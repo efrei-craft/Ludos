@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,8 +46,13 @@ public class WorldUtils {
      * @return Nombre de mondes supprimés
      */
     public static int cleanUpWorlds() {
-        List<World> worldsToCleanUp = Bukkit.getWorlds()
-                .stream().filter(world -> world.getName().startsWith(worldPrefix)).toList();
+        List<World> worldsToCleanUp = new ArrayList<>();
+        for(World world : Bukkit.getWorlds()) {
+            if(world.getName().startsWith(worldPrefix)) {
+                worldsToCleanUp.add(world);
+            }
+        }
+
         for(World world : worldsToCleanUp) {
             deleteWorld(world);
         }
