@@ -46,7 +46,7 @@ public class LudosGame extends Game {
 
     @Override
     public void postMapParse() {
-
+        // No need to do anything here
     }
 
     @Override
