@@ -24,7 +24,7 @@ public class GameCountdown extends BukkitRunnable {
         }
         if (countdown == 0) {
             MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&7Le jeu commence maintenant!");
-            Core.getInstance().getGameManager().setStatus(GameManager.GameStatus.INGAME);
+            Core.get().getGameManager().setStatus(GameManager.GameStatus.INGAME);
             this.cancel();
         }
         countdown--;

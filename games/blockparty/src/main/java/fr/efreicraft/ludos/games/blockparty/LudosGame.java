@@ -54,15 +54,15 @@ public class LudosGame extends Game {
 
     @Override
     public void postMapParse() {
-        Location killZoneLocation = Core.getInstance().getMapManager().getCurrentMap().getGamePoints()
+        Location killZoneLocation = Core.get().getMapManager().getCurrentMap().getGamePoints()
                 .get("KILL_ZONE").get(0).getLocation();
         this.gameLogic.setKillZoneLocation(killZoneLocation);
-        Core.getInstance().getMapManager().getCurrentMap().getWorld().setBlockData(
+        Core.get().getMapManager().getCurrentMap().getWorld().setBlockData(
                 killZoneLocation,
                 Material.PINK_WOOL.createBlockData()
         );
 
-        this.gameLogic.generateDanceFloor(Core.getInstance().getMapManager().getCurrentMap().getGamePoints().get("DANCE_FLOOR"));
+        this.gameLogic.generateDanceFloor(Core.get().getMapManager().getCurrentMap().getGamePoints().get("DANCE_FLOOR"));
     }
 
     @Override
@@ -71,7 +71,7 @@ public class LudosGame extends Game {
 
         player.getBoard().setField(
                 0,
-                new ScoreboardField("&b&lJoueurs en vie", player, true, player1 -> String.valueOf(Core.getInstance().getTeamManager().getTeam("PLAYERS").getPlayers().size()))
+                new ScoreboardField("&b&lJoueurs en vie", player, true, player1 -> String.valueOf(Core.get().getTeamManager().getTeam("PLAYERS").getPlayers().size()))
         );
         player.getBoard().setField(
                 1,

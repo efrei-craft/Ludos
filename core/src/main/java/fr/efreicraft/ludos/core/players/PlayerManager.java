@@ -23,7 +23,7 @@ public class PlayerManager implements IManager {
      * Constructeur du gestionnaire de joueurs. Il initialise la liste des joueurs aux joueurs connectés actuellement.
      */
     public PlayerManager() {
-        if(Core.getInstance().getPlayerManager() != null) {
+        if(Core.get().getPlayerManager() != null) {
             throw new IllegalStateException("PlayerManager already initialized !");
         }
         this.players = new HashSet<>();
@@ -42,9 +42,9 @@ public class PlayerManager implements IManager {
      */
     public void addPlayer(Player p) {
         this.players.add(p);
-        Core.getInstance().getTeamManager().dispatchPlayerInTeams(p, false);
+        Core.get().getTeamManager().dispatchPlayerInTeams(p, false);
 
-        if(Core.getInstance().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
+        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
             p.spawnAtWaitingLobby();
         }
     }
@@ -95,7 +95,7 @@ public class PlayerManager implements IManager {
      */
     public Set<Player> getPlayingPlayers() {
         Set<Player> playingPlayers = new HashSet<>();
-        if(Core.getInstance().getGameManager().getCurrentGame() == null) {
+        if(Core.get().getGameManager().getCurrentGame() == null) {
             playingPlayers.addAll(this.players);
         } else {
             for(Player player : getPlayers()) {

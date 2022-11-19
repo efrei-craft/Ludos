@@ -34,7 +34,7 @@ public class MapCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
-        Player player = Core.getInstance().getPlayerManager().getPlayer((org.bukkit.entity.Player) sender);
+        Player player = Core.get().getPlayerManager().getPlayer((org.bukkit.entity.Player) sender);
         
         if(args.length == 0) {
             player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /map <load | tp | metadata> <nomMap | equipe>");
@@ -46,13 +46,13 @@ public class MapCommand implements CommandExecutor, TabCompleter {
                 player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /map load <name>");
                 return false;
             }
-            if(Core.getInstance().getGameManager().getCurrentGame() == null) {
+            if(Core.get().getGameManager().getCurrentGame() == null) {
                 player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cAucun jeu n'a été chargé.");
                 return false;
             }
             player.sendMessage(MessageUtils.ChatPrefix.MAP, "&7Chargement de la map...");
             try {
-                Core.getInstance().getMapManager().loadMap(args[1]);
+                Core.get().getMapManager().loadMap(args[1]);
                 player.sendMessage(MessageUtils.ChatPrefix.MAP, "&7Parsing de la map...");
             } catch (MapLoadingException e) {
                 player.sendMessage(MessageUtils.ChatPrefix.MAP, "&cErreur: " + e.getMessage());
@@ -63,12 +63,12 @@ public class MapCommand implements CommandExecutor, TabCompleter {
                 player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /map tp <equipe>");
                 return false;
             }
-            ParsedMap map = Core.getInstance().getMapManager().getCurrentMap();
+            ParsedMap map = Core.get().getMapManager().getCurrentMap();
             if(map == null) {
                 player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cAucune map n'est chargée!");
                 return false;
             }
-            Team team = Core.getInstance().getTeamManager().getTeam(args[1]);
+            Team team = Core.get().getTeamManager().getTeam(args[1]);
             SpawnPoint spawnPoint = map.getSpawnPoints().get(team).get(0);
 
             TextComponent msgComponent = Component.text()
@@ -84,7 +84,7 @@ public class MapCommand implements CommandExecutor, TabCompleter {
             player.entity().teleport(spawnPoint.getLocation());
             return true;
         } else if(args[0].equalsIgnoreCase("metadata")) {
-            ParsedMap map = Core.getInstance().getMapManager().getCurrentMap();
+            ParsedMap map = Core.get().getMapManager().getCurrentMap();
             if(map == null) {
                 player.sendMessage(
                         MessageUtils.ChatPrefix.ADMIN,
@@ -158,13 +158,13 @@ public class MapCommand implements CommandExecutor, TabCompleter {
         if(args.length == 1) {
             return Arrays.asList("load", "tp", "metadata");
         } else if(args.length == 2) {
-            if(Core.getInstance().getGameManager().getCurrentGame() == null) {
+            if(Core.get().getGameManager().getCurrentGame() == null) {
                 return new ArrayList<>();
             }
             if(args[0].equalsIgnoreCase("load")) {
-                return Core.getInstance().getGameManager().getCurrentGame().getMaps();
+                return Core.get().getGameManager().getCurrentGame().getMaps();
             } else if(args[0].equalsIgnoreCase("tp")) {
-                Map<String, Team> teams = Core.getInstance().getTeamManager().getTeams();
+                Map<String, Team> teams = Core.get().getTeamManager().getTeams();
                 return new ArrayList<>(teams.keySet());
             }
         }

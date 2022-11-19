@@ -94,7 +94,7 @@ public class Team {
      * Charge l'équipe dans le scoreboard de Bukkit.
      */
     public void loadTeam() {
-        this.bukkitTeam = Core.getInstance().getScoreboardManager().getMainScoreboard().registerNewTeam(
+        this.bukkitTeam = Core.get().getScoreboardManager().getMainScoreboard().registerNewTeam(
                 this.generateTeamNameWithPriority()
         );
         if(showTeamName) {
@@ -153,7 +153,7 @@ public class Team {
         this.players.add(player);
         player.setTeam(this);
         this.bukkitTeam.addEntry(player.entity().getName());
-        if(Core.getInstance().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
+        if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
             this.spawnBehavior.spawnPlayer(player);
         }
     }
@@ -168,8 +168,8 @@ public class Team {
         if(player.entity() != null) {
             this.bukkitTeam.removeEntry(player.entity().getName());
         }
-        if(Core.getInstance().getGameManager().getCurrentGame() != null) {
-            Core.getInstance().getGameManager().getCurrentGame().checkIfGameHasToBeEnded();
+        if(Core.get().getGameManager().getCurrentGame() != null) {
+            Core.get().getGameManager().getCurrentGame().checkIfGameHasToBeEnded();
         }
     }
 
@@ -194,7 +194,7 @@ public class Team {
      * @return Liste des points de spawn de l'équipe.
      */
     public List<SpawnPoint> getSpawnPointsForCurrentMap() {
-        return Core.getInstance().getMapManager().getCurrentMap().getSpawnPoints().get(this);
+        return Core.get().getMapManager().getCurrentMap().getSpawnPoints().get(this);
     }
 
     /**

@@ -37,7 +37,7 @@ public class SchematicUtils {
      * @return Schematic.
      */
     private static File getSchematicFile(String name) {
-        return new File(Core.getInstance().getPlugin().getDataFolder(), "schematics/" + name + ".schem");
+        return new File(Core.get().getPlugin().getDataFolder(), "schematics/" + name + ".schem");
     }
 
     /**

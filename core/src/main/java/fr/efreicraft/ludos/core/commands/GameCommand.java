@@ -25,7 +25,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
-        Player player = Core.getInstance().getPlayerManager().getPlayer((org.bukkit.entity.Player) sender);
+        Player player = Core.get().getPlayerManager().getPlayer((org.bukkit.entity.Player) sender);
 
         if(args.length == 0) {
             player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /game <list | load | start | stop> <name>");
@@ -35,7 +35,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
         switch (args[0]) {
             case "list" -> player.sendMessage(
                     MessageUtils.ChatPrefix.GAME,
-                    "&7Jeux disponibles: &r" + Core.getInstance().getGameManager().getAvailableGames()
+                    "&7Jeux disponibles: &r" + Core.get().getGameManager().getAvailableGames()
             );
             case "load" -> {
                 if (args.length == 1) {
@@ -47,7 +47,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                         "&b" + sender.getName() + "&7 a changé le prochain jeu."
                 );
                 try {
-                    Core.getInstance().getGameManager().loadGame(args[1]);
+                    Core.get().getGameManager().loadGame(args[1]);
                 } catch (GameStatusException e) {
                     player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
                     return false;
@@ -59,7 +59,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                         "&b" + sender.getName() + "&7 a forcé le démarrage de la partie."
                 );
                 try {
-                    Core.getInstance().getGameManager().startCurrentGame();
+                    Core.get().getGameManager().startCurrentGame();
                 } catch (GameStatusException e) {
                     player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
                 }
@@ -70,7 +70,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                         "&b" + sender.getName() + "&7 a forcé l'arrêt de la partie."
                 );
                 try {
-                    Core.getInstance().getGameManager().endCurrentGame();
+                    Core.get().getGameManager().endCurrentGame();
                 } catch (GameStatusException e) {
                     player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
                 }
@@ -87,7 +87,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
             return Arrays.asList("list", "load", "start", "stop");
         }
         if(args.length == 2 && args[0].equalsIgnoreCase("load")) {
-            return Core.getInstance().getGameManager().getAvailableGames();
+            return Core.get().getGameManager().getAvailableGames();
         }
         return new ArrayList<>();
     }

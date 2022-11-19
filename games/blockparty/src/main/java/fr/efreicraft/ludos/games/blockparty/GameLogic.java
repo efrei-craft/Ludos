@@ -27,7 +27,7 @@ public class GameLogic {
         this.patternProvider.preparePattern(gamePointList);
         for(GamePoint mapPoint : gamePointList) {
             Location location = mapPoint.getLocation();
-            Core.getInstance().getMapManager().getCurrentMap().getWorld().setBlockData(
+            Core.get().getMapManager().getCurrentMap().getWorld().setBlockData(
                     location,
                     this.patternProvider.getBlock(location)
             );

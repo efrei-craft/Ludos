@@ -58,7 +58,7 @@ public class GameManager implements IManager {
      * Constructeur du gestionnaire de jeux. Il vérifie que la classe n'est pas déjà initialisée.
      */
     public GameManager() {
-        if(Core.getInstance().getGameManager() != null) {
+        if(Core.get().getGameManager() != null) {
             throw new IllegalStateException("GameManager already initialized !");
         }
     }
@@ -73,7 +73,7 @@ public class GameManager implements IManager {
      * Charge les jeux disponibles dans le dossier "games" du datafolder.
      */
     private void loadGameJars() {
-        File gamesFolder = new File(Core.getInstance().getPlugin().getDataFolder(), "games");
+        File gamesFolder = new File(Core.get().getPlugin().getDataFolder(), "games");
         if(!gamesFolder.exists()) {
             gamesFolder.mkdirs();
         }
@@ -86,9 +86,9 @@ public class GameManager implements IManager {
         for(File file : files) {
             if(file.getName().endsWith(".jar")) {
                 try {
-                    Plugin pl = Core.getInstance().getServer().getPluginManager().loadPlugin(file);
+                    Plugin pl = Core.get().getServer().getPluginManager().loadPlugin(file);
                     if(pl != null) {
-                        Core.getInstance().getServer().getPluginManager().enablePlugin(pl);
+                        Core.get().getServer().getPluginManager().enablePlugin(pl);
                     }
                 } catch (InvalidPluginException | InvalidDescriptionException e) {
                     e.printStackTrace();
@@ -111,7 +111,7 @@ public class GameManager implements IManager {
                 try {
                     currentGame = gameClass.getConstructor().newInstance();
                     currentGame.prepareServer();
-                    Core.getInstance().getLogger().log(Level.INFO, "Game {0} loaded !", gameName);
+                    Core.get().getLogger().log(Level.INFO, "Game {0} loaded !", gameName);
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                     e.printStackTrace();
                 }
@@ -124,7 +124,7 @@ public class GameManager implements IManager {
      * @param gameClass Classe du jeu
      */
     public void registerGame(Class<? extends Game> gameClass) {
-        Core.getInstance().getLogger().log(Level.INFO, "Game {0} registered !", gameClass.getPackageName());
+        Core.get().getLogger().log(Level.INFO, "Game {0} registered !", gameClass.getPackageName());
         games.add(gameClass);
     }
 
@@ -167,10 +167,10 @@ public class GameManager implements IManager {
         if (status != GameStatus.WAITING) {
             throw new GameStatusException("Impossible de démarrer un jeu en cours de partie !");
         }
-        if(Core.getInstance().getMapManager().getCurrentMap() == null) {
+        if(Core.get().getMapManager().getCurrentMap() == null) {
             throw new GameStatusException("Impossible de démarrer un jeu sans map !");
         }
-        if(!Core.getInstance().getMapManager().getCurrentMap().isParsed()) {
+        if(!Core.get().getMapManager().getCurrentMap().isParsed()) {
             throw new GameStatusException("Impossible de démarrer un jeu sans que la map soit parsée !");
         }
 
@@ -202,7 +202,7 @@ public class GameManager implements IManager {
     public void setStatus(GameStatus status) {
         this.status = status;
 
-        for(Player player : Core.getInstance().getPlayerManager().getPlayers()) {
+        for(Player player : Core.get().getPlayerManager().getPlayers()) {
             player.setupScoreboard();
         }
 
