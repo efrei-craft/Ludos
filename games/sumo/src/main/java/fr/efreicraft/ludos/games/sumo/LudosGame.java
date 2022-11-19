@@ -1,8 +1,10 @@
 package fr.efreicraft.ludos.games.sumo;
 
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
+import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
-import fr.efreicraft.ludos.core.games.interfaces.GameMetadata;
+
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
@@ -17,12 +19,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @GameMetadata(
-        name = "Sumo",
-        authors = {"DocSystem"},
+name = "Sumo",
         description = "Poussez votre adversaire en dehors du ring !",
+        authors = {"DocSystem"},
         color = "&c",
-        version = "1.0",
-        minPlayers = 2
+        rules = @GameRules(
+                minPlayers = 2,
+                maxPlayers = 2
+        )
 )
 public class LudosGame extends Game {
 
