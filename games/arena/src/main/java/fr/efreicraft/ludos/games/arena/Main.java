@@ -1,4 +1,4 @@
-package fr.efreicraft.ludos.games.blockparty;
+package fr.efreicraft.ludos.games.arena;
 
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.games.interfaces.GamePlugin;
