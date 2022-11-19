@@ -102,11 +102,11 @@ public class Player {
                                 ChatColor color = ChatColor.WHITE;
                                 String necessary = "";
                                 if(Core.get().getGameManager().getCurrentGame() != null) {
-                                    if(Core.get().getGameManager().getCurrentGame().getMetadata().minPlayers() <= Core.get().getPlayerManager().getNumberOfPlayingPlayers()) {
+                                    if(Core.get().getGameManager().getCurrentGame().getMetadata().rules().minPlayers() <= Core.get().getPlayerManager().getNumberOfPlayingPlayers()) {
                                         color = ChatColor.GREEN;
                                     } else {
                                         color = ChatColor.RED;
-                                        necessary = " &7(" + (Core.get().getGameManager().getCurrentGame().getMetadata().minPlayers() - Core.get().getPlayerManager().getNumberOfPlayingPlayers()) + " requis)";
+                                        necessary = " &7(" + (Core.get().getGameManager().getCurrentGame().getMetadata().rules().minPlayers() - Core.get().getPlayerManager().getNumberOfPlayingPlayers()) + " requis)";
                                     }
                                 }
                                 return color + "" + Core.get().getPlayerManager().getNumberOfPlayingPlayers() + necessary;
@@ -348,7 +348,7 @@ public class Player {
             entity().setGameMode(GameMode.SPECTATOR);
             Game game = Core.get().getGameManager().getCurrentGame();
             if(game != null) {
-                if(game.getMetadata().allowRespawn()) {
+                if(game.getMetadata().rules().allowRespawn()) {
                     PlayerRespawnCountdown countdown = new PlayerRespawnCountdown(this);
                     countdown.runTaskTimer(Core.get().getPlugin(), 0, 20);
                 } else {

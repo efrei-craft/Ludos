@@ -1,7 +1,7 @@
 package fr.efreicraft.ludos.games.rush;
 
 import fr.efreicraft.ludos.core.games.interfaces.Game;
-import fr.efreicraft.ludos.core.games.interfaces.GameMetadata;
+import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import org.bukkit.Material;
@@ -15,9 +15,7 @@ import java.util.Map;
         name = "Rush",
         color = "&5",
         description = "",
-        authors = {"Idir 'Niilyx' NAIT MEDDOUR"},
-        minPlayers = 1,
-        version = ":wink:"
+        authors = {"Idir 'Niilyx' NAIT MEDDOUR"}
 )
 public class LudosGame extends Game {
     @Override

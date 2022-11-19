@@ -4,6 +4,7 @@ import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.GameCountdown;
 import fr.efreicraft.ludos.core.games.GameEventManager;
 import fr.efreicraft.ludos.core.games.GameManager;
+import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.maps.MapLoadingException;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.Team;
@@ -116,7 +117,7 @@ public abstract class Game implements IGame {
         if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
             return false;
         }
-        if(this.getMetadata().minPlayers() > Core.get().getPlayerManager().getNumberOfPlayingPlayers()) {
+        if(this.getMetadata().rules().minPlayers() > Core.get().getPlayerManager().getNumberOfPlayingPlayers()) {
             MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&cIl n'y a plus assez de joueurs pour continuer le jeu!");
             Core.get().getGameManager().setStatus(GameManager.GameStatus.ENDING);
             return true;

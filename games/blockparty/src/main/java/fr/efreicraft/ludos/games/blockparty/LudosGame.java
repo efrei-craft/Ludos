@@ -4,7 +4,7 @@ import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.games.interfaces.GameMetadata;
+import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import org.bukkit.GameRule;
@@ -26,9 +26,7 @@ import java.util.Map;
         name = "BlockParty",
         color = "&b",
         description = "Tenez-vous sur la bonne couleur au bon moment, sinon vous mourrez !",
-        authors = {"Antoine", "Logan"},
-        version = "1.0",
-        minPlayers = 1
+        authors = {"Antoine", "Logan"}
 )
 public class LudosGame extends Game {
 

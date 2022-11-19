@@ -1,5 +1,6 @@
 package fr.efreicraft.ludos.core.players;
 
+import fr.efreicraft.ludos.core.Core;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.util.Ticks;
@@ -16,7 +17,7 @@ public class PlayerRespawnCountdown extends BukkitRunnable {
     /**
      * Temps restant avant le début de la partie.
      */
-    private int countdown = 5;
+    private int countdown;
 
     /**
      * Joueur concerné par le décompte.
@@ -25,6 +26,7 @@ public class PlayerRespawnCountdown extends BukkitRunnable {
 
     PlayerRespawnCountdown(Player player) {
         this.player = player;
+        countdown = Core.get().getGameManager().getCurrentGame().getMetadata().rules().respawnTimer();
     }
 
     @Override

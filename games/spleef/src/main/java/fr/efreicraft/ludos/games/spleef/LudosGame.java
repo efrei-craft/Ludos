@@ -2,7 +2,7 @@ package fr.efreicraft.ludos.games.spleef;
 
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.players.Player;
-import fr.efreicraft.ludos.core.games.interfaces.GameMetadata;
+import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import org.bukkit.GameRule;
@@ -22,9 +22,7 @@ import java.util.Map;
         name = "Spleef",
         color = "&e",
         description = "Détruisez le sol et éliminez vos adversaires !",
-        authors = {"Antoine"},
-        version = "1.0",
-        minPlayers = 1
+        authors = {"Antoine"}
 )
 public class LudosGame extends Game {
 

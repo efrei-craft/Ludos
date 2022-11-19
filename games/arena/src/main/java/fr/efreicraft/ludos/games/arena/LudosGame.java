@@ -1,8 +1,9 @@
 package fr.efreicraft.ludos.games.arena;
 
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
-import fr.efreicraft.ludos.core.games.interfaces.GameMetadata;
+import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
@@ -28,9 +29,12 @@ import java.util.Map;
         color = "&c",
         description = "Un 4v4 dans un arène, bonne chance !",
         authors = {"Antoine"},
-        version = "1.0",
-        minPlayers = 1,
-        allowRespawn = true
+        rules = @GameRules(
+                minPlayers = 1,
+                maxPlayers = 20,
+                allowRespawn = true,
+                respawnTimer = 0
+        )
 )
 public class LudosGame extends Game {
 

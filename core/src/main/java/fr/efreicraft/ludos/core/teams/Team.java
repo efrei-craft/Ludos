@@ -6,6 +6,7 @@ import fr.efreicraft.ludos.core.maps.interfaces.SpawnPoint;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 
@@ -152,6 +153,17 @@ public class Team {
         }
         this.players.add(player);
         player.setTeam(this);
+        if(showTeamName) {
+            player.entity().playerListName(Component.text()
+                    .append(this.name())
+                    .append(Component.text(" "))
+                    .append(player.entity().name().color(this.colorSet.textColor()))
+                    .build());
+        } else {
+            player.entity().playerListName(Component.text()
+                    .append(player.entity().name().color(this.colorSet.textColor()))
+                    .build());
+        }
         this.bukkitTeam.addEntry(player.entity().getName());
         if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
             this.spawnBehavior.spawnPlayer(player);
