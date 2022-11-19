@@ -40,7 +40,7 @@ public class EventListener implements Listener {
      */
     @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        event.joinMessage(Component.text(MessageUtils.getText(MessageUtils.ChatPrefix.MINIGAMES, "&b" + event.getPlayer().getName() + "&7 a rejoins la partie !")));
+        event.joinMessage(Component.text(MessageUtils.getText(MessageUtils.ChatPrefix.MINIGAMES, "&b" + event.getPlayer().getName() + "&7 a rejoint la partie !")));
         Core.get().getPlayerManager().addPlayer(new Player(event.getPlayer()));
     }
 
