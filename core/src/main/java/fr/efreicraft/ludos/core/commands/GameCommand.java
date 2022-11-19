@@ -28,7 +28,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
         Player player = Core.get().getPlayerManager().getPlayer((org.bukkit.entity.Player) sender);
 
         if(args.length == 0) {
-            player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /game <list | load | start | stop> <name>");
+            player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /game <list | load | start | stop | reset> <name>");
             return false;
         }
 
@@ -75,7 +75,16 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                     player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
                 }
             }
-            default -> player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /game <list | load | start | stop> <name>");
+            case "reset" -> {
+                Core.get().getMapManager().unloadMap();
+                Core.get().getGameManager().unregisterCurrentGame();
+                player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&7La carte et le jeu ont bien été &anettoyés&7.");
+            }
+            case "reload" -> {
+                Core.get().getGameManager().loadAllGameJars();
+                player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&7Jeux &arechargés&7.");
+            }
+            default -> player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /game <list | load | start | stop | reset> <name>");
         }
 
         return true;
@@ -84,7 +93,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if(args.length == 1) {
-            return Arrays.asList("list", "load", "start", "stop");
+            return Arrays.asList("list", "load", "start", "stop", "reset", "reload");
         }
         if(args.length == 2 && args[0].equalsIgnoreCase("load")) {
             return Core.get().getGameManager().getAvailableGames();

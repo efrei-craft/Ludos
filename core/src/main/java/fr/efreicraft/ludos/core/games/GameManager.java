@@ -49,9 +49,11 @@ public class GameManager implements IManager {
         ENDING
     }
 
-    private final ArrayList<Class<? extends Game>> games = new ArrayList<>();
+    private ArrayList<Plugin> gamePlugins;
 
     private Game currentGame;
+    private Plugin currentPlugin;
+
     private GameStatus status;
 
     /**
@@ -66,30 +68,27 @@ public class GameManager implements IManager {
     @Override
     public void runManager() {
         setStatus(GameStatus.WAITING);
-        loadGameJars();
+        loadAllGameJars();
     }
 
     /**
-     * Charge les jeux disponibles dans le dossier "games" du datafolder.
+     * Charge les plguins de jeu disponibles dans le dossier "games" du datafolder.
      */
-    private void loadGameJars() {
+    public void loadAllGameJars() {
+        gamePlugins = new ArrayList<>();
         File gamesFolder = new File(Core.get().getPlugin().getDataFolder(), "games");
         if(!gamesFolder.exists()) {
             gamesFolder.mkdirs();
         }
-
         File[] files = gamesFolder.listFiles();
         if(files == null) {
             return;
         }
-
         for(File file : files) {
             if(file.getName().endsWith(".jar")) {
                 try {
                     Plugin pl = Core.get().getServer().getPluginManager().loadPlugin(file);
-                    if(pl != null) {
-                        Core.get().getServer().getPluginManager().enablePlugin(pl);
-                    }
+                    gamePlugins.add(pl);
                 } catch (InvalidPluginException | InvalidDescriptionException e) {
                     e.printStackTrace();
                 }
@@ -99,33 +98,45 @@ public class GameManager implements IManager {
 
     /**
      * Charge le jeu demandé.
-     * @param gameName Chemin canonique de la classe Main du jeu
+     * @param gameName Nom du plugin du jeu.
      * @throws GameStatusException Exception levée si le jeu ne peut pas être chargé
      */
     public void loadGame(String gameName) throws GameStatusException {
         if(status != GameStatus.WAITING) {
             throw new GameStatusException("Impossible de charger un jeu en cours de partie !");
         }
-        for (Class<? extends Game> gameClass : games) {
-            if (gameClass.getPackageName().equalsIgnoreCase(gameName)) {
-                try {
-                    currentGame = gameClass.getConstructor().newInstance();
-                    currentGame.prepareServer();
-                    Core.get().getLogger().log(Level.INFO, "Game {0} loaded !", gameName);
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                    e.printStackTrace();
-                }
+        for (Plugin gamePlugin : gamePlugins) {
+            if (gamePlugin.getName().equalsIgnoreCase(gameName)) {
+                currentPlugin = gamePlugin;
+                Core.get().getServer().getPluginManager().enablePlugin(gamePlugin);
             }
         }
     }
 
     /**
-     * Enregistre un jeu dans le gestionnaire de jeux.
+     * Méthode appelée par le plugin du jeu pour s'enregistrer.
      * @param gameClass Classe du jeu
      */
     public void registerGame(Class<? extends Game> gameClass) {
         Core.get().getLogger().log(Level.INFO, "Game {0} registered !", gameClass.getPackageName());
-        games.add(gameClass);
+        try {
+            currentGame = gameClass.getConstructor().newInstance();
+            currentGame.prepareServer();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Désenregistre le jeu chargé.
+     */
+    public void unregisterCurrentGame() {
+        if(currentGame == null || currentPlugin == null) {
+            return;
+        }
+        Core.get().getServer().getPluginManager().disablePlugin(currentPlugin);
+        currentGame = null;
+        currentPlugin = null;
     }
 
     /**
@@ -134,8 +145,8 @@ public class GameManager implements IManager {
      */
     public List<String> getAvailableGames() {
         ArrayList<String> gamesAvailable = new ArrayList<>();
-        for (Class<? extends Game> game : games) {
-            gamesAvailable.add(game.getPackageName());
+        for (Plugin gamePlugin : gamePlugins) {
+            gamesAvailable.add(gamePlugin.getName());
         }
         return gamesAvailable;
     }
@@ -215,7 +226,7 @@ public class GameManager implements IManager {
         } else if(status == GameStatus.ENDING) {
             currentGame.endGame();
         } else if(status == GameStatus.WAITING) {
-            currentGame = null;
+            unregisterCurrentGame();
         }
     }
 

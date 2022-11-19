@@ -1,8 +1,10 @@
 package fr.efreicraft.ludos.games.arena;
 
+import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.games.interfaces.GameMetadata;
 import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
@@ -59,6 +61,16 @@ public class LudosGame extends Game {
     @Override
     public void setupScoreboard(Player player) {
         player.getBoard().clearFields();
+
+        player.getBoard().setField(
+                0,
+                new ScoreboardField("&9&lVikings en vie", player, true, player1 -> String.valueOf(Core.get().getTeamManager().getTeam("VIKINGS").getPlayers().size()))
+        );
+
+        player.getBoard().setField(
+                1,
+                new ScoreboardField("&c&lBarbares en vie", player, true, player1 -> String.valueOf(Core.get().getTeamManager().getTeam("BARBARES").getPlayers().size()))
+        );
     }
 
     @Override
