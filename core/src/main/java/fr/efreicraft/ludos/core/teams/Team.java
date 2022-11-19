@@ -153,17 +153,6 @@ public class Team {
         }
         this.players.add(player);
         player.setTeam(this);
-        if(showTeamName) {
-            player.entity().playerListName(Component.text()
-                    .append(this.name())
-                    .append(Component.text(" "))
-                    .append(player.entity().name().color(this.colorSet.textColor()))
-                    .build());
-        } else {
-            player.entity().playerListName(Component.text()
-                    .append(player.entity().name().color(this.colorSet.textColor()))
-                    .build());
-        }
         this.bukkitTeam.addEntry(player.entity().getName());
         if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
             this.spawnBehavior.spawnPlayer(player);
@@ -177,7 +166,6 @@ public class Team {
     public void removePlayer(Player player) {
         this.players.remove(player);
         player.clearTeam();
-        player.entity().playerListName(player.entity().name().color(NamedTextColor.WHITE));
         if(player.entity() != null) {
             this.bukkitTeam.removeEntry(player.entity().getName());
         }
