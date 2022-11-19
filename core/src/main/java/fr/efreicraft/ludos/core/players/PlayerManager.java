@@ -56,7 +56,9 @@ public class PlayerManager implements IManager {
      * @param player Joueur à supprimer
      */
     public void removePlayer(Player player) {
-        if(player.getTeam().isPlayingTeam()) {
+        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.INGAME
+                && player.getTeam() != null
+                && player.getTeam().isPlayingTeam()) {
             player.entity().setHealth(0);
         }
         player.unload();
