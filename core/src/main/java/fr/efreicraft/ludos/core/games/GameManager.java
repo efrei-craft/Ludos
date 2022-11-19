@@ -160,6 +160,14 @@ public class GameManager implements IManager {
     }
 
     /**
+     * Récupère le plugin du jeu actuellement chargé
+     * @return Plugin du jeu actuellement chargé
+     */
+    public Plugin getCurrentPlugin() {
+        return currentPlugin;
+    }
+
+    /**
      * Récupère le status actuel du jeu
      * @return Status actuel du jeu
      */
