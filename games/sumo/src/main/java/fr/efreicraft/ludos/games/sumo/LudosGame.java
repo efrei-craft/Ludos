@@ -3,7 +3,9 @@ package fr.efreicraft.ludos.games.sumo;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.games.interfaces.GameMetadata;
 import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
+import org.bukkit.GameRule;
 import org.bukkit.Material;
 import org.bukkit.World;
 
@@ -21,7 +23,11 @@ import java.util.Map;
 public class LudosGame extends Game {
     @Override
     public void preMapParse(World world) {
-
+        world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+        world.setGameRule(GameRule.DO_TILE_DROPS, false);
+        world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
+        world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+        world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
     }
 
     @Override
@@ -41,6 +47,6 @@ public class LudosGame extends Game {
 
     @Override
     public Map<String, TeamRecord> getTeamRecords() {
-        return null;
+        return DefaultTeamRecordBuilder.DefaultTeamRecords.DEFAULT_TEAMS_SOLO.getTeamRecords();
     }
 }
