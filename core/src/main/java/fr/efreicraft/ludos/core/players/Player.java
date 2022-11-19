@@ -60,7 +60,9 @@ public class Player {
         this.scoreboard = new PlayerScoreboard(this);
         this.setupScoreboard();
 
-        if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
+        if(Core.get().getGameManager().getStatus() != null
+                && Core.get().getGameManager().getStatus() != GameManager.GameStatus.WAITING
+                && !entity().hasPermission("ludos.admin")) {
             this.ephemeralPlayer = true;
             sendMessage(MessageUtils.ChatPrefix.SERVER, "&7Vous avez rejoint une partie &aen cours de jeu&7. Vous serez &cdéconnecté&7 à la fin de celle-ci.");
         }
