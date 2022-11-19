@@ -186,6 +186,9 @@ public class Team {
                 this.bukkitTeam.removeEntry(player.entity().getName());
             }
             iterator.remove();
+            if(player.isEphemeral() && !player.entity().hasPermission("ludos.admin")) {
+                player.entity().kick();
+            }
         }
     }
 

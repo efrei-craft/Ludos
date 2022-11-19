@@ -28,7 +28,7 @@ public class GameEventManager {
             Core.get().getServer().getPluginManager()
                 .registerEvents(eventListenerInstance, Core.get().getPlugin());
         } else {
-            String gameName = Core.get().getGameManager().getCurrentGame().getMetadata().getClass().getName();
+            String gameName = Core.get().getGameManager().getCurrentGame().getMetadata().name();
             Core.get().getLogger().log(Level.WARNING, "[GameEventManager] {0} has no event listener set.", gameName);
         }
     }
