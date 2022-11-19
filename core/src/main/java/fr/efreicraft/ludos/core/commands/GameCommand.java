@@ -43,6 +43,10 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                     player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /game load <name>");
                     return false;
                 }
+                if(Core.get().getGameManager().getCurrentGame() != null) {
+                    player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cUn jeu est déjà chargé. &7Déchargez le avec &e/game reset&7.");
+                    return false;
+                }
                 MessageUtils.broadcast(
                         MessageUtils.ChatPrefix.ADMIN,
                         "&b" + sender.getName() + "&7 a changé le prochain jeu."
