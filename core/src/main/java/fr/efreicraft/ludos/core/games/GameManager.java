@@ -88,6 +88,7 @@ public class GameManager implements IManager {
             if(file.getName().endsWith(".jar")) {
                 try {
                     Plugin pl = Core.get().getServer().getPluginManager().loadPlugin(file);
+                    Core.get().getServer().getPluginManager().disablePlugin(pl);
                     gamePlugins.add(pl);
                 } catch (InvalidPluginException | InvalidDescriptionException e) {
                     e.printStackTrace();

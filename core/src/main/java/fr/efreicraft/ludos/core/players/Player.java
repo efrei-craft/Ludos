@@ -5,7 +5,6 @@ import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
-import fr.efreicraft.ludos.core.maps.ParsedMap;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import net.kyori.adventure.text.Component;
@@ -98,18 +97,20 @@ public class Player {
                     new ScoreboardField(
                             "&6&lJoueurs",
                             this,
+                            true,
                             player1 -> {
                                 ChatColor color = ChatColor.WHITE;
-                                String necessary = "";
+                                String maxString = "";
                                 if(Core.get().getGameManager().getCurrentGame() != null) {
-                                    if(Core.get().getGameManager().getCurrentGame().getMetadata().rules().minPlayers() <= Core.get().getPlayerManager().getNumberOfPlayingPlayers()) {
+                                    Game game = Core.get().getGameManager().getCurrentGame();
+                                    if(game.getMetadata().rules().minPlayers() <= Core.get().getPlayerManager().getNumberOfPlayingPlayers()) {
                                         color = ChatColor.GREEN;
                                     } else {
                                         color = ChatColor.RED;
-                                        necessary = " &7(" + (Core.get().getGameManager().getCurrentGame().getMetadata().rules().minPlayers() - Core.get().getPlayerManager().getNumberOfPlayingPlayers()) + " requis)";
                                     }
+                                    maxString = "&7/" + game.getMetadata().rules().maxPlayers();
                                 }
-                                return color + "" + Core.get().getPlayerManager().getNumberOfPlayingPlayers() + necessary;
+                                return color + "" + Core.get().getPlayerManager().getNumberOfPlayingPlayers() + maxString;
                             }
                     )
             );
@@ -142,8 +143,7 @@ public class Player {
                                     if (Core.get().getMapManager().getCurrentMap() == null) {
                                         return EMPTY + "e";
                                     } else {
-                                        ParsedMap map = Core.get().getMapManager().getCurrentMap();
-                                        return map.getName() + " par " + map.getAuthor();
+                                        return Core.get().getMapManager().getCurrentMap().getName();
                                     }
                                 }
                             }

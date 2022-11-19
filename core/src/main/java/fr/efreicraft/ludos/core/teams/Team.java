@@ -248,4 +248,12 @@ public class Team {
     public boolean isPlayingTeam() {
         return playingTeam;
     }
+
+    /**
+     * Change l'état de friendly fire de l'équipe.
+     * @param friendlyFire Nouvel état de friendly fire.
+     */
+    public void setFriendlyFire(boolean friendlyFire) {
+        this.bukkitTeam.setAllowFriendlyFire(friendlyFire);
+    }
 }

@@ -4,6 +4,8 @@ import fr.efreicraft.ludos.core.Core;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
+ * Classe abstraite pour les plugins de jeux.
+ *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
  * @project Ludos
  */

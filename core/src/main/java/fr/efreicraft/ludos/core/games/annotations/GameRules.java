@@ -15,6 +15,12 @@ public @interface GameRules {
     int minPlayers() default 1;
 
     /**
+     * Joueurs minimum pour démarrer le jeu.
+     * @return Joueurs minimum pour démarrer le jeu.
+     */
+    int minPlayersToStart() default 2;
+
+    /**
      * Joueurs maximum pour le jeu.
      * @return Joueurs maximum pour le jeu.
      */
