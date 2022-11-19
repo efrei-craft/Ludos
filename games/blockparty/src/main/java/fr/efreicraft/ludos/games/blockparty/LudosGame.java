@@ -1,5 +1,6 @@
 package fr.efreicraft.ludos.games.blockparty;
 
+import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
@@ -26,7 +27,10 @@ import java.util.Map;
         name = "BlockParty",
         color = "&b",
         description = "Tenez-vous sur la bonne couleur au bon moment, sinon vous mourrez !",
-        authors = {"Antoine", "Logan"}
+        authors = {"Antoine", "Logan"},
+        rules = @GameRules(
+                minPlayers = 2
+        )
 )
 public class LudosGame extends Game {
 

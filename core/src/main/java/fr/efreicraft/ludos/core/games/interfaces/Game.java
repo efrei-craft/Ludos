@@ -1,17 +1,13 @@
 package fr.efreicraft.ludos.core.games.interfaces;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.games.GameCountdown;
-import fr.efreicraft.ludos.core.games.GameEventManager;
-import fr.efreicraft.ludos.core.games.GameManager;
+import fr.efreicraft.ludos.core.games.*;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.maps.MapLoadingException;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.event.Listener;
 
 import java.util.List;
@@ -30,6 +26,8 @@ public abstract class Game implements IGame {
     
     private final GameEventManager eventManager;
     private Listener eventListenerInstance;
+
+    private GameWinner winner;
 
     /**
      * Constructeur de jeu.
@@ -118,7 +116,15 @@ public abstract class Game implements IGame {
             return false;
         }
         if(this.getMetadata().rules().minPlayers() > Core.get().getPlayerManager().getNumberOfPlayingPlayers()) {
-            MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&cIl n'y a plus assez de joueurs pour continuer le jeu!");
+            if(Core.get().getPlayerManager().getNumberOfPlayingPlayers() > 0) {
+                Player lastPlayer = Core.get().getPlayerManager().getPlayingPlayers().iterator().next();
+                if(lastPlayer != null) {
+                    this.setWinner(new PlayerWin(lastPlayer));
+                }
+            }
+            if(this.winner == null) {
+                MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&cIl n'y a plus assez de joueurs pour continuer le jeu.");
+            }
             Core.get().getGameManager().setStatus(GameManager.GameStatus.ENDING);
             return true;
         }
@@ -137,12 +143,20 @@ public abstract class Game implements IGame {
      */
     public void endGame() {
         Core.get().getLogger().info("Ending " + this.getClass().getName() + "...");
+
+        int secondsDelay = 5;
+
+        if(winner != null) {
+            secondsDelay = 10;
+            winner.winEffect();
+        }
+
         eventManager.unregisterMinigameEvents();
         Bukkit.getScheduler().runTaskLater(Core.get().getPlugin(), () -> {
             Core.get().getMapManager().unloadMap();
             Core.get().getTeamManager().unloadTeams();
             Core.get().getGameManager().setStatus(GameManager.GameStatus.WAITING);
-        }, (long) 20 * 5);
+        }, (long) 20 * secondsDelay);
     }
 
     /**
@@ -182,5 +196,14 @@ public abstract class Game implements IGame {
      */
     public void setEventListener(Listener eventListenerInstance) {
         this.eventListenerInstance = eventListenerInstance;
+    }
+
+    /**
+     * Change le joueur ou l'équipe gagnant(e) du jeu.
+     * Peut-être soit {@link fr.efreicraft.ludos.core.games.PlayerWin} soit {@link fr.efreicraft.ludos.core.games.TeamWin}
+     * @param winner Le joueur ou l'équipe gagnant(e)
+     */
+    public void setWinner(GameWinner winner) {
+        this.winner = winner;
     }
 }

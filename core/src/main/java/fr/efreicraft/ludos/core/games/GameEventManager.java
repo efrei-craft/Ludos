@@ -26,7 +26,7 @@ public class GameEventManager {
         Listener eventListenerInstance = minigame.getEventListener();
         if (eventListenerInstance != null) {
             Core.get().getServer().getPluginManager()
-                .registerEvents(eventListenerInstance, Core.get().getGameManager().getCurrentPlugin());
+                .registerEvents(eventListenerInstance, Core.get().getPlugin());
         } else {
             String gameName = Core.get().getGameManager().getCurrentGame().getMetadata().name();
             Core.get().getLogger().log(Level.WARNING, "[GameEventManager] {0} has no event listener set.", gameName);
