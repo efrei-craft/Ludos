@@ -295,7 +295,7 @@ public class Player {
         entity().teleport(Core.get().getMapManager().getLobbyWorld().getSpawnLocation().add(-0.5, 0, -0.5));
         resetPlayer();
 
-        for (Player p : Core.get().getPlayerManager().getPlayingPlayers()) {
+        for (Player p : Core.get().getPlayerManager().getPlayers()) {
             entity().showPlayer(Core.get().getPlugin(), p.entity());
             p.entity().showPlayer(Core.get().getPlugin(), entity());
         }
@@ -329,9 +329,13 @@ public class Player {
      * @param event L'évènement de réapparition.
      */
     public void respawnEvent(PlayerRespawnEvent event) {
-        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.INGAME
-                && this.getTeam().isPlayingTeam()) {
-            event.setRespawnLocation(this.respawnLocation);
+        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.INGAME) {
+            if(this.getTeam().isPlayingTeam() && this.respawnLocation != null) {
+                event.setRespawnLocation(this.respawnLocation);
+                this.respawnLocation = null;
+            } else {
+                event.setRespawnLocation(Core.get().getMapManager().getCurrentMap().getMiddleOfMap());
+            }
         }
     }
 

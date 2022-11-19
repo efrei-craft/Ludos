@@ -29,6 +29,10 @@ public class PlayerRespawnCountdown extends BukkitRunnable {
 
     @Override
     public void run() {
+        if (this.player.entity() == null || this.player.entity().isDead()) {
+            this.cancel();
+            return;
+        }
         if (countdown == 0) {
             this.player.getTeam().spawnPlayer(this.player);
             this.player.entity().showTitle(Title.title(

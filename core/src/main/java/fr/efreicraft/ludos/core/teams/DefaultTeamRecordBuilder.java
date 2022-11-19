@@ -30,8 +30,12 @@ public class DefaultTeamRecordBuilder {
                         new ColorUtils.TeamColorSet(NamedTextColor.DARK_GRAY, DyeColor.GRAY, Color.GRAY),
                         player -> {
                             player.entity().setGameMode(org.bukkit.GameMode.SPECTATOR);
-                            for (Player p : Core.get().getPlayerManager().getPlayingPlayers()) {
-                                p.entity().hidePlayer(Core.get().getPlugin(), player.entity());
+                            for (Player p : Core.get().getPlayerManager().getPlayers()) {
+                                if(p.getTeam() != null && p.getTeam().isPlayingTeam()) {
+                                    p.entity().hidePlayer(Core.get().getPlugin(), player.entity());
+                                } else {
+                                    p.entity().showPlayer(Core.get().getPlugin(), player.entity());
+                                }
                             }
                         }
                 ))
