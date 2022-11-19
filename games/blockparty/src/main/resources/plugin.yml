@@ -1,0 +1,4 @@
+name: BlockParty
+version: '${version}'
+main: fr.efreicraft.ludos.games.blockparty.Main
+api-version: 1.19
