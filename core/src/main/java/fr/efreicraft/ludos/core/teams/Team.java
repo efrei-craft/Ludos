@@ -187,7 +187,7 @@ public class Team {
             }
             iterator.remove();
             if(player.isEphemeral() && !player.entity().hasPermission("ludos.admin")) {
-                player.entity().kick();
+                player.entity().kick(Component.text("Fin de la partie."));
             }
         }
     }

@@ -40,7 +40,7 @@ public class EventListener implements Listener {
      */
     @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        event.joinMessage(Component.text(MessageUtils.getText(MessageUtils.ChatPrefix.MINIGAMES, "&b" + event.getPlayer().getName() + "&7 a rejoint la partie !")));
+        event.joinMessage(null);
         Core.get().getPlayerManager().addPlayer(new Player(event.getPlayer()));
     }
 
@@ -50,7 +50,7 @@ public class EventListener implements Listener {
      */
     @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        event.quitMessage(Component.text(MessageUtils.getText(MessageUtils.ChatPrefix.MINIGAMES, "&b" + event.getPlayer().getName() + "&7 a quitté la partie !")));
+        event.quitMessage(null);
         Core.get().getPlayerManager().removePlayer(event.getPlayer());
     }
 
@@ -91,19 +91,25 @@ public class EventListener implements Listener {
     @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
-        player.deathEvent(event);
+        if(player != null) {
+            player.deathEvent(event);
+        }
     }
 
     @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
-        player.respawnEvent(event);
+        if(player != null) {
+            player.respawnEvent(event);
+        }
     }
 
     @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
     public void onPlayerPostRespawn(PlayerPostRespawnEvent event) {
         Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
-        player.postRespawnEvent();
+        if(player != null) {
+            player.postRespawnEvent();
+        }
     }
 
     @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)

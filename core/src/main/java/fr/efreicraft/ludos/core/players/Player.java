@@ -306,10 +306,10 @@ public class Player {
      * @param event L'évènement de mort.
      */
     public void deathEvent(PlayerDeathEvent event) {
+        event.deathMessage(null);
         if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
             spawnAtWaitingLobby();
         } else if(!event.isCancelled()) {
-            event.deathMessage(null);
             this.respawnLocation = event.getEntity().getLocation();
             if(event.getEntity().getKiller() != null) {
                 Player killer = Core.get().getPlayerManager().getPlayer(event.getEntity().getKiller());
@@ -329,7 +329,8 @@ public class Player {
      * @param event L'évènement de réapparition.
      */
     public void respawnEvent(PlayerRespawnEvent event) {
-        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.INGAME) {
+        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.INGAME
+                && this.getTeam().isPlayingTeam()) {
             event.setRespawnLocation(this.respawnLocation);
         }
     }
@@ -338,7 +339,8 @@ public class Player {
      * Méthode appelée quand le joueur est réapparu.
      */
     public void postRespawnEvent() {
-        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.INGAME) {
+        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.INGAME
+                && this.getTeam().isPlayingTeam()) {
             entity().setGameMode(GameMode.SPECTATOR);
             Game game = Core.get().getGameManager().getCurrentGame();
             if(game != null) {
