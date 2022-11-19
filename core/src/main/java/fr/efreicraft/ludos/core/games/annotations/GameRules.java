@@ -12,7 +12,7 @@ public @interface GameRules {
      * Joueurs minimum pour le jeu.
      * @return Joueurs minimum pour le jeu.
      */
-    int minPlayers() default 2;
+    int minPlayers() default 1;
 
     /**
      * Joueurs maximum pour le jeu.

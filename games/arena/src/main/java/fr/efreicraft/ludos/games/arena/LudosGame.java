@@ -30,8 +30,6 @@ import java.util.Map;
         description = "Un 4v4 dans un arène, bonne chance !",
         authors = {"Antoine"},
         rules = @GameRules(
-                minPlayers = 1,
-                maxPlayers = 20,
                 allowRespawn = true,
                 respawnTimer = 0
         )
