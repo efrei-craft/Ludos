@@ -1,5 +1,6 @@
 package fr.efreicraft.ludos.core.commands;
 
+import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.GameStatusException;
@@ -77,7 +78,8 @@ public class GameCommand implements CommandExecutor, TabCompleter {
             }
             case "reset" -> {
                 Core.get().getMapManager().unloadMap();
-                Core.get().getGameManager().unregisterCurrentGame();
+                Core.get().getTeamManager().unloadTeams();
+                Core.get().getGameManager().setStatus(GameManager.GameStatus.WAITING);
                 player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&7La carte et le jeu ont bien été &anettoyés&7.");
             }
             case "reload" -> {

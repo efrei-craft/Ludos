@@ -3,6 +3,7 @@ package fr.efreicraft.ludos.core.players;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.IManager;
 import fr.efreicraft.ludos.core.games.GameManager;
+import fr.efreicraft.ludos.core.utils.MessageUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -46,6 +47,7 @@ public class PlayerManager implements IManager {
 
         if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
             p.spawnAtWaitingLobby();
+            MessageUtils.broadcast(MessageUtils.ChatPrefix.SERVER, "&b" + p.getName() + " &7a &arejoint&7 la partie.");
         }
     }
 
@@ -54,8 +56,14 @@ public class PlayerManager implements IManager {
      * @param player Joueur à supprimer
      */
     public void removePlayer(Player player) {
+        if(player.getTeam().isPlayingTeam()) {
+            player.entity().setHealth(0);
+        }
         player.unload();
         this.players.remove(player);
+        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
+            MessageUtils.broadcast(MessageUtils.ChatPrefix.SERVER, "&b" + player.getName() + " &7a &cquitté&7 la partie.");
+        }
     }
 
     /**

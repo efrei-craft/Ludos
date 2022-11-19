@@ -27,13 +27,13 @@ bukkit {
     commands {
         register("game") {
             description = "Manages the games"
-            permission = "minigames.game"
+            permission = "ludos.admin"
             permissionMessage = "You do not have permission to manage the games"
             aliases = listOf("g")
         }
         register("map") {
             description = "Manages the maps"
-            permission = "minigames.map"
+            permission = "ludos.admin"
             permissionMessage = "You do not have permission to manage the maps"
             aliases = listOf("m")
         }

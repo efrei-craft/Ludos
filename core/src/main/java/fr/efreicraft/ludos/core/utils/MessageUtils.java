@@ -24,7 +24,12 @@ public class MessageUtils {
         /**
          * Préfixe basique pour le plugin.
          */
-        MINIGAMES("&bMinigames"),
+        MINIGAMES("&bLudos"),
+
+        /**
+         * Préfixe pour le serveur.
+         */
+        SERVER("&6Serveur"),
 
         /**
          * Préfixe pour les messages correspondant au jeu.
