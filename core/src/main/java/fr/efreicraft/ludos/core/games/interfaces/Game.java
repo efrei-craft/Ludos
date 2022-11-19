@@ -119,7 +119,7 @@ public abstract class Game implements IGame {
             if(Core.get().getPlayerManager().getNumberOfPlayingPlayers() > 0) {
                 Player lastPlayer = Core.get().getPlayerManager().getPlayingPlayers().iterator().next();
                 if(lastPlayer != null) {
-                    this.setWinner(new PlayerWin(lastPlayer));
+                    this.winner = new PlayerWin(lastPlayer);
                 }
             }
             if(this.winner == null) {
@@ -203,7 +203,8 @@ public abstract class Game implements IGame {
      * Peut-être soit {@link fr.efreicraft.ludos.core.games.PlayerWin} soit {@link fr.efreicraft.ludos.core.games.TeamWin}
      * @param winner Le joueur ou l'équipe gagnant(e)
      */
-    public void setWinner(GameWinner winner) {
+    public void setWinnerAndEndGame(GameWinner winner) {
         this.winner = winner;
+        Core.get().getGameManager().setStatus(GameManager.GameStatus.ENDING);
     }
 }
