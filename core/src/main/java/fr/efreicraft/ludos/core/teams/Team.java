@@ -177,7 +177,7 @@ public class Team {
     public void removePlayer(Player player) {
         this.players.remove(player);
         player.clearTeam();
-        player.entity().playerListName(player.entity().name());
+        player.entity().playerListName(player.entity().name().color(NamedTextColor.WHITE));
         if(player.entity() != null) {
             this.bukkitTeam.removeEntry(player.entity().getName());
         }
