@@ -12,5 +12,6 @@ include (
         "games:blockparty",
         "games:arena",
         "games:spleef",
-        "games:rush"
+        "games:rush",
+        "games:sumo"
 )
