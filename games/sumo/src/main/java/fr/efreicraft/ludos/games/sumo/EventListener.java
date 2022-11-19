@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public record EventListener(GameLogic sumo) implements Listener {
 
@@ -30,7 +31,12 @@ public record EventListener(GameLogic sumo) implements Listener {
             if (!player.getTeam().isPlayingTeam()) {
                 return;
             }
-            player.entity().setHealth(20);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    player.entity().setHealth(20);
+                }
+            }.runTaskLater((Core.get().getPlugin()), 1);
         }
     }
 }
