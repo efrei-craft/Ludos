@@ -3,8 +3,6 @@ package fr.efreicraft.ludos.core;
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.games.GameManager;
-import fr.efreicraft.ludos.core.utils.MessageUtils;
-import net.kyori.adventure.text.Component;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -85,6 +83,9 @@ public class EventListener implements Listener {
         if(event.getEntity() instanceof org.bukkit.entity.Player
                 && Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
             event.setCancelled(true);
+            if(event.getCause() == EntityDamageEvent.DamageCause.VOID) {
+                event.getEntity().teleport(Core.get().getMapManager().getLobbyWorld().getSpawnLocation());
+            }
         }
     }
 

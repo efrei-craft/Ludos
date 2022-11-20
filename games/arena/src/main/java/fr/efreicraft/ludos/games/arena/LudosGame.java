@@ -27,7 +27,7 @@ import java.util.Map;
 @GameMetadata(
         name = "Arena",
         color = "&c",
-        description = "Un 4v4 dans un arène, bonne chance !",
+        description = "L'équipe avec le plus de kills à la fin du timer gagne !",
         authors = {"Antoine"},
         rules = @GameRules(
                 allowRespawn = true,
@@ -44,6 +44,7 @@ public class LudosGame extends Game {
     public LudosGame() {
         super();
         this.gameLogic = new GameLogic();
+        this.setEventListener(new EventListener(gameLogic));
     }
 
     @Override
@@ -61,17 +62,39 @@ public class LudosGame extends Game {
     }
 
     @Override
+    public void beginGame() {
+        super.beginGame();
+        gameLogic.startTimer();
+    }
+
+    @Override
+    public void endGame() {
+        gameLogic.stopTimer();
+        super.endGame();
+    }
+
+    @Override
     public void setupScoreboard(Player player) {
         player.getBoard().clearFields();
 
         player.getBoard().setField(
                 0,
-                new ScoreboardField("&9&lVikings en vie", player, true, player1 -> String.valueOf(Core.get().getTeamManager().getTeam("VIKINGS").getPlayers().size()))
+                new ScoreboardField("&c&lKills Vikings", player, true, player1 -> String.valueOf(gameLogic.getTeamKills(Core.get().getTeamManager().getTeam("VIKINGS"))))
         );
 
         player.getBoard().setField(
                 1,
-                new ScoreboardField("&c&lBarbares en vie", player, true, player1 -> String.valueOf(Core.get().getTeamManager().getTeam("BARBARES").getPlayers().size()))
+                new ScoreboardField("&9&lKills Romains", player, true, player1 -> String.valueOf(gameLogic.getTeamKills(Core.get().getTeamManager().getTeam("ROMAINS"))))
+        );
+
+        player.getBoard().setField(
+                2,
+                new ScoreboardField(
+                        "&6&lTimer",
+                        player,
+                        false,
+                        player1 -> gameLogic.getTimerString()
+                )
         );
     }
 
@@ -83,16 +106,16 @@ public class LudosGame extends Game {
     @Override
     public Map<String, TeamRecord> getTeamRecords() {
         HashMap<String, TeamRecord> teams = new HashMap<>();
-        teams.put("BARBARES", new TeamRecord(
-                "Barbares",
+        teams.put("VIKINGS", new TeamRecord(
+                "Vikings",
                 1,
                 true,
                 true,
                 new ColorUtils.TeamColorSet(ColorUtils.TeamColors.RED),
                 this.gameLogic::preparePlayerToSpawn
         ));
-        teams.put("VIKINGS", new TeamRecord(
-                "Vikings",
+        teams.put("ROMAINS", new TeamRecord(
+                "Romains",
                 2,
                 true,
                 true,

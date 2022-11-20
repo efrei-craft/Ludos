@@ -133,7 +133,6 @@ public abstract class Game implements IGame {
 
     @Override
     public void beginGame() {
-        // log here
         Core.get().getLogger().info("Beginning " + this.getClass().getName() + " game logic...");
         eventManager.registerMinigameEvents();
     }
