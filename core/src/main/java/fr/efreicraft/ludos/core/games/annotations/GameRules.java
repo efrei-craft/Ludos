@@ -30,7 +30,7 @@ public @interface GameRules {
      * Temps avant le lancement automatique de la partie.
      * @return Temps avant le lancement automatique de la partie.
      */
-    int startTimer() default 180;
+    int startTimer() default 120;
 
     /**
      * Autorise les joueurs à rejoindre en tant que spectateur depuis le lobby.

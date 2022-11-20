@@ -54,17 +54,14 @@ public class LobbyCountdown extends BukkitRunnable {
             } else {
                 countingDown = true;
 
-                if(players >= rules.maxPlayers() / 2 && timer > originalTime / 2) {
-                    timer = originalTime / 2;
+                if(players >= rules.maxPlayers() * 0.5 && timer > 60) {
+                    timer = 60;
                 }
-                if(players >= rules.maxPlayers() / 4 * 3 && timer > originalTime / 4) {
-                    timer = originalTime / 4;
+                if(players >= rules.maxPlayers() * 0.75 && timer > 30) {
+                    timer = 30;
                 }
-                if(players >= rules.maxPlayers() / 10 * 9 && timer > originalTime / 8) {
-                    timer = originalTime / 8;
-                }
-                if(players == rules.maxPlayers() && timer > originalTime / 16) {
-                    timer = originalTime / 16;
+                if(players >= rules.maxPlayers() && timer > 10) {
+                    timer = 10;
                 }
 
                 if(timer % 60 == 0) {
