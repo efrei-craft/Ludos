@@ -1,7 +1,7 @@
 package fr.efreicraft.ludos.games.blockparty;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.maps.interfaces.GamePoint;
+import fr.efreicraft.ludos.core.maps.points.GamePoint;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.games.blockparty.patterns.IPatternProvider;
 import fr.efreicraft.ludos.games.blockparty.patterns.PikselPattern;

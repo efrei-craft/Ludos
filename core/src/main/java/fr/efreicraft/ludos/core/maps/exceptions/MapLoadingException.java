@@ -1,4 +1,4 @@
-package fr.efreicraft.ludos.core.maps;
+package fr.efreicraft.ludos.core.maps.exceptions;
 
 /**
  * Exception levée si le chargement d'une map échoue.

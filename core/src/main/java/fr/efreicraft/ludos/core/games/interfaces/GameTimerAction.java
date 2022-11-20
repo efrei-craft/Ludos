@@ -1,4 +1,4 @@
-package fr.efreicraft.ludos.core.games;
+package fr.efreicraft.ludos.core.games.interfaces;
 
 /**
  * Interface fonctionnelle pour les évènements de temps.

@@ -1,4 +1,4 @@
-package fr.efreicraft.ludos.core.games;
+package fr.efreicraft.ludos.core.games.exceptions;
 
 /**
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}

@@ -1,6 +1,7 @@
-package fr.efreicraft.ludos.core.games;
+package fr.efreicraft.ludos.core.games.runnables;
 
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 

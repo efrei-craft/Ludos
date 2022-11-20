@@ -1,6 +1,7 @@
-package fr.efreicraft.ludos.core.players;
+package fr.efreicraft.ludos.core.players.runnables;
 
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.players.Player;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.util.Ticks;
@@ -24,7 +25,7 @@ public class PlayerRespawnCountdown extends BukkitRunnable {
      */
     private final Player player;
 
-    PlayerRespawnCountdown(Player player) {
+    public PlayerRespawnCountdown(Player player) {
         this.player = player;
         countdown = Core.get().getGameManager().getCurrentGame().getMetadata().rules().respawnTimer();
     }

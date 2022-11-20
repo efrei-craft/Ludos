@@ -1,5 +1,6 @@
 package fr.efreicraft.ludos.core.games;
 
+import fr.efreicraft.ludos.core.games.interfaces.GameWinner;
 import fr.efreicraft.ludos.core.players.Player;
 import org.bukkit.Color;
 

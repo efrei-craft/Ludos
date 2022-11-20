@@ -7,6 +7,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.IManager;
+import fr.efreicraft.ludos.core.maps.exceptions.MapLoadingException;
 import fr.efreicraft.ludos.core.utils.SchematicUtils;
 import fr.efreicraft.ludos.core.utils.WorldUtils;
 import fr.efreicraft.ludos.core.games.interfaces.Game;

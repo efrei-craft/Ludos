@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.core.players.scoreboards;
 
 import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.scoreboards.interfaces.IDynamicScoreboardFieldValue;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 

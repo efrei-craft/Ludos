@@ -2,6 +2,8 @@ package fr.efreicraft.ludos.core.games;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.IManager;
+import fr.efreicraft.ludos.core.games.exceptions.GameRegisteringException;
+import fr.efreicraft.ludos.core.games.exceptions.GameStatusException;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import org.bukkit.plugin.InvalidDescriptionException;
@@ -118,13 +120,13 @@ public class GameManager implements IManager {
      * Méthode appelée par le plugin du jeu pour s'enregistrer.
      * @param gameClass Classe du jeu
      */
-    public void registerGame(Class<? extends Game> gameClass) {
+    public void registerGame(Class<? extends Game> gameClass) throws GameRegisteringException {
         Core.get().getLogger().log(Level.INFO, "Game {0} registered !", gameClass.getPackageName());
         try {
             currentGame = gameClass.getConstructor().newInstance();
             currentGame.prepareServer();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            throw new RuntimeException(e);
+            throw new GameRegisteringException(e.getMessage());
         }
     }
 

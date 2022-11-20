@@ -1,9 +1,9 @@
 package fr.efreicraft.ludos.core.maps;
 
-import fr.efreicraft.ludos.core.maps.interfaces.GamePoint;
-import fr.efreicraft.ludos.core.maps.interfaces.SpawnPoint;
-import fr.efreicraft.ludos.core.maps.interfaces.GlobalPoint;
 import fr.efreicraft.ludos.core.maps.interfaces.MapPoint;
+import fr.efreicraft.ludos.core.maps.points.GamePoint;
+import fr.efreicraft.ludos.core.maps.points.GlobalPoint;
+import fr.efreicraft.ludos.core.maps.points.SpawnPoint;
 import fr.efreicraft.ludos.core.teams.Team;
 import org.bukkit.Location;
 import org.bukkit.World;

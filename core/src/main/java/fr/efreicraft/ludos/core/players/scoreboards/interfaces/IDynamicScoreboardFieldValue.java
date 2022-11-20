@@ -1,4 +1,4 @@
-package fr.efreicraft.ludos.core.players.scoreboards;
+package fr.efreicraft.ludos.core.players.scoreboards.interfaces;
 
 import fr.efreicraft.ludos.core.players.Player;
 

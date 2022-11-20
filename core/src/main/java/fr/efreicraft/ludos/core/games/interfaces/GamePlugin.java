@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.core.games.interfaces;
 
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.games.exceptions.GameRegisteringException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -18,7 +19,11 @@ public abstract class GamePlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        Core.get().getGameManager().registerGame(getGameClass());
+        try {
+            Core.get().getGameManager().registerGame(getGameClass());
+        } catch (GameRegisteringException e) {
+            e.printStackTrace();
+        }
         Core.get().getLogger().info("Enabling GamePlugin " + getDescription().getName() + ".");
     }
 

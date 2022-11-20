@@ -3,6 +3,7 @@ package fr.efreicraft.ludos.core.teams;
 import com.google.common.collect.ImmutableMap;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnBehavior;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
