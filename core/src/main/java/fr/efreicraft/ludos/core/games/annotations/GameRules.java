@@ -27,6 +27,12 @@ public @interface GameRules {
     int maxPlayers() default 20;
 
     /**
+     * Temps avant le lancement automatique de la partie.
+     * @return Temps avant le lancement automatique de la partie.
+     */
+    int startTimer() default 180;
+
+    /**
      * Autorise les joueurs à rejoindre en tant que spectateur depuis le lobby.
      * Une fois la partie terminée, les joueurs ayant rejoint en tant que spectateur seront kick.
      * @return Booléen d'autorisation.

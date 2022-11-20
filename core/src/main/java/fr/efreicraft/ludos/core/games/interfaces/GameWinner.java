@@ -4,12 +4,8 @@ import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.maps.ParsedMap;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
+import fr.efreicraft.ludos.core.utils.TitleUtils;
 import fr.efreicraft.ludos.core.utils.WinEffectUtils;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.title.Title;
-import net.kyori.adventure.util.Ticks;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -77,13 +73,13 @@ public interface GameWinner {
         MessageUtils.broadcast("&7&m--------------------------------------");
         MessageUtils.broadcast("");
 
-        for(Player p : Core.get().getPlayerManager().getPlayers()) {
-            p.entity().showTitle(Title.title(
-                    LegacyComponentSerializer.legacyAmpersand().deserialize(getWinnerColoredName()),
-                    Component.text("a gagné la partie !").color(NamedTextColor.GRAY),
-                    Title.Times.times(Ticks.duration(10), Ticks.duration(100), Ticks.duration(15))
-            ));
-        }
+        TitleUtils.broadcastTitle(
+                getWinnerColoredName(),
+                "&7a gagné la partie!",
+                0.5f,
+                3,
+                0.5f
+        );
     }
 
     private void launchWinEffects(Color color) {

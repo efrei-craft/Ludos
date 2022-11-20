@@ -31,7 +31,9 @@ import java.util.Map;
         authors = {"Antoine"},
         rules = @GameRules(
                 allowRespawn = true,
-                respawnTimer = 5
+                respawnTimer = 5,
+                minPlayers = 2,
+                minPlayersToStart = 2
         )
 )
 public class LudosGame extends Game {

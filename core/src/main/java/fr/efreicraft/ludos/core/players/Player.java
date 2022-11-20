@@ -8,6 +8,8 @@ import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
+import fr.efreicraft.ludos.core.utils.SoundUtils;
+import fr.efreicraft.ludos.core.utils.TitleUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -16,6 +18,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -242,6 +245,28 @@ public class Player {
      */
     public void sendMessage(MessageUtils.ChatPrefix prefix, String message) {
         MessageUtils.sendMessage(this.playerEntity, prefix, message);
+    }
+
+    /**
+     * Envoie un title au joueur.
+     * @param title     Titre du title.
+     * @param subtitle  Sous-titre du title.
+     * @param fadeIn    Temps d'apparition du title en secondes.
+     * @param stay      Temps d'affichage du title en secondes.
+     * @param fadeOut   Temps de disparition du title en secondes.
+     */
+    public void sendTitle(String title, String subtitle, float fadeIn, float stay, float fadeOut) {
+        TitleUtils.sendTitle(this, title, subtitle, fadeIn, stay, fadeOut);
+    }
+
+    /**
+     * Joue un son au joueur.
+     * @param sound     Son à jouer.
+     * @param volume    Volume du son.
+     * @param pitch     Pitch du son.
+     */
+    public void playSound(Sound sound, float volume, float pitch) {
+        SoundUtils.playSound(this, sound, volume, pitch);
     }
 
     public String toString() {

@@ -2,9 +2,6 @@ package fr.efreicraft.ludos.core.players.runnables;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.players.Player;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.title.Title;
-import net.kyori.adventure.util.Ticks;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -38,18 +35,16 @@ public class PlayerRespawnCountdown extends BukkitRunnable {
         }
         if (countdown == 0) {
             this.player.getTeam().spawnPlayer(this.player);
-            this.player.entity().showTitle(Title.title(
-                    Component.empty(),
-                    Component.empty(),
-                    Title.Times.times(Ticks.duration(0), Ticks.duration(40), Ticks.duration(0))
-            ));
+            this.player.sendTitle("", "", 0, 40, 0);
             this.cancel();
         } else {
-            this.player.entity().showTitle(Title.title(
-                    Component.text("§cVous êtes mort!"),
-                    Component.text("§7Vous réapparaitrez dans §f" + countdown + " §7secondes."),
-                    Title.Times.times(Ticks.duration(0), Ticks.duration(40), Ticks.duration(0))
-            ));
+            this.player.sendTitle(
+                    "&cVous êtes mort!",
+                    "&7Vous réapparaîtrez dans &f" + countdown + " &7secondes.",
+                    0,
+                    40,
+                    0
+            );
         }
         countdown--;
     }

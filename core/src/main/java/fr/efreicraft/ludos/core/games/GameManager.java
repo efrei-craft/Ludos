@@ -4,6 +4,7 @@ import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.IManager;
 import fr.efreicraft.ludos.core.games.exceptions.GameRegisteringException;
 import fr.efreicraft.ludos.core.games.exceptions.GameStatusException;
+import fr.efreicraft.ludos.core.games.runnables.LobbyCountdown;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import org.bukkit.plugin.InvalidDescriptionException;
@@ -57,6 +58,8 @@ public class GameManager implements IManager {
     private Plugin currentPlugin;
 
     private GameStatus status;
+
+    private LobbyCountdown lobbyCountdown;
 
     /**
      * Constructeur du gestionnaire de jeux. Il vérifie que la classe n'est pas déjà initialisée.
@@ -125,6 +128,10 @@ public class GameManager implements IManager {
         try {
             currentGame = gameClass.getConstructor().newInstance();
             currentGame.prepareServer();
+            if(lobbyCountdown != null) {
+                lobbyCountdown.cancel();
+            }
+            lobbyCountdown = new LobbyCountdown(currentGame.getMetadata().rules().startTimer());
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new GameRegisteringException(e.getMessage());
         }
@@ -136,6 +143,9 @@ public class GameManager implements IManager {
     public void unregisterCurrentGame() {
         if(currentGame == null || currentPlugin == null) {
             return;
+        }
+        if(lobbyCountdown != null) {
+            lobbyCountdown.cancel();
         }
         Core.get().getServer().getPluginManager().disablePlugin(currentPlugin);
         currentGame = null;

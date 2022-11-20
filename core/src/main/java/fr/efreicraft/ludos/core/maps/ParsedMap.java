@@ -185,4 +185,19 @@ public class ParsedMap {
         return new Location(world, x, y, z);
     }
 
+    /**
+     * Méthode pour récupérer le point Y le plus bas de la carte.
+     * @return Point Y le plus bas de la carte.
+     */
+    public Location getLowestBoundary() {
+        Location first = globalPoints.get("BOUNDARY").get(0).getLocation();
+        Location second = globalPoints.get("BOUNDARY").get(1).getLocation();
+
+        if (first.getY() < second.getY()) {
+            return first;
+        } else {
+            return second;
+        }
+    }
+
 }

@@ -39,18 +39,18 @@ public class LudosGame extends Game {
 
     @Override
     public void preMapParse(World world) {
+        // Nothing to do here
+    }
 
+    @Override
+    public void beginGame() {
+        super.beginGame();
+        Core.get().getTeamManager().getTeam("PLAYERS").setFriendlyFire(true);
     }
 
     @Override
     public void postMapParse() {
-        Location killZoneLocation = Core.get().getMapManager().getCurrentMap().getGamePoints()
-                .get("KILL_ZONE").get(0).getLocation();
-        this.gameLogic.setKillZoneLocation(killZoneLocation);
-        Core.get().getMapManager().getCurrentMap().getWorld().setBlockData(
-                killZoneLocation,
-                Material.AIR.createBlockData()
-        );
+        this.gameLogic.setKillZoneLocation(Core.get().getMapManager().getCurrentMap().getLowestBoundary());
     }
 
     @Override
@@ -67,24 +67,6 @@ public class LudosGame extends Game {
 
     @Override
     public Map<String, TeamRecord> getTeamRecords() {
-        HashMap<String, TeamRecord> teams = new HashMap<>();
-        teams.put("ROUGE", new TeamRecord(
-                "Rouge",
-                1,
-                true,
-                true,
-                new ColorUtils.TeamColorSet(ColorUtils.TeamColors.RED),
-                null
-        ));
-        teams.put("BLEU", new TeamRecord(
-                "Bleu",
-                2,
-                true,
-                true,
-                new ColorUtils.TeamColorSet(ColorUtils.TeamColors.BLUE),
-                null
-        ));
-        teams.putAll(DefaultTeamRecordBuilder.DefaultTeamRecords.ONLY_SPECTATOR.getTeamRecords());
-        return teams;
+        return new HashMap<>(DefaultTeamRecordBuilder.DefaultTeamRecords.DEFAULT_TEAMS_SOLO.getTeamRecords());
     }
 }

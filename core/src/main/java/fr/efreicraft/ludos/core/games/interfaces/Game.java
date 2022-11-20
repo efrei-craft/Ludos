@@ -53,10 +53,16 @@ public abstract class Game implements IGame {
 
         Core.get().getTeamManager().loadTeams(this.getTeamRecords());
         Core.get().getTeamManager().dispatchAllPlayersInTeams();
-        try {
-            Core.get().getMapManager().loadMap(maps.get(random.nextInt(maps.size())));
-        } catch (MapLoadingException e) {
-            Core.get().getLogger().log(Level.SEVERE, "Erreur lors du chargement de la map.", e);
+
+        if(!maps.isEmpty()) {
+            String map = maps.get(random.nextInt(maps.size()));
+            try {
+                Core.get().getMapManager().loadMap(map);
+            } catch (MapLoadingException e) {
+                Core.get().getLogger().log(Level.SEVERE, e.getMessage());
+            }
+        } else {
+            Core.get().getLogger().warning("No maps available for " + metadata.name() + "!");
         }
     }
 

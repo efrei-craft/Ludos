@@ -67,7 +67,7 @@ public class PlayerScoreboard {
     private static String currentAnimationString = "";
 
     static {
-        Bukkit.getScheduler().runTaskTimer(
+        Bukkit.getScheduler().runTaskTimerAsynchronously(
                 Core.get().getPlugin(),
                 PlayerScoreboard::animateFooter,
                 0,
