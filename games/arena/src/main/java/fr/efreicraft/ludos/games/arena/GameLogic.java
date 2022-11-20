@@ -85,7 +85,9 @@ public class GameLogic {
     }
 
     public void stopTimer() {
-        timer.cancel();
+        if(timer != null) {
+            timer.cancel();
+        }
     }
 
     public String getTimerString() {
