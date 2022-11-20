@@ -6,8 +6,12 @@ import fr.efreicraft.ludos.core.games.TeamWin;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
+import fr.efreicraft.ludos.core.utils.SoundUtils;
+import fr.efreicraft.ludos.core.utils.TitleUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
@@ -29,7 +33,9 @@ public class GameLogic {
 
     public void preparePlayerToSpawn(Player player) {
         player.entity().setGameMode(GameMode.ADVENTURE);
-        player.entity().getInventory().addItem(new ItemStack(Material.STONE_SWORD));
+        ItemStack sword = new ItemStack(Material.IRON_SWORD);
+        sword.addEnchantment(Enchantment.DURABILITY, 3);
+        player.entity().getInventory().addItem(sword);
         ItemStack[] armor = new ItemStack[4];
         armor[0] = new ItemStack(Material.LEATHER_BOOTS);
         armor[1] = new ItemStack(Material.LEATHER_LEGGINGS);
@@ -57,7 +63,8 @@ public class GameLogic {
                 makeBestTeamWin();
             } else if (timeLambda % 60 == 0 && timeLambda != GAME_TIMER) {
                 int minutes = timeLambda / 60;
-                MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&7Plus que &c" + minutes + " minutes&7 pour faire un maximum de kills!");
+                TitleUtils.broadcastTitle("&c" + minutes + " minute" + (minutes != 1 ? "s" : ""), "&7pour faire un maximum de kills!", 0, 2, 0.5f);
+                SoundUtils.broadcastSound(Sound.ENTITY_BLAZE_HURT, 1, 0.8f);
             }
             this.time = timeLambda;
         }, GAME_TIMER);

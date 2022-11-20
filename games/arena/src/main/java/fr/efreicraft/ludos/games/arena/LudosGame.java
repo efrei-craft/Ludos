@@ -33,7 +33,8 @@ import java.util.Map;
                 allowRespawn = true,
                 respawnTimer = 5,
                 minPlayers = 2,
-                minPlayersToStart = 2
+                minPlayersToStart = 2,
+                maxPlayers = 8
         )
 )
 public class LudosGame extends Game {

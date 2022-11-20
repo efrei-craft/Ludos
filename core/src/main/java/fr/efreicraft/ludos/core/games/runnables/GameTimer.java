@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.core.games.runnables;
 
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.games.interfaces.GameTimerAction;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -23,6 +24,10 @@ public class GameTimer extends BukkitRunnable {
 
     @Override
     public void run() {
+        if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
+            this.cancel();
+            return;
+        }
         action.run(time);
         if(time == 0) {
             cancel();

@@ -74,8 +74,8 @@ public class LobbyCountdown extends BukkitRunnable {
                     TitleUtils.broadcastTitle("&6" + timer + " secondes", "&favant le début de la partie !", 0.5f, 3, 0.5f);
                     SoundUtils.broadcastSound(Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1, 1);
                 } else if (timer == 5 || timer == 4 || timer == 3 || timer == 2 || timer == 1) {
-                    TitleUtils.broadcastTitle("&6" + timer, "", 0, 2, 0);
-                    SoundUtils.broadcastSound(Sound.BLOCK_NOTE_BLOCK_HAT, 1, 1);
+                    TitleUtils.broadcastTitle("", "&6" + timer, 0, 2, 0);
+                    SoundUtils.broadcastSound(Sound.BLOCK_NOTE_BLOCK_HAT, 1, 0.5f);
                 }
 
                 updateScoreboardOfPlayers();

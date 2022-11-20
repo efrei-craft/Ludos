@@ -3,6 +3,9 @@ package fr.efreicraft.ludos.core.games.runnables;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
+import fr.efreicraft.ludos.core.utils.SoundUtils;
+import fr.efreicraft.ludos.core.utils.TitleUtils;
+import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -20,11 +23,15 @@ public class GameCountdown extends BukkitRunnable {
 
     @Override
     public void run() {
-        if (countdown == 10 || countdown == 5 || countdown == 4 || countdown == 3 || countdown == 2 || countdown == 1) {
-            MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&7Le jeu commence dans &f" + countdown + " &7secondes!");
-        }
-        if (countdown == 0) {
-            MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&7Le jeu commence maintenant!");
+        if (countdown == 10) {
+            SoundUtils.broadcastSound(Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+        } else if (countdown == 5 || countdown == 4 || countdown == 3 || countdown == 2 || countdown == 1) {
+            TitleUtils.broadcastTitle(Core.get().getGameManager().getCurrentGame().getMetadata().color() + countdown, "", 0, 2, 0);
+            SoundUtils.broadcastSound(Sound.BLOCK_NOTE_BLOCK_HAT, 1, 1);
+        } else if (countdown == 0) {
+            SoundUtils.broadcastSound(Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
+            TitleUtils.broadcastTitle(Core.get().getGameManager().getCurrentGame().getMetadata().color() + "GO", "&7Que la partie commence !", 0, 2, 0.5f);
+            MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&7Que la partie commence !");
             Core.get().getGameManager().setStatus(GameManager.GameStatus.INGAME);
             this.cancel();
         }
