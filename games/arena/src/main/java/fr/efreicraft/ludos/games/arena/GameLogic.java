@@ -19,7 +19,7 @@ import java.util.HashMap;
  */
 public class GameLogic {
 
-    private static final int GAME_TIMER = 60 * 5;
+    private static final int GAME_TIMER = 60 * 3;
 
     private final HashMap<Team, Integer> teamKills = new HashMap<>();
 
