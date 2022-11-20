@@ -31,12 +31,7 @@ public record EventListener(GameLogic sumo) implements Listener {
             if (!player.getTeam().isPlayingTeam()) {
                 return;
             }
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    player.entity().setHealth(20);
-                }
-            }.runTaskLater((Core.get().getPlugin()), 1);
+            event.setDamage(0);
         }
     }
 }
