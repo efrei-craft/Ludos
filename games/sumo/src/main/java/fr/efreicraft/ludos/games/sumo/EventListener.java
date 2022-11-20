@@ -26,8 +26,8 @@ public record EventListener(GameLogic sumo) implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof org.bukkit.entity.Player) {
-            Player player = Core.get().getPlayerManager().getPlayer((org.bukkit.entity.Player) event.getEntity());
+        if (event.getEntity() instanceof org.bukkit.entity.Player bukkitPlayer) {
+            Player player = Core.get().getPlayerManager().getPlayer(bukkitPlayer);
             if (!player.getTeam().isPlayingTeam()) {
                 return;
             }
