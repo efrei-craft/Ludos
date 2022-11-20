@@ -9,13 +9,15 @@ package fr.efreicraft.ludos.core.games.annotations;
 public @interface GameRules {
 
     /**
-     * Joueurs minimum pour le jeu.
+     * <p>Joueurs minimum pour le jeu. Est vérifié en permanence pendant le jeu, pour savoir
+     * si on peut continuer.</p>
      * @return Joueurs minimum pour le jeu.
      */
     int minPlayers() default 1;
 
     /**
-     * Joueurs minimum pour démarrer le jeu.
+     * <p>Joueurs minimum pour démarrer le jeu. Utilisé dans le lobby,
+     * pour démarrer le minuteur.</p>
      * @return Joueurs minimum pour démarrer le jeu.
      */
     int minPlayersToStart() default 2;
