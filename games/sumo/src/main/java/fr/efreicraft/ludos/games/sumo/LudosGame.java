@@ -30,7 +30,7 @@ name = "Sumo",
 public class LudosGame extends Game {
 
     private final GameLogic gameLogic;
-
+coucou
     public LudosGame() {
         super();
         this.gameLogic = new GameLogic();
