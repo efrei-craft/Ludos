@@ -21,7 +21,7 @@ import java.util.Map;
 name = "Sumo",
         description = "Poussez votre adversaire en dehors du ring !",
         authors = {"DocSystem"},
-        color = "&c",
+        color = "&4",
         rules = @GameRules(
                 minPlayers = 2,
                 maxPlayers = 2
