@@ -9,7 +9,7 @@ java {
 
 sonarqube {
     properties {
-        property("sonar.projectKey", "Ludos")
+        property("sonar.projectKey", "efrei-craft_Ludos_AYSZTr62QVykjK5bXj5l")
     }
 }
 
