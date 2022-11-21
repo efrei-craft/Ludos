@@ -1,9 +1,16 @@
 plugins {
     `java-library`
+    id("org.sonarqube") version "3.4.0.2513"
 }
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
+
+sonarqube {
+    properties {
+        property("sonar.projectKey", "Ludos")
+    }
 }
 
 subprojects {
