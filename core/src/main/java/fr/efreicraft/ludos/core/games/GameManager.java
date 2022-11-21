@@ -32,22 +32,22 @@ public class GameManager implements IManager {
      */
     public enum GameStatus {
         /**
-         * Etat en attente. Les joueurs sont dans le lobby.
+         * État en attente. Les joueurs sont dans le lobby.
          */
         WAITING,
 
         /**
-         * Etat de démarrage du jeu. Les joueurs sont dans la carte mais sont freeze. La logique du jeu n'est pas encore lancée.
+         * État de démarrage du jeu. Les joueurs sont dans la carte mais sont freeze. La logique du jeu n'est pas encore lancée.
          */
         STARTING,
 
         /**
-         * Etat de jeu. Les joueurs peuvent jouer et la logique du jeu est lancée.
+         * État de jeu. Les joueurs peuvent jouer et la logique du jeu est lancée.
          */
         INGAME,
 
         /**
-         * Etat de fin de jeu. Les joueurs sont dans la carte mais la logique du jeu est arrêtée.
+         * État de fin de jeu. Les joueurs sont dans la carte mais la logique du jeu est arrêtée.
          */
         ENDING
     }

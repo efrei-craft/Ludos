@@ -141,7 +141,7 @@ public class Core {
     }
 
     /**
-     * Retourne l'instance du {@link JavaPlugin} Minecraft.
+     * Retourne l'instance du {@link JavaPlugin} Minecraft de LudosCore.
      * @return Plugin Java Bukkit pour interfacer avec l'API Bukkit.
      */
     public JavaPlugin getPlugin() {
