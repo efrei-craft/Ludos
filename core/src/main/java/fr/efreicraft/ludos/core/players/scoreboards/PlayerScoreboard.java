@@ -67,8 +67,8 @@ public class PlayerScoreboard {
     private static String currentAnimationString = "";
 
     static {
-        Bukkit.getScheduler().runTaskTimer(
-                Core.getInstance().getPlugin(),
+        Bukkit.getScheduler().runTaskTimerAsynchronously(
+                Core.get().getPlugin(),
                 PlayerScoreboard::animateFooter,
                 0,
                 2
@@ -84,7 +84,7 @@ public class PlayerScoreboard {
         this.setVisibility(true);
         this.fields = new TreeMap<>();
         updateTask = Bukkit.getScheduler().runTaskTimerAsynchronously(
-                Core.getInstance().getPlugin(),
+                Core.get().getPlugin(),
                 this::updateScoreboard,
                 0,
                 10
@@ -121,7 +121,7 @@ public class PlayerScoreboard {
         if(scoreboardsToAnimate.isEmpty()) return;
 
         List<String> stringsAnim = StringAnimationUtils.generateColorStrings(
-                Core.getInstance().getPlugin().getConfig().getString("serverAddress"),
+                Core.get().getPlugin().getConfig().getString("serverAddress"),
                 ChatColor.GOLD,
                 ChatColor.YELLOW,
                 ChatColor.WHITE
@@ -140,7 +140,7 @@ public class PlayerScoreboard {
                     int indexToSet = playerScoreboard.board.getLines().size() - 1;
                     playerScoreboard.board.updateLine(indexToSet, currentAnimationString);
                 }
-            }.runTaskAsynchronously(Core.getInstance().getPlugin());
+            }.runTaskAsynchronously(Core.get().getPlugin());
         }
     }
 

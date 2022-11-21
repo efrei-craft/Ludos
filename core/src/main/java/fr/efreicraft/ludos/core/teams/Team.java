@@ -2,8 +2,9 @@ package fr.efreicraft.ludos.core.teams;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.GameManager;
-import fr.efreicraft.ludos.core.maps.interfaces.SpawnPoint;
+import fr.efreicraft.ludos.core.maps.points.SpawnPoint;
 import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnBehavior;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -94,7 +95,7 @@ public class Team {
      * Charge l'équipe dans le scoreboard de Bukkit.
      */
     public void loadTeam() {
-        this.bukkitTeam = Core.getInstance().getScoreboardManager().getMainScoreboard().registerNewTeam(
+        this.bukkitTeam = Core.get().getScoreboardManager().getMainScoreboard().registerNewTeam(
                 this.generateTeamNameWithPriority()
         );
         if(showTeamName) {
@@ -153,7 +154,7 @@ public class Team {
         this.players.add(player);
         player.setTeam(this);
         this.bukkitTeam.addEntry(player.entity().getName());
-        if(Core.getInstance().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
+        if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
             this.spawnBehavior.spawnPlayer(player);
         }
     }
@@ -168,8 +169,8 @@ public class Team {
         if(player.entity() != null) {
             this.bukkitTeam.removeEntry(player.entity().getName());
         }
-        if(Core.getInstance().getGameManager().getCurrentGame() != null) {
-            Core.getInstance().getGameManager().getCurrentGame().checkIfGameHasToBeEnded();
+        if(Core.get().getGameManager().getCurrentGame() != null) {
+            Core.get().getGameManager().getCurrentGame().checkIfGameHasToBeEnded();
         }
     }
 
@@ -186,6 +187,9 @@ public class Team {
                 this.bukkitTeam.removeEntry(player.entity().getName());
             }
             iterator.remove();
+            if(player.isEphemeral() && !player.entity().hasPermission("ludos.admin")) {
+                player.entity().kick(Component.text("Fin de la partie."));
+            }
         }
     }
 
@@ -194,7 +198,7 @@ public class Team {
      * @return Liste des points de spawn de l'équipe.
      */
     public List<SpawnPoint> getSpawnPointsForCurrentMap() {
-        return Core.getInstance().getMapManager().getCurrentMap().getSpawnPoints().get(this);
+        return Core.get().getMapManager().getCurrentMap().getSpawnPoints().get(this);
     }
 
     /**
@@ -243,5 +247,13 @@ public class Team {
      */
     public boolean isPlayingTeam() {
         return playingTeam;
+    }
+
+    /**
+     * Change l'état de friendly fire de l'équipe.
+     * @param friendlyFire Nouvel état de friendly fire.
+     */
+    public void setFriendlyFire(boolean friendlyFire) {
+        this.bukkitTeam.setAllowFriendlyFire(friendlyFire);
     }
 }

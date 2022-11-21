@@ -3,8 +3,6 @@ package fr.efreicraft.ludos.core;
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.games.GameManager;
-import fr.efreicraft.ludos.core.utils.MessageUtils;
-import net.kyori.adventure.text.Component;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -27,10 +25,10 @@ public class EventListener implements Listener {
      */
     @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
     public void onPlayerSpawn(PlayerSpawnLocationEvent event) {
-        if(Core.getInstance().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
-            event.setSpawnLocation(Core.getInstance().getMapManager().getLobbyWorld().getSpawnLocation().add(-0.5, 0, -0.5));
+        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
+            event.setSpawnLocation(Core.get().getMapManager().getLobbyWorld().getSpawnLocation().add(-0.5, 0, -0.5));
         } else {
-            event.setSpawnLocation(Core.getInstance().getMapManager().getCurrentMap().getMiddleOfMap());
+            event.setSpawnLocation(Core.get().getMapManager().getCurrentMap().getMiddleOfMap());
         }
     }
 
@@ -40,8 +38,8 @@ public class EventListener implements Listener {
      */
     @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
-        event.joinMessage(Component.text(MessageUtils.getText(MessageUtils.ChatPrefix.MINIGAMES, "&b" + event.getPlayer().getName() + "&7 a rejoins la partie !")));
-        Core.getInstance().getPlayerManager().addPlayer(new Player(event.getPlayer()));
+        event.joinMessage(null);
+        Core.get().getPlayerManager().addPlayer(new Player(event.getPlayer()));
     }
 
     /**
@@ -50,8 +48,8 @@ public class EventListener implements Listener {
      */
     @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        event.quitMessage(Component.text(MessageUtils.getText(MessageUtils.ChatPrefix.MINIGAMES, "&b" + event.getPlayer().getName() + "&7 a quitté la partie !")));
-        Core.getInstance().getPlayerManager().removePlayer(event.getPlayer());
+        event.quitMessage(null);
+        Core.get().getPlayerManager().removePlayer(event.getPlayer());
     }
 
     /**
@@ -71,9 +69,9 @@ public class EventListener implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         if(
                 hasMovedInBlockXAndBlockZ(event)
-                && Core.getInstance().getGameManager().getStatus() == GameManager.GameStatus.STARTING
+                && Core.get().getGameManager().getStatus() == GameManager.GameStatus.STARTING
         ) {
-            Player player = Core.getInstance().getPlayerManager().getPlayer(event.getPlayer());
+            Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
             if(player.getTeam().isPlayingTeam()) {
                 event.setCancelled(true);
             }
@@ -83,32 +81,41 @@ public class EventListener implements Listener {
     @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
         if(event.getEntity() instanceof org.bukkit.entity.Player
-                && Core.getInstance().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
+                && Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
             event.setCancelled(true);
+            if(event.getCause() == EntityDamageEvent.DamageCause.VOID) {
+                event.getEntity().teleport(Core.get().getMapManager().getLobbyWorld().getSpawnLocation());
+            }
         }
     }
 
     @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Player player = Core.getInstance().getPlayerManager().getPlayer(event.getPlayer());
-        player.deathEvent(event);
+        Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+        if(player != null) {
+            player.deathEvent(event);
+        }
     }
 
     @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
-        Player player = Core.getInstance().getPlayerManager().getPlayer(event.getPlayer());
-        player.respawnEvent(event);
+        Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+        if(player != null) {
+            player.respawnEvent(event);
+        }
     }
 
     @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
     public void onPlayerPostRespawn(PlayerPostRespawnEvent event) {
-        Player player = Core.getInstance().getPlayerManager().getPlayer(event.getPlayer());
-        player.postRespawnEvent();
+        Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+        if(player != null) {
+            player.postRespawnEvent();
+        }
     }
 
     @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
-        if(Core.getInstance().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
+        if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
             event.setCancelled(true);
         }
     }

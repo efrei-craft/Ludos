@@ -10,5 +10,8 @@ rootProject.name = "Ludos"
 include (
         "core",
         "games:blockparty",
-        "games:arena"
+        "games:arena",
+        "games:spleef",
+        "games:rush",
+        "games:sumo"
 )

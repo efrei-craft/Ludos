@@ -3,6 +3,7 @@ package fr.efreicraft.ludos.core.teams;
 import com.google.common.collect.ImmutableMap;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnBehavior;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
@@ -30,8 +31,12 @@ public class DefaultTeamRecordBuilder {
                         new ColorUtils.TeamColorSet(NamedTextColor.DARK_GRAY, DyeColor.GRAY, Color.GRAY),
                         player -> {
                             player.entity().setGameMode(org.bukkit.GameMode.SPECTATOR);
-                            for (Player p : Core.getInstance().getPlayerManager().getPlayingPlayers()) {
-                                p.entity().hidePlayer(Core.getInstance().getPlugin(), player.entity());
+                            for (Player p : Core.get().getPlayerManager().getPlayers()) {
+                                if(p.getTeam() != null && p.getTeam().isPlayingTeam()) {
+                                    p.entity().hidePlayer(Core.get().getPlugin(), player.entity());
+                                } else {
+                                    p.entity().showPlayer(Core.get().getPlugin(), player.entity());
+                                }
                             }
                         }
                 ))

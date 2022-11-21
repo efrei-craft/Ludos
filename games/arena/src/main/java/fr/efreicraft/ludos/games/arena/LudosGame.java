@@ -1,8 +1,11 @@
 package fr.efreicraft.ludos.games.arena;
 
+import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
-import fr.efreicraft.ludos.core.games.interfaces.GameMetadata;
+import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
@@ -24,11 +27,15 @@ import java.util.Map;
 @GameMetadata(
         name = "Arena",
         color = "&c",
-        description = "Un 4v4 dans un arène, bonne chance !",
+        description = "L'équipe avec le plus de kills à la fin du timer gagne !",
         authors = {"Antoine"},
-        version = "1.0",
-        minPlayers = 1,
-        allowRespawn = true
+        rules = @GameRules(
+                allowRespawn = true,
+                respawnTimer = 5,
+                minPlayers = 2,
+                minPlayersToStart = 2,
+                maxPlayers = 8
+        )
 )
 public class LudosGame extends Game {
 
@@ -40,6 +47,7 @@ public class LudosGame extends Game {
     public LudosGame() {
         super();
         this.gameLogic = new GameLogic();
+        this.setEventListener(new EventListener(gameLogic));
     }
 
     @Override
@@ -57,8 +65,40 @@ public class LudosGame extends Game {
     }
 
     @Override
+    public void beginGame() {
+        super.beginGame();
+        gameLogic.startTimer();
+    }
+
+    @Override
+    public void endGame() {
+        gameLogic.stopTimer();
+        super.endGame();
+    }
+
+    @Override
     public void setupScoreboard(Player player) {
         player.getBoard().clearFields();
+
+        player.getBoard().setField(
+                0,
+                new ScoreboardField("&c&lKills Vikings", player, true, player1 -> String.valueOf(gameLogic.getTeamKills(Core.get().getTeamManager().getTeam("VIKINGS"))))
+        );
+
+        player.getBoard().setField(
+                1,
+                new ScoreboardField("&9&lKills Romains", player, true, player1 -> String.valueOf(gameLogic.getTeamKills(Core.get().getTeamManager().getTeam("ROMAINS"))))
+        );
+
+        player.getBoard().setField(
+                2,
+                new ScoreboardField(
+                        "&6&lTimer",
+                        player,
+                        false,
+                        player1 -> gameLogic.getTimerString()
+                )
+        );
     }
 
     @Override
@@ -69,16 +109,16 @@ public class LudosGame extends Game {
     @Override
     public Map<String, TeamRecord> getTeamRecords() {
         HashMap<String, TeamRecord> teams = new HashMap<>();
-        teams.put("BARBARES", new TeamRecord(
-                "Barbares",
+        teams.put("VIKINGS", new TeamRecord(
+                "Vikings",
                 1,
                 true,
                 true,
                 new ColorUtils.TeamColorSet(ColorUtils.TeamColors.RED),
                 this.gameLogic::preparePlayerToSpawn
         ));
-        teams.put("VIKINGS", new TeamRecord(
-                "Vikings",
+        teams.put("ROMAINS", new TeamRecord(
+                "Romains",
                 2,
                 true,
                 true,

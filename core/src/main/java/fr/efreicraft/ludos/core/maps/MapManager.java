@@ -7,6 +7,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.IManager;
+import fr.efreicraft.ludos.core.maps.exceptions.MapLoadingException;
 import fr.efreicraft.ludos.core.utils.SchematicUtils;
 import fr.efreicraft.ludos.core.utils.WorldUtils;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
@@ -50,7 +51,7 @@ public class MapManager implements IManager {
      * Constructeur du gestionnaire de cartes. Il vérifie que la classe n'est pas déjà initialisée.
      */
     public MapManager() {
-        if(Core.getInstance().getMapManager() != null) {
+        if(Core.get().getMapManager() != null) {
             throw new IllegalStateException("MapManager already initialized !");
         }
     }
@@ -60,7 +61,7 @@ public class MapManager implements IManager {
         setupLobbyWorld();
 
         int cleanedUpWorlds = WorldUtils.cleanUpWorlds();
-        Core.getInstance().getLogger().log(Level.INFO, "Cleaned up {0} worlds.", cleanedUpWorlds);
+        Core.get().getLogger().log(Level.INFO, "Cleaned up {0} worlds.", cleanedUpWorlds);
     }
 
     /**
@@ -70,7 +71,7 @@ public class MapManager implements IManager {
      */
     public List<String> getMapsForGame(Game game) {
         ArrayList<String> maps = new ArrayList<>();
-        File dataFolder = new File(Core.getInstance().getPlugin().getDataFolder(), "schematics/" + game.getMetadata().name());
+        File dataFolder = new File(Core.get().getPlugin().getDataFolder(), "schematics/" + game.getMetadata().name());
         if(dataFolder.exists()) {
             for (File file : Objects.requireNonNull(dataFolder.listFiles())) {
                 if (file.isFile() && file.getName().endsWith(".schem")) {
@@ -95,14 +96,14 @@ public class MapManager implements IManager {
      * Charge le lobby d'attente du serveur.
      */
     private void setupLobbyWorld() {
-        String lobbyWorldName = Core.getInstance().getPlugin().getConfig().getString("waitingLobbyName");
+        String lobbyWorldName = Core.get().getPlugin().getConfig().getString("waitingLobbyName");
         if(lobbyWorldName == null) {
-            Core.getInstance().getLogger().log(Level.SEVERE, "Waiting lobby name not set in config !");
+            Core.get().getLogger().log(Level.SEVERE, "Waiting lobby name not set in config !");
             return;
         }
 
-        if(Core.getInstance().getServer().getWorld(lobbyWorldName) != null) {
-            lobbyWorld = Core.getInstance().getServer().getWorld(lobbyWorldName);
+        if(Core.get().getServer().getWorld(lobbyWorldName) != null) {
+            lobbyWorld = Core.get().getServer().getWorld(lobbyWorldName);
             return;
         }
 
@@ -125,7 +126,7 @@ public class MapManager implements IManager {
                     BlockVector3.at(SCHEMATIC_FROM.getX(), SCHEMATIC_FROM.getY(), SCHEMATIC_FROM.getZ())
             );
         } catch (IOException e) {
-            Core.getInstance().getLogger().severe("Unable to load the Lobby schematic.");
+            Core.get().getLogger().severe("Unable to load the Lobby schematic.");
         }
     }
 
@@ -140,18 +141,19 @@ public class MapManager implements IManager {
         }
 
         // On créé le nouveau monde vide
-        Core.getInstance().getLogger().log(Level.INFO, "Creating world {0}...", mapName);
+        Core.get().getLogger().log(Level.INFO, "Creating world {0}...", mapName);
         org.bukkit.World world = WorldUtils.createWorld(mapName);
+        WorldUtils.setupClassicWorldGamerules(world);
         World currentWorld = BukkitAdapter.adapt(world);
 
-        Core.getInstance().getLogger().log(Level.INFO, "Pasting schematic {0} in the new world...", mapName);
+        Core.get().getLogger().log(Level.INFO, "Pasting schematic {0} in the new world...", mapName);
 
         // On récupère la carte à partir du fichier schematic
         Clipboard schematic;
 
         try {
             schematic = SchematicUtils.loadSchematic(
-                    Core.getInstance().getGameManager().getCurrentGame().getMetadata().name() + "/" + mapName
+                    Core.get().getGameManager().getCurrentGame().getMetadata().name() + "/" + mapName
             );
         } catch (IOException e) {
             WorldUtils.deleteWorld(world);
@@ -175,8 +177,8 @@ public class MapManager implements IManager {
             throw new MapLoadingException("Collage du schematic impossible.");
         }
 
-        Core.getInstance().getLogger().log(Level.INFO, "Schematic pasted, now parsing map...");
-        if(Core.getInstance().getGameManager().getCurrentGame() != null) {
+        Core.get().getLogger().log(Level.INFO, "Schematic pasted, now parsing map...");
+        if(Core.get().getGameManager().getCurrentGame() != null) {
 
             // On récupère le premier BOUNDARY de la map. C'est lui qui définiera le point d'origine de la map.
             Location firstBoundary = WorldUtils.findFirstBoundary(
@@ -213,7 +215,7 @@ public class MapManager implements IManager {
             }
 
             // On applique un point de hook lifecycle pour permettre au jeu de faire des modifications sur la carte ou autre.
-            Core.getInstance().getGameManager().getCurrentGame().preMapParse(world);
+            Core.get().getGameManager().getCurrentGame().preMapParse(world);
 
             // On parse la carte afin de récupérer les différents éléments de la carte.
             currentMap = MapParser.parseMap(
@@ -221,7 +223,7 @@ public class MapManager implements IManager {
                     firstBoundary,
                     lastBoundary,
                     parsedMap -> {
-                        Core.getInstance().getGameManager().getCurrentGame().postMapParse();
+                        Core.get().getGameManager().getCurrentGame().postMapParse();
                         MessageUtils.broadcast(MessageUtils.ChatPrefix.MAP, "&7La prochaine carte est &b" + currentMap.getName() + "&7!");
                     }
             );

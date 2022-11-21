@@ -1,16 +1,14 @@
 package fr.efreicraft.ludos.core.games.interfaces;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.games.GameCountdown;
-import fr.efreicraft.ludos.core.games.GameEventManager;
-import fr.efreicraft.ludos.core.games.GameManager;
-import fr.efreicraft.ludos.core.maps.MapLoadingException;
+import fr.efreicraft.ludos.core.games.*;
+import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
+import fr.efreicraft.ludos.core.games.runnables.GameCountdown;
+import fr.efreicraft.ludos.core.maps.exceptions.MapLoadingException;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.event.Listener;
 
 import java.util.List;
@@ -30,6 +28,8 @@ public abstract class Game implements IGame {
     private final GameEventManager eventManager;
     private Listener eventListenerInstance;
 
+    private GameWinner winner;
+
     /**
      * Constructeur de jeu.
      */
@@ -41,22 +41,28 @@ public abstract class Game implements IGame {
      * Méthode préparant le jeu
      */
     public void prepareServer() {
-        Core.getInstance().getLogger().info("Preparing server for " + this.getClass().getName() + "...");
+        Core.get().getLogger().info("Preparing server for " + this.getClass().getName() + "...");
 
         GameMetadata metadata = getMetadata();
         MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&7Le prochain jeu sera " + metadata.color() + metadata.name() + "&7!");
 
         List<String> maps = getMaps();
         if (maps.isEmpty()) {
-            Core.getInstance().getLogger().warning("No maps available for " + this.getClass().getName() + "!");
+            Core.get().getLogger().warning("No maps available for " + this.getClass().getName() + "!");
         }
 
-        Core.getInstance().getTeamManager().loadTeams(this.getTeamRecords());
-        Core.getInstance().getTeamManager().dispatchAllPlayersInTeams();
-        try {
-            Core.getInstance().getMapManager().loadMap(maps.get(random.nextInt(maps.size())));
-        } catch (MapLoadingException e) {
-            Core.getInstance().getLogger().log(Level.SEVERE, "Erreur lors du chargement de la map.", e);
+        Core.get().getTeamManager().loadTeams(this.getTeamRecords());
+        Core.get().getTeamManager().dispatchAllPlayersInTeams();
+
+        if(!maps.isEmpty()) {
+            String map = maps.get(random.nextInt(maps.size()));
+            try {
+                Core.get().getMapManager().loadMap(map);
+            } catch (MapLoadingException e) {
+                Core.get().getLogger().log(Level.SEVERE, e.getMessage());
+            }
+        } else {
+            Core.get().getLogger().warning("No maps available for " + metadata.name() + "!");
         }
     }
 
@@ -66,7 +72,7 @@ public abstract class Game implements IGame {
                 team.spawnPlayer(player);
             }
         } else {
-            Location mapMiddle = Core.getInstance().getMapManager().getCurrentMap().getMiddleOfMap();
+            Location mapMiddle = Core.get().getMapManager().getCurrentMap().getMiddleOfMap();
             for (Player player : team.getPlayers()) {
                 player.entity().teleport(mapMiddle);
                 team.spawnPlayer(player);
@@ -76,7 +82,7 @@ public abstract class Game implements IGame {
 
     private void startRunnableCountdown() {
         GameCountdown countdown = new GameCountdown();
-        countdown.runTaskTimer(Core.getInstance().getPlugin(), 0, 20);
+        countdown.runTaskTimer(Core.get().getPlugin(), 0, 20);
     }
 
     private void broadcastGameInfo() {
@@ -87,8 +93,8 @@ public abstract class Game implements IGame {
         MessageUtils.broadcast("  &f" + this.getMetadata().description());
         MessageUtils.broadcast("");
         MessageUtils.broadcast("  &7Carte: "
-                + this.getMetadata().color() + "&l" + Core.getInstance().getMapManager().getCurrentMap().getName()
-                + "&7 par " + this.getMetadata().color() + Core.getInstance().getMapManager().getCurrentMap().getAuthor()
+                + this.getMetadata().color() + "&l" + Core.get().getMapManager().getCurrentMap().getName()
+                + "&7 par " + this.getMetadata().color() + Core.get().getMapManager().getCurrentMap().getAuthor()
         );
         MessageUtils.broadcast("&7&m--------------------------------------");
         MessageUtils.broadcast("");
@@ -98,9 +104,9 @@ public abstract class Game implements IGame {
      * Méthode standardisée de démarrage de jeu
      */
     public void startGame() {
-        Core.getInstance().getLogger().info("Starting " + this.getClass().getName() + "...");
+        Core.get().getLogger().info("Starting " + this.getClass().getName() + "...");
 
-        for (Team team : Core.getInstance().getTeamManager().getTeams().values()) {
+        for (Team team : Core.get().getTeamManager().getTeams().values()) {
             dispatchAndSpawnTeamPlayers(team);
         }
 
@@ -113,12 +119,20 @@ public abstract class Game implements IGame {
      * @return true si le jeu doit se terminer, false sinon
      */
     public boolean checkIfGameHasToBeEnded() {
-        if(Core.getInstance().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
+        if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
             return false;
         }
-        if(this.getMetadata().minPlayers() > Core.getInstance().getPlayerManager().getNumberOfPlayingPlayers()) {
-            MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&cIl n'y a plus assez de joueurs pour continuer le jeu!");
-            Core.getInstance().getGameManager().setStatus(GameManager.GameStatus.ENDING);
+        if(this.getMetadata().rules().minPlayers() > Core.get().getPlayerManager().getNumberOfPlayingPlayers()) {
+            if(Core.get().getPlayerManager().getNumberOfPlayingPlayers() > 0) {
+                Player lastPlayer = Core.get().getPlayerManager().getPlayingPlayers().iterator().next();
+                if(lastPlayer != null) {
+                    this.winner = new PlayerWin(lastPlayer);
+                }
+            }
+            if(this.winner == null) {
+                MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&cIl n'y a plus assez de joueurs pour continuer le jeu.");
+            }
+            Core.get().getGameManager().setStatus(GameManager.GameStatus.ENDING);
             return true;
         }
         return false;
@@ -126,8 +140,7 @@ public abstract class Game implements IGame {
 
     @Override
     public void beginGame() {
-        // log here
-        Core.getInstance().getLogger().info("Beginning " + this.getClass().getName() + " game logic...");
+        Core.get().getLogger().info("Beginning " + this.getClass().getName() + " game logic...");
         eventManager.registerMinigameEvents();
     }
 
@@ -135,13 +148,21 @@ public abstract class Game implements IGame {
      * Méthode standardisée de fin de jeu
      */
     public void endGame() {
-        Core.getInstance().getLogger().info("Ending " + this.getClass().getName() + "...");
+        Core.get().getLogger().info("Ending " + this.getClass().getName() + "...");
+
+        int secondsDelay = 5;
+
+        if(winner != null) {
+            secondsDelay = 10;
+            winner.winEffect();
+        }
+
         eventManager.unregisterMinigameEvents();
-        Bukkit.getScheduler().runTaskLater(Core.getInstance().getPlugin(), () -> {
-            Core.getInstance().getMapManager().unloadMap();
-            Core.getInstance().getTeamManager().unloadTeams();
-            Core.getInstance().getGameManager().setStatus(GameManager.GameStatus.WAITING);
-        }, (long) 20 * 5);
+        Bukkit.getScheduler().runTaskLater(Core.get().getPlugin(), () -> {
+            Core.get().getMapManager().unloadMap();
+            Core.get().getTeamManager().unloadTeams();
+            Core.get().getGameManager().setStatus(GameManager.GameStatus.WAITING);
+        }, (long) 20 * secondsDelay);
     }
 
     /**
@@ -150,7 +171,7 @@ public abstract class Game implements IGame {
      * @return Liste des cartes disponibles en String
      */
     public List<String> getMaps() {
-        return Core.getInstance().getMapManager().getMapsForGame(this);
+        return Core.get().getMapManager().getMapsForGame(this);
     }
 
     /**
@@ -181,5 +202,15 @@ public abstract class Game implements IGame {
      */
     public void setEventListener(Listener eventListenerInstance) {
         this.eventListenerInstance = eventListenerInstance;
+    }
+
+    /**
+     * Change le joueur ou l'équipe gagnant(e) du jeu.
+     * Peut-être soit {@link fr.efreicraft.ludos.core.games.PlayerWin} soit {@link fr.efreicraft.ludos.core.games.TeamWin}
+     * @param winner Le joueur ou l'équipe gagnant(e)
+     */
+    public void setWinnerAndEndGame(GameWinner winner) {
+        this.winner = winner;
+        Core.get().getGameManager().setStatus(GameManager.GameStatus.ENDING);
     }
 }

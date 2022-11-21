@@ -1,4 +1,4 @@
-package fr.efreicraft.ludos.core.teams;
+package fr.efreicraft.ludos.core.teams.interfaces;
 
 import fr.efreicraft.ludos.core.players.Player;
 

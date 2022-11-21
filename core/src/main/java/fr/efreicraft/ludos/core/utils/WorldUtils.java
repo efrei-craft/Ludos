@@ -6,6 +6,7 @@ import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -30,7 +31,7 @@ public class WorldUtils {
 
     static {
         // Chargement du préfixe des noms normalisés de monde depuis la configuration.
-        String prefixFromConfig = Core.getInstance().getPlugin().getConfig().getString("mapPrefix");
+        String prefixFromConfig = Core.get().getPlugin().getConfig().getString("mapPrefix");
         if(prefixFromConfig != null && !prefixFromConfig.isEmpty()) {
             worldPrefix = prefixFromConfig;
         }
@@ -45,8 +46,13 @@ public class WorldUtils {
      * @return Nombre de mondes supprimés
      */
     public static int cleanUpWorlds() {
-        List<World> worldsToCleanUp = Bukkit.getWorlds()
-                .stream().filter(world -> world.getName().startsWith(worldPrefix)).toList();
+        List<World> worldsToCleanUp = new ArrayList<>();
+        for(World world : Bukkit.getWorlds()) {
+            if(world.getName().startsWith(worldPrefix)) {
+                worldsToCleanUp.add(world);
+            }
+        }
+
         for(World world : worldsToCleanUp) {
             deleteWorld(world);
         }
@@ -59,16 +65,16 @@ public class WorldUtils {
      */
     public static void deleteWorld(org.bukkit.World world) {
         for(org.bukkit.entity.Player player : world.getPlayers()) {
-            Player p = Core.getInstance().getPlayerManager().getPlayer(player);
+            Player p = Core.get().getPlayerManager().getPlayer(player);
             if(p == null) {
-                player.teleport(Core.getInstance().getMapManager().getLobbyWorld().getSpawnLocation());
+                player.teleport(Core.get().getMapManager().getLobbyWorld().getSpawnLocation());
             } else {
                 p.spawnAtWaitingLobby();
             }
         }
         Bukkit.unloadWorld(world, false);
         try {
-            Core.getInstance().getLogger().info("Deleting world folder: " + world.getWorldFolder().getAbsolutePath());
+            Core.get().getLogger().info("Deleting world folder: " + world.getWorldFolder().getAbsolutePath());
             FileUtils.deleteDirectory(world.getWorldFolder());
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,7 +88,7 @@ public class WorldUtils {
      */
     public static org.bukkit.World createWorld(String name) {
         String normalizedWorldName = getNormalizedWorldName(name);
-        org.bukkit.World world = Core.getInstance().getServer().getWorld(normalizedWorldName);
+        org.bukkit.World world = Core.get().getServer().getWorld(normalizedWorldName);
         if(world != null) {
             deleteWorld(world);
         }

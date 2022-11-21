@@ -66,7 +66,7 @@ public class Core {
      * @param protocolManager ProtocolManager pour interfacer avec l'API ProtocolLib pour la manipulation des packets.
      */
     public Core(JavaPlugin plugin, ProtocolManager protocolManager) {
-        setInstance(this);
+        set(this);
         this.protocolManager = protocolManager;
         plugin.getLogger().info("Loading core...");
         this.plugin = plugin;
@@ -152,7 +152,7 @@ public class Core {
      * Retourne l'instance du singleton de la classe Core.
      * @return Singleton de la classe Core.
      */
-    public static Core getInstance() {
+    public static Core get() {
         return instance;
     }
 
@@ -160,7 +160,7 @@ public class Core {
      * Définit l'instance du singleton de la classe Core.
      * @param instance Singleton de la classe Core.
      */
-    private static void setInstance(Core instance) {
+    private static void set(Core instance) {
         Core.instance = instance;
     }
 

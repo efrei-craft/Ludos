@@ -24,7 +24,7 @@ public class CommandManager implements IManager {
      * Constructeur du gestionnaire de commandes. Il initialise les commandes du plugin.
      */
     public CommandManager() {
-        if(Core.getInstance().getCommandManager() != null) {
+        if(Core.get().getCommandManager() != null) {
             throw new IllegalStateException("CommandManager already initialized !");
         }
         this.loadCommands();
@@ -36,17 +36,17 @@ public class CommandManager implements IManager {
     }
 
     private void loadCommands() {
-        Core.getInstance().getLogger().info("Registering commands...");
+        Core.get().getLogger().info("Registering commands...");
 
-        Core.getInstance().getPlugin().getDescription().getCommands().forEach((name, command) -> {
+        Core.get().getPlugin().getDescription().getCommands().forEach((name, command) -> {
             try {
                 String className = name.substring(0, 1).toUpperCase() + name.substring(1) + "Command";
                 Class<?> commandClass = Class.forName(COMMAND_PACKAGE + "." + className);
                 CommandExecutor executor = (CommandExecutor) commandClass.getDeclaredConstructor().newInstance();
-                PluginCommand pluginCommand = Core.getInstance().getPlugin().getCommand(name);
+                PluginCommand pluginCommand = Core.get().getPlugin().getCommand(name);
                 assert pluginCommand != null;
                 pluginCommand.setExecutor(executor);
-                Core.getInstance().getLogger().info("Registered command " + name);
+                Core.get().getLogger().info("Registered command " + name);
             } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }

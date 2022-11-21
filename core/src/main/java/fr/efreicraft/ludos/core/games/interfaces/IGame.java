@@ -1,6 +1,6 @@
 package fr.efreicraft.ludos.core.games.interfaces;
 
-import fr.efreicraft.ludos.core.maps.interfaces.GamePoint;
+import fr.efreicraft.ludos.core.maps.points.GamePoint;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import org.bukkit.Material;

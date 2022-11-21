@@ -1,9 +1,9 @@
 package fr.efreicraft.ludos.core.maps;
 
-import fr.efreicraft.ludos.core.maps.interfaces.GamePoint;
-import fr.efreicraft.ludos.core.maps.interfaces.SpawnPoint;
-import fr.efreicraft.ludos.core.maps.interfaces.GlobalPoint;
 import fr.efreicraft.ludos.core.maps.interfaces.MapPoint;
+import fr.efreicraft.ludos.core.maps.points.GamePoint;
+import fr.efreicraft.ludos.core.maps.points.GlobalPoint;
+import fr.efreicraft.ludos.core.maps.points.SpawnPoint;
 import fr.efreicraft.ludos.core.teams.Team;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -183,6 +183,21 @@ public class ParsedMap {
         double z = (first.getZ() + second.getZ()) / 2;
 
         return new Location(world, x, y, z);
+    }
+
+    /**
+     * Méthode pour récupérer le point Y le plus bas de la carte.
+     * @return Point Y le plus bas de la carte.
+     */
+    public Location getLowestBoundary() {
+        Location first = globalPoints.get("BOUNDARY").get(0).getLocation();
+        Location second = globalPoints.get("BOUNDARY").get(1).getLocation();
+
+        if (first.getY() < second.getY()) {
+            return first;
+        } else {
+            return second;
+        }
     }
 
 }

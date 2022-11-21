@@ -7,6 +7,9 @@ import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.world.World;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.maps.interfaces.*;
+import fr.efreicraft.ludos.core.maps.points.GamePoint;
+import fr.efreicraft.ludos.core.maps.points.GlobalPoint;
+import fr.efreicraft.ludos.core.maps.points.SpawnPoint;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
@@ -66,7 +69,7 @@ public class MapParser {
     private static MapPoint parseMapPoint(Material block, Material blockAbove, Location location) {
         if (blockAbove == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
             if(ColorUtils.getDyeColorMap().containsKey(block)) {
-                Team team = Core.getInstance().getTeamManager().getTeamByDyeColor(ColorUtils.getDyeColorMap().get(block));
+                Team team = Core.get().getTeamManager().getTeamByDyeColor(ColorUtils.getDyeColorMap().get(block));
                 if(team != null) {
                     return new SpawnPoint(team, location);
                 }
@@ -76,7 +79,7 @@ public class MapParser {
             }
         } else if (blockAbove == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
             Map<Material, String> materialStringMap =
-                    Core.getInstance().getGameManager().getCurrentGame().getGamePointsMaterials();
+                    Core.get().getGameManager().getCurrentGame().getGamePointsMaterials();
             if (materialStringMap.containsKey(block)) {
                 return new GamePoint(materialStringMap.get(block), location);
             }
@@ -99,13 +102,13 @@ public class MapParser {
                 BlockVector3.at(p2.getX(), p2.getY(), p2.getZ())
         );
 
-        Core.getInstance().getLogger().log(Level.INFO, "Parsing map: {0} in world: {1}", new Object[]{ region, world.getName() });
+        Core.get().getLogger().log(Level.INFO, "Parsing map: {0} in world: {1}", new Object[]{ region, world.getName() });
 
         org.bukkit.World bukkitWorld = BukkitAdapter.adapt(world);
 
         ParsedMap parsedMap = new ParsedMap(bukkitWorld);
 
-        Bukkit.getScheduler().runTaskAsynchronously(Core.getInstance().getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(Core.get().getPlugin(), () -> {
             Iterator<BlockVector3> iterator = region.iterator();
             List<Block> blocksToBreak = new ArrayList<>();
 
@@ -123,7 +126,7 @@ public class MapParser {
                 );
 
                 if (currentBlock.getType() == Material.SPONGE && blockAbove.getType() == Material.OAK_SIGN) {
-                    Bukkit.getScheduler().runTask(Core.getInstance().getPlugin(), () -> {
+                    Bukkit.getScheduler().runTask(Core.get().getPlugin(), () -> {
                         Sign sign = (Sign) blockAbove.getState();
                         StringBuilder builder = new StringBuilder();
                         ArrayList<TextComponent> lines = new ArrayList<>();
@@ -149,7 +152,7 @@ public class MapParser {
                 }
             }
 
-            Bukkit.getScheduler().runTask(Core.getInstance().getPlugin(), () -> {
+            Bukkit.getScheduler().runTask(Core.get().getPlugin(), () -> {
                 for (Block block : blocksToBreak) {
                     block.setType(Material.AIR);
                 }

@@ -1,4 +1,4 @@
-package fr.efreicraft.ludos.core.players.scoreboards;
+package fr.efreicraft.ludos.core.players.scoreboards.exceptions;
 
 /**
  * Exception levée pour les fields.

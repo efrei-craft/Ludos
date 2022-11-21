@@ -1,5 +1,6 @@
 package fr.efreicraft.ludos.core.teams;
 
+import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnBehavior;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import org.bukkit.GameMode;
 

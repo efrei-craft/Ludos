@@ -1,5 +1,6 @@
-package fr.efreicraft.ludos.core.maps.interfaces;
+package fr.efreicraft.ludos.core.maps.points;
 
+import fr.efreicraft.ludos.core.maps.interfaces.MapPoint;
 import org.bukkit.Location;
 
 /**

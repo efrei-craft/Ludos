@@ -1,10 +1,11 @@
 package fr.efreicraft.ludos.games.blockparty;
 
+import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.games.interfaces.GameMetadata;
+import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import org.bukkit.GameRule;
@@ -27,8 +28,9 @@ import java.util.Map;
         color = "&b",
         description = "Tenez-vous sur la bonne couleur au bon moment, sinon vous mourrez !",
         authors = {"Antoine", "Logan"},
-        version = "1.0",
-        minPlayers = 1
+        rules = @GameRules(
+                minPlayers = 2
+        )
 )
 public class LudosGame extends Game {
 
@@ -54,15 +56,15 @@ public class LudosGame extends Game {
 
     @Override
     public void postMapParse() {
-        Location killZoneLocation = Core.getInstance().getMapManager().getCurrentMap().getGamePoints()
+        Location killZoneLocation = Core.get().getMapManager().getCurrentMap().getGamePoints()
                 .get("KILL_ZONE").get(0).getLocation();
         this.gameLogic.setKillZoneLocation(killZoneLocation);
-        Core.getInstance().getMapManager().getCurrentMap().getWorld().setBlockData(
+        Core.get().getMapManager().getCurrentMap().getWorld().setBlockData(
                 killZoneLocation,
                 Material.PINK_WOOL.createBlockData()
         );
 
-        this.gameLogic.generateDanceFloor(Core.getInstance().getMapManager().getCurrentMap().getGamePoints().get("DANCE_FLOOR"));
+        this.gameLogic.generateDanceFloor(Core.get().getMapManager().getCurrentMap().getGamePoints().get("DANCE_FLOOR"));
     }
 
     @Override
@@ -71,7 +73,7 @@ public class LudosGame extends Game {
 
         player.getBoard().setField(
                 0,
-                new ScoreboardField("&b&lJoueurs en vie", player, true, player1 -> String.valueOf(Core.getInstance().getTeamManager().getTeam("PLAYERS").getPlayers().size()))
+                new ScoreboardField("&b&lJoueurs en vie", player, true, player1 -> String.valueOf(Core.get().getTeamManager().getTeam("PLAYERS").getPlayers().size()))
         );
         player.getBoard().setField(
                 1,

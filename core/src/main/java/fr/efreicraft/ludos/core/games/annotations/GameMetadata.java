@@ -1,4 +1,4 @@
-package fr.efreicraft.ludos.core.games.interfaces;
+package fr.efreicraft.ludos.core.games.annotations;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -37,21 +37,9 @@ public @interface GameMetadata {
     String[] authors();
 
     /**
-     * Version du jeu.
-     * @return Version du jeu.
+     * Règles de fonctionnement du jeu.
+     * @return Annotation des règles de fonctionnement du jeu.
      */
-    String version();
-
-    /**
-     * Joueurs minimum pour le jeu.
-     * @return Joueurs minimum pour le jeu.
-     */
-    int minPlayers() default 2;
-
-    /**
-     * Respawn le joueur s'il meurt.
-     * @return Respawn le joueur s'il meurt.
-     */
-    boolean allowRespawn() default false;
+    GameRules rules() default @GameRules;
 
 }

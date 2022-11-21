@@ -25,11 +25,11 @@ public class GameEventManager {
     public void registerMinigameEvents() {
         Listener eventListenerInstance = minigame.getEventListener();
         if (eventListenerInstance != null) {
-            Core.getInstance().getServer().getPluginManager()
-                .registerEvents(eventListenerInstance, Core.getInstance().getPlugin());
+            Core.get().getServer().getPluginManager()
+                .registerEvents(eventListenerInstance, Core.get().getPlugin());
         } else {
-            String gameName = Core.getInstance().getGameManager().getCurrentGame().getMetadata().getClass().getName();
-            Core.getInstance().getLogger().log(Level.WARNING, "[GameEventManager] {0} has no event listener set.", gameName);
+            String gameName = Core.get().getGameManager().getCurrentGame().getMetadata().name();
+            Core.get().getLogger().log(Level.WARNING, "[GameEventManager] {0} has no event listener set.", gameName);
         }
     }
 

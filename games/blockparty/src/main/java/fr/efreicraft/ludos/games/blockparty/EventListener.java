@@ -22,7 +22,7 @@ public record EventListener(GameLogic blockParty) implements Listener {
         if (!event.hasChangedBlock()) {
             return;
         }
-        Player player = Core.getInstance().getPlayerManager().getPlayer(event.getPlayer());
+        Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         if (!player.getTeam().isPlayingTeam()) {
             return;
         }

@@ -29,7 +29,7 @@ public class TeamManager implements IManager {
      * Constructeur du gestionnaire d'équipes.
      */
     public TeamManager() {
-        if(Core.getInstance().getTeamManager() != null) {
+        if(Core.get().getTeamManager() != null) {
             throw new IllegalStateException("TeamManager already initialized");
         }
         this.teams = new HashMap<>();
@@ -56,7 +56,7 @@ public class TeamManager implements IManager {
     }
 
     private void unregisterAllBukkitTeams() {
-        for (org.bukkit.scoreboard.Team team : Core.getInstance().getScoreboardManager().getMainScoreboard().getTeams()) {
+        for (org.bukkit.scoreboard.Team team : Core.get().getScoreboardManager().getMainScoreboard().getTeams()) {
             team.unregister();
         }
     }
@@ -91,7 +91,7 @@ public class TeamManager implements IManager {
             return;
         }
         if(player.getTeam() == null || forceRebalance) {
-            if(Core.getInstance().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
+            if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
                 this.getTeam("SPECTATORS").addPlayer(player);
             } else if(this.teams.size() == 2) {
                 this.teams.values().iterator().next().addPlayer(player);
@@ -111,7 +111,7 @@ public class TeamManager implements IManager {
         if(this.teams.size() == 0) {
             return;
         }
-        for (Player player : Core.getInstance().getPlayerManager().getPlayers()) {
+        for (Player player : Core.get().getPlayerManager().getPlayers()) {
             dispatchPlayerInTeams(player, false);
         }
     }

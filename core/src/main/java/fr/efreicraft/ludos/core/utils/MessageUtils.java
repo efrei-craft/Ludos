@@ -24,7 +24,12 @@ public class MessageUtils {
         /**
          * Préfixe basique pour le plugin.
          */
-        MINIGAMES("&bMinigames"),
+        MINIGAMES("&bLudos"),
+
+        /**
+         * Préfixe pour le serveur.
+         */
+        SERVER("&6Serveur"),
 
         /**
          * Préfixe pour les messages correspondant au jeu.
@@ -78,10 +83,10 @@ public class MessageUtils {
                 return "";
             }
             if(this == GAME
-                    && Core.getInstance().getGameManager().getCurrentGame() != null
-                    && Core.getInstance().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
-                return Core.getInstance().getGameManager().getCurrentGame().getMetadata().color()
-                        + Core.getInstance().getGameManager().getCurrentGame().getMetadata().name()
+                    && Core.get().getGameManager().getCurrentGame() != null
+                    && Core.get().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
+                return Core.get().getGameManager().getCurrentGame().getMetadata().color()
+                        + Core.get().getGameManager().getCurrentGame().getMetadata().name()
                         + SEPARATOR;
             }
             return this.prefix + SEPARATOR;

@@ -1,6 +1,6 @@
 package fr.efreicraft.ludos.games.blockparty.patterns;
 
-import fr.efreicraft.ludos.core.maps.interfaces.GamePoint;
+import fr.efreicraft.ludos.core.maps.points.GamePoint;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;

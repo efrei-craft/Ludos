@@ -1,13 +1,15 @@
 package fr.efreicraft.ludos.core.players;
 
+import fr.efreicraft.ludos.core.players.runnables.PlayerRespawnCountdown;
 import fr.efreicraft.ludos.core.players.scoreboards.PlayerScoreboard;
 import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
-import fr.efreicraft.ludos.core.maps.ParsedMap;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
+import fr.efreicraft.ludos.core.utils.SoundUtils;
+import fr.efreicraft.ludos.core.utils.TitleUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -16,6 +18,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -48,6 +51,8 @@ public class Player {
      */
     private Location respawnLocation;
 
+    private boolean ephemeralPlayer = false;
+
     /**
      * Constructeur du joueur.
      *
@@ -57,6 +62,13 @@ public class Player {
         this.playerEntity = playerEntity;
         this.scoreboard = new PlayerScoreboard(this);
         this.setupScoreboard();
+
+        if(Core.get().getGameManager().getStatus() != null
+                && Core.get().getGameManager().getStatus() != GameManager.GameStatus.WAITING
+                && !entity().hasPermission("ludos.admin")) {
+            this.ephemeralPlayer = true;
+            sendMessage(MessageUtils.ChatPrefix.SERVER, "&7Vous avez rejoint une partie &aen cours de jeu&7. Vous serez &cdéconnecté&7 à la fin de celle-ci.");
+        }
     }
 
     /**
@@ -78,7 +90,7 @@ public class Player {
      */
     public void setupScoreboard() {
         this.scoreboard.clearFields();
-        if (Core.getInstance().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
+        if (Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
             this.scoreboard.setVisibility(true);
             this.scoreboard.setTitle("&f&lEn attente...");
 
@@ -89,18 +101,20 @@ public class Player {
                     new ScoreboardField(
                             "&6&lJoueurs",
                             this,
+                            true,
                             player1 -> {
                                 ChatColor color = ChatColor.WHITE;
-                                String necessary = "";
-                                if(Core.getInstance().getGameManager().getCurrentGame() != null) {
-                                    if(Core.getInstance().getGameManager().getCurrentGame().getMetadata().minPlayers() <= Core.getInstance().getPlayerManager().getNumberOfPlayingPlayers()) {
+                                String maxString = "";
+                                if(Core.get().getGameManager().getCurrentGame() != null) {
+                                    Game game = Core.get().getGameManager().getCurrentGame();
+                                    if(game.getMetadata().rules().minPlayers() <= Core.get().getPlayerManager().getNumberOfPlayingPlayers()) {
                                         color = ChatColor.GREEN;
                                     } else {
                                         color = ChatColor.RED;
-                                        necessary = " &7(" + (Core.getInstance().getGameManager().getCurrentGame().getMetadata().minPlayers() - Core.getInstance().getPlayerManager().getNumberOfPlayingPlayers()) + " requis)";
                                     }
+                                    maxString = "&7/" + game.getMetadata().rules().maxPlayers();
                                 }
-                                return color + "" + Core.getInstance().getPlayerManager().getNumberOfPlayingPlayers() + necessary;
+                                return color + "" + Core.get().getPlayerManager().getNumberOfPlayingPlayers() + maxString;
                             }
                     )
             );
@@ -112,10 +126,10 @@ public class Player {
                             "&6&lJeu",
                             this,
                             player1 -> {
-                                if (Core.getInstance().getGameManager().getCurrentGame() == null) {
+                                if (Core.get().getGameManager().getCurrentGame() == null) {
                                     return EMPTY;
                                 } else {
-                                    return Core.getInstance().getGameManager().getCurrentGame().getMetadata().name();
+                                    return Core.get().getGameManager().getCurrentGame().getMetadata().name();
                                 }
                             }
                     )
@@ -127,14 +141,13 @@ public class Player {
                             "&6&lCarte",
                             this,
                             player1 -> {
-                                if (Core.getInstance().getGameManager().getCurrentGame() == null) {
+                                if (Core.get().getGameManager().getCurrentGame() == null) {
                                     return EMPTY + "e";
                                 } else {
-                                    if (Core.getInstance().getMapManager().getCurrentMap() == null) {
+                                    if (Core.get().getMapManager().getCurrentMap() == null) {
                                         return EMPTY + "e";
                                     } else {
-                                        ParsedMap map = Core.getInstance().getMapManager().getCurrentMap();
-                                        return map.getName() + " par " + map.getAuthor();
+                                        return Core.get().getMapManager().getCurrentMap().getName();
                                     }
                                 }
                             }
@@ -156,11 +169,11 @@ public class Player {
                             }
                     )
             );
-        } else if (Core.getInstance().getGameManager().getStatus() == GameManager.GameStatus.INGAME) {
-            Game game = Core.getInstance().getGameManager().getCurrentGame();
+        } else if (Core.get().getGameManager().getStatus() == GameManager.GameStatus.INGAME) {
+            Game game = Core.get().getGameManager().getCurrentGame();
             this.scoreboard.setVisibility(true);
             this.scoreboard.setTitle(game.getMetadata().color() + "&l" + game.getMetadata().name());
-            Core.getInstance().getGameManager().getCurrentGame().setupScoreboard(this);
+            Core.get().getGameManager().getCurrentGame().setupScoreboard(this);
         } else {
             this.scoreboard.setVisibility(false);
         }
@@ -201,8 +214,8 @@ public class Player {
     public void setTeam(Team team) {
         this.team = team;
 
-        if(Core.getInstance().getGameManager().getStatus() == GameManager.GameStatus.WAITING
-            || Core.getInstance().getTeamManager().getTeams().size() > 2) {
+        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING
+            || Core.get().getTeamManager().getTeams().size() > 2) {
             TextComponent msgComponent = Component.text()
                     .append(Component.text("Vous êtes désormais dans l'équipe ", NamedTextColor.GRAY))
                     .append(team.name().decoration(TextDecoration.BOLD, true))
@@ -234,8 +247,38 @@ public class Player {
         MessageUtils.sendMessage(this.playerEntity, prefix, message);
     }
 
+    /**
+     * Envoie un title au joueur.
+     * @param title     Titre du title.
+     * @param subtitle  Sous-titre du title.
+     * @param fadeIn    Temps d'apparition du title en secondes.
+     * @param stay      Temps d'affichage du title en secondes.
+     * @param fadeOut   Temps de disparition du title en secondes.
+     */
+    public void sendTitle(String title, String subtitle, float fadeIn, float stay, float fadeOut) {
+        TitleUtils.sendTitle(this, title, subtitle, fadeIn, stay, fadeOut);
+    }
+
+    /**
+     * Joue un son au joueur.
+     * @param sound     Son à jouer.
+     * @param volume    Volume du son.
+     * @param pitch     Pitch du son.
+     */
+    public void playSound(Sound sound, float volume, float pitch) {
+        SoundUtils.playSound(this, sound, volume, pitch);
+    }
+
     public String toString() {
         return this.playerEntity.getName();
+    }
+
+    /**
+     * Vérification pour voir si le joueur est éphémère.
+     * @return Booléen indiquant si le joueur est éphémère.
+     */
+    public boolean isEphemeral() {
+        return this.ephemeralPlayer;
     }
 
     /**
@@ -275,12 +318,12 @@ public class Player {
      * Spawn le joueur dans le monde d'attente.
      */
     public void spawnAtWaitingLobby() {
-        entity().teleport(Core.getInstance().getMapManager().getLobbyWorld().getSpawnLocation().add(-0.5, 0, -0.5));
+        entity().teleport(Core.get().getMapManager().getLobbyWorld().getSpawnLocation().add(-0.5, 0, -0.5));
         resetPlayer();
 
-        for (Player p : Core.getInstance().getPlayerManager().getPlayingPlayers()) {
-            entity().showPlayer(Core.getInstance().getPlugin(), p.entity());
-            p.entity().showPlayer(Core.getInstance().getPlugin(), entity());
+        for (Player p : Core.get().getPlayerManager().getPlayers()) {
+            entity().showPlayer(Core.get().getPlugin(), p.entity());
+            p.entity().showPlayer(Core.get().getPlugin(), entity());
         }
     }
 
@@ -289,17 +332,17 @@ public class Player {
      * @param event L'évènement de mort.
      */
     public void deathEvent(PlayerDeathEvent event) {
-        if(Core.getInstance().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
+        event.deathMessage(null);
+        if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
             spawnAtWaitingLobby();
         } else if(!event.isCancelled()) {
-            event.deathMessage(null);
             this.respawnLocation = event.getEntity().getLocation();
             if(event.getEntity().getKiller() != null) {
-                Player killer = Core.getInstance().getPlayerManager().getPlayer(event.getEntity().getKiller());
+                Player killer = Core.get().getPlayerManager().getPlayer(event.getEntity().getKiller());
                 MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, getName() + "&7 a été tué par " + killer.getName() + "&7.");
             } else if (event.getEntity().getLastDamageCause() != null &&
                     event.getEntity().getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.VOID) {
-                this.respawnLocation = Core.getInstance().getMapManager().getCurrentMap().getMiddleOfMap();
+                this.respawnLocation = Core.get().getMapManager().getCurrentMap().getMiddleOfMap();
                 MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, getName() + "&7 est mort en tombant dans le vide.");
             } else {
                 MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, getName() + "&7 est mort.");
@@ -312,8 +355,13 @@ public class Player {
      * @param event L'évènement de réapparition.
      */
     public void respawnEvent(PlayerRespawnEvent event) {
-        if(Core.getInstance().getGameManager().getStatus() == GameManager.GameStatus.INGAME) {
-            event.setRespawnLocation(this.respawnLocation);
+        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.INGAME) {
+            if(this.getTeam().isPlayingTeam() && this.respawnLocation != null) {
+                event.setRespawnLocation(this.respawnLocation);
+                this.respawnLocation = null;
+            } else {
+                event.setRespawnLocation(Core.get().getMapManager().getCurrentMap().getMiddleOfMap());
+            }
         }
     }
 
@@ -321,15 +369,16 @@ public class Player {
      * Méthode appelée quand le joueur est réapparu.
      */
     public void postRespawnEvent() {
-        if(Core.getInstance().getGameManager().getStatus() == GameManager.GameStatus.INGAME) {
+        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.INGAME
+                && this.getTeam().isPlayingTeam()) {
             entity().setGameMode(GameMode.SPECTATOR);
-            Game game = Core.getInstance().getGameManager().getCurrentGame();
+            Game game = Core.get().getGameManager().getCurrentGame();
             if(game != null) {
-                if(game.getMetadata().allowRespawn()) {
+                if(game.getMetadata().rules().allowRespawn()) {
                     PlayerRespawnCountdown countdown = new PlayerRespawnCountdown(this);
-                    countdown.runTaskTimer(Core.getInstance().getPlugin(), 0, 20);
+                    countdown.runTaskTimer(Core.get().getPlugin(), 0, 20);
                 } else {
-                    Team specTeam = Core.getInstance().getTeamManager().getTeam("SPECTATORS");
+                    Team specTeam = Core.get().getTeamManager().getTeam("SPECTATORS");
                     if(specTeam != null) {
                         specTeam.addPlayer(this);
                     }
