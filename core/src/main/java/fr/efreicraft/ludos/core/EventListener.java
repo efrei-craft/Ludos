@@ -6,6 +6,7 @@ import fr.efreicraft.ludos.core.games.GameManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.jetbrains.annotations.NotNull;
@@ -123,6 +124,13 @@ public class EventListener implements Listener {
     @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
     public void onPlayerPortalEvent(PlayerPortalEvent event) {
         event.setCancelled(true);
+    }
+
+    @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
+    public void onFoodLevelChange(FoodLevelChangeEvent event) {
+        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING){
+            event.setCancelled(true);
+        }
     }
 
 }
