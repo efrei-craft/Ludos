@@ -1,15 +1,21 @@
 package fr.efreicraft.ludos.games.rush;
 
 import fr.efreicraft.ludos.core.teams.Team;
+import org.bukkit.entity.Villager;
 
 public class GameLogic {
 
     private int yDeath;
+    final Villager merchant;
+
+    public GameLogic() {
+        merchant = null;
+    }
 
     public void yDeath(int yDeath) {
         this.yDeath = yDeath;
     }
-
+    
     //TODO
     /**
      * Vérifie si le lit de *team* a été détruit.
