@@ -3,7 +3,7 @@ package fr.efreicraft.ludos.core.players.menus;
 import fr.efreicraft.ludos.core.players.menus.interfaces.Menu;
 
 /**
- * Classe pour les menu joueur.
+ * Classe pour les menus joueur.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
  * @project Ludos

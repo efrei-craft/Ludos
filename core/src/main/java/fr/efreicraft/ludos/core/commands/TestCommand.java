@@ -40,7 +40,7 @@ public class TestCommand implements CommandExecutor {
                 )
         );
 
-        player.getMenu().setMenu(
+        player.getMenu().set(
                 new ChestMenu(
                         player,
                         "&8» &6Test",
@@ -48,7 +48,7 @@ public class TestCommand implements CommandExecutor {
                         9
                 )
         );
-        player.getMenu().getMenu().open();
+        player.getMenu().get().open();
 
         return true;
     }

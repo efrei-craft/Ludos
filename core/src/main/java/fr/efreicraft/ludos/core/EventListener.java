@@ -141,9 +141,9 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = Core.get().getPlayerManager().getPlayer((org.bukkit.entity.Player) event.getWhoClicked());
-        if(player != null && player.getMenu().getMenu() != null) {
+        if(player != null && player.getMenu().get() != null) {
             event.setCancelled(true);
-            ChestMenu menu = (ChestMenu) player.getMenu().getMenu();
+            ChestMenu menu = (ChestMenu) player.getMenu().get();
             MenuItem item = menu.getMenuItem(event.getSlot());
             item.getCallback().onClick(player);
         }
@@ -152,8 +152,8 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onInventoryClose(InventoryCloseEvent event) {
         Player player = Core.get().getPlayerManager().getPlayer((org.bukkit.entity.Player) event.getPlayer());
-        if(player != null && player.getMenu().getMenu() != null) {
-            player.getMenu().setMenu(null);
+        if(player != null && player.getMenu().get() != null) {
+            player.getMenu().set(null);
         }
     }
 
