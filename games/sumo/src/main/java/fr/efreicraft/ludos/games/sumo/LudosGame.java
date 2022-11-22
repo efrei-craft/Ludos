@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @GameMetadata(
-name = "Sumo",
+        name = "Sumo",
         description = "Poussez votre adversaire en dehors du ring !",
         authors = {"DocSystem"},
         color = "&4",
@@ -50,12 +50,14 @@ public class LudosGame extends Game {
 
     @Override
     public void postMapParse() {
-        this.gameLogic.setKillZoneLocation(Core.get().getMapManager().getCurrentMap().getLowestBoundary());
+        this.gameLogic.setKillZoneLocation(
+                Core.get().getMapManager().getCurrentMap().getGamePoints().get("KILL_ZONE").get(0).getLocation()
+        );
     }
 
     @Override
     public void setupScoreboard(Player player) {
-
+        // No scoreboard for now
     }
 
     @Override
