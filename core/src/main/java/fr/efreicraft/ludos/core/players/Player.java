@@ -1,5 +1,6 @@
 package fr.efreicraft.ludos.core.players;
 
+import fr.efreicraft.ludos.core.players.menus.PlayerMenu;
 import fr.efreicraft.ludos.core.players.runnables.PlayerRespawnCountdown;
 import fr.efreicraft.ludos.core.players.scoreboards.PlayerScoreboard;
 import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
@@ -42,6 +43,11 @@ public class Player {
     private final PlayerScoreboard scoreboard;
 
     /**
+     * Instance du menu du joueur.
+     */
+    private final PlayerMenu menu;
+
+    /**
      * Instance de l'équipe du joueur.
      */
     private Team team;
@@ -55,11 +61,11 @@ public class Player {
 
     /**
      * Constructeur du joueur.
-     *
      * @param playerEntity Instance du joueur Bukkit.
      */
     public Player(org.bukkit.entity.Player playerEntity) {
         this.playerEntity = playerEntity;
+        this.menu = new PlayerMenu();
         this.scoreboard = new PlayerScoreboard(this);
         this.setupScoreboard();
 
@@ -199,11 +205,18 @@ public class Player {
 
     /**
      * Retourne le {@link PlayerScoreboard} du joueur.
-     *
      * @return Le {@link PlayerScoreboard} du joueur.
      */
     public PlayerScoreboard getBoard() {
         return scoreboard;
+    }
+
+    /**
+     * Retourne le {@link PlayerMenu} du joueur.
+     * @return Le {@link PlayerMenu} du joueur.
+     */
+    public PlayerMenu getMenu() {
+        return menu;
     }
 
     /**
@@ -386,5 +399,4 @@ public class Player {
             }
         }
     }
-
 }

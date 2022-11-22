@@ -41,5 +41,8 @@ bukkit {
             description = "Puts players in spectator mode"
             aliases = listOf("spec")
         }
+        register("test") {
+            description = "Test"
+        }
     }
 }

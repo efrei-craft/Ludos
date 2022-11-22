@@ -3,11 +3,16 @@ package fr.efreicraft.ludos.core;
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.games.GameManager;
+import fr.efreicraft.ludos.core.players.menus.ChestMenu;
+import fr.efreicraft.ludos.core.players.menus.interfaces.MenuItem;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.jetbrains.annotations.NotNull;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
@@ -130,6 +135,25 @@ public class EventListener implements Listener {
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING){
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onInventoryClick(InventoryClickEvent event) {
+        Player player = Core.get().getPlayerManager().getPlayer((org.bukkit.entity.Player) event.getWhoClicked());
+        if(player != null && player.getMenu().getMenu() != null) {
+            event.setCancelled(true);
+            ChestMenu menu = (ChestMenu) player.getMenu().getMenu();
+            MenuItem item = menu.getMenuItem(event.getSlot());
+            item.getCallback().onClick(player);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onInventoryClose(InventoryCloseEvent event) {
+        Player player = Core.get().getPlayerManager().getPlayer((org.bukkit.entity.Player) event.getPlayer());
+        if(player != null && player.getMenu().getMenu() != null) {
+            player.getMenu().setMenu(null);
         }
     }
 
