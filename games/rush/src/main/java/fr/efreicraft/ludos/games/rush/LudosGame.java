@@ -54,7 +54,7 @@ public class LudosGame extends Game {
     @Override
     public void postMapParse() {
         Location killZoneLocation = Core.get().getMapManager().getCurrentMap().getGamePoints()
-                .get("KILL_ZONE").get(0).getLocation();
+                .get("MERCHANT").get(0).getLocation().subtract(0, 64, 0);
         this.gameLogic.yDeath(killZoneLocation.getBlockY());
     }
 
@@ -66,23 +66,34 @@ public class LudosGame extends Game {
     @Override
     public EnumMap<Material, String> getGamePointsMaterials() {
         EnumMap<Material, String> gamePointsMaterials = new EnumMap<>(Material.class);
-        /** Le générateur */
+        /* Le générateur d'items des teams */
         gamePointsMaterials.put(Material.REDSTONE_BLOCK, "TEAM1_GENERATOR");
         gamePointsMaterials.put(Material.LAPIS_BLOCK, "TEAM2_GENERATOR");
+        gamePointsMaterials.put(Material.SLIME_BLOCK, "TEAM3_GENERATOR");
+        gamePointsMaterials.put(Material.COPPER_BLOCK, "TEAM4_GENERATOR");
+
+        /* Traders de cryptomonnaies */
         gamePointsMaterials.put(Material.CUT_SANDSTONE, "MERCHANT");
-        gamePointsMaterials.put(Material.PINK_WOOL, "KILL_ZONE");
         return gamePointsMaterials;
     }
 
     @Override
     public Map<String, TeamRecord> getTeamRecords() {
         HashMap<String, TeamRecord> teams = new HashMap<>();
-        teams.put("ORANGES", new TeamRecord(
-                "Oranges",
+        teams.put("BLEUS", new TeamRecord(
+                "Bleus",
+                2,
+                false,
+                true,
+                new ColorUtils.TeamColorSet(ColorUtils.TeamColors.GREEN),
+                null
+        ));
+        teams.put("ROUGES", new TeamRecord(
+                "Rouges",
                 1,
                 false,
                 true,
-                new ColorUtils.TeamColorSet(ColorUtils.TeamColors.GOLD),
+                new ColorUtils.TeamColorSet(ColorUtils.TeamColors.YELLOW),
                 null
         ));
         teams.put("VERTS", new TeamRecord(
@@ -91,6 +102,14 @@ public class LudosGame extends Game {
                 false,
                 true,
                 new ColorUtils.TeamColorSet(ColorUtils.TeamColors.GREEN),
+                null
+        ));
+        teams.put("JAUNES", new TeamRecord(
+                "Jaunes",
+                1,
+                false,
+                true,
+                new ColorUtils.TeamColorSet(ColorUtils.TeamColors.YELLOW),
                 null
         ));
         teams.putAll(DefaultTeamRecordBuilder.DefaultTeamRecords.ONLY_SPECTATOR.getTeamRecords());
