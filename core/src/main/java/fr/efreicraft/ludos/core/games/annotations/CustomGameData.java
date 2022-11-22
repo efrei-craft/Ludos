@@ -1,7 +1,8 @@
 package fr.efreicraft.ludos.core.games.annotations;
 
 /**
- * Annotation pour customiser le comportement du core en fontction du jeu
+ * Annotation pour customiser le comportement du core en fonction du jeu
+ * @author Aurélien D. {@literal <aurelien.dasse@efrei.net>}
  */
 public @interface CustomGameData {
 
