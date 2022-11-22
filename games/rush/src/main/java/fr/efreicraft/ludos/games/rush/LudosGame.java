@@ -1,5 +1,6 @@
 package fr.efreicraft.ludos.games.rush;
 
+import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
@@ -8,6 +9,7 @@ import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import org.bukkit.GameRule;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 
@@ -51,7 +53,9 @@ public class LudosGame extends Game {
 
     @Override
     public void postMapParse() {
-
+        Location killZoneLocation = Core.get().getMapManager().getCurrentMap().getGamePoints()
+                .get("KILL_ZONE").get(0).getLocation();
+        this.gameLogic.yDeath(killZoneLocation.getBlockY());
     }
 
     @Override
@@ -62,9 +66,11 @@ public class LudosGame extends Game {
     @Override
     public EnumMap<Material, String> getGamePointsMaterials() {
         EnumMap<Material, String> gamePointsMaterials = new EnumMap<>(Material.class);
+        /** Le générateur */
         gamePointsMaterials.put(Material.REDSTONE_BLOCK, "TEAM1_GENERATOR");
         gamePointsMaterials.put(Material.LAPIS_BLOCK, "TEAM2_GENERATOR");
         gamePointsMaterials.put(Material.CUT_SANDSTONE, "MERCHANT");
+        gamePointsMaterials.put(Material.PINK_WOOL, "KILL_ZONE");
         return gamePointsMaterials;
     }
 

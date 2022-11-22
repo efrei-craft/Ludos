@@ -4,6 +4,12 @@ import fr.efreicraft.ludos.core.teams.Team;
 
 public class GameLogic {
 
+    private int yDeath;
+
+    public void yDeath(int yDeath) {
+        this.yDeath = yDeath;
+    }
+
     //TODO
     /**
      * Vérifie si le lit de *team* a été détruit.
