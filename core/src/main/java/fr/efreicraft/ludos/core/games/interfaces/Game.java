@@ -215,7 +215,7 @@ public abstract class Game implements IGame {
     }
 
     /**
-     * Récupère l'instance random
+     * Récupère l'instance Random.
      * @return l'instance
      */
     public Random getRandom() {
