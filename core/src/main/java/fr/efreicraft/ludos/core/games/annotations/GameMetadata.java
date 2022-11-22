@@ -44,7 +44,7 @@ public @interface GameMetadata {
 
 
     /**
-     * Customisation du core en fonction du jeu.
+     * Customisation des comportements du Core en fonction du jeu.
      * @return Annotation des customisation.
      */
     CustomGameData customData() default @CustomGameData;
