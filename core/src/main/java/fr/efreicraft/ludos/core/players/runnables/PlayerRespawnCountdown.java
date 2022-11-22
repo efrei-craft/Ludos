@@ -22,9 +22,12 @@ public class PlayerRespawnCountdown extends BukkitRunnable {
      */
     private final Player player;
 
+    private final String respawnTitle;
     public PlayerRespawnCountdown(Player player) {
         this.player = player;
-        countdown = Core.get().getGameManager().getCurrentGame().getMetadata().rules().respawnTimer();
+        this.countdown = Core.get().getGameManager().getCurrentGame().getMetadata().rules().respawnTimer();
+        String[] intermediaire = Core.get().getGameManager().getCurrentGame().getMetadata().customData().respawnTitles();
+        this.respawnTitle = intermediaire[Core.get().getGameManager().getCurrentGame().getRandom().nextInt(intermediaire.length)];
     }
 
     @Override
@@ -39,7 +42,7 @@ public class PlayerRespawnCountdown extends BukkitRunnable {
             this.cancel();
         } else {
             this.player.sendTitle(
-                    "&cVous êtes mort!",
+                    "&c" + this.respawnTitle,
                     "&7Vous réapparaîtrez dans &f" + countdown + " &7secondes.",
                     0,
                     40,

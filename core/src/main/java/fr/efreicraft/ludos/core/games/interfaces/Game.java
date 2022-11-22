@@ -213,4 +213,12 @@ public abstract class Game implements IGame {
         this.winner = winner;
         Core.get().getGameManager().setStatus(GameManager.GameStatus.ENDING);
     }
+
+    /**
+     * Récupère l'instance Random.
+     * @return l'instance
+     */
+    public Random getRandom() {
+        return random;
+    }
 }

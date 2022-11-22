@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.games.arena;
 
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.games.annotations.CustomGameData;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
@@ -35,6 +36,9 @@ import java.util.Map;
                 minPlayers = 2,
                 minPlayersToStart = 2,
                 maxPlayers = 8
+        ),
+        customData = @CustomGameData(
+                respawnTitles = {"Zut Alors !", "C'est pas fini !", "Relève-toi !", "Mieux que ça ..."}
         )
 )
 public class LudosGame extends Game {
