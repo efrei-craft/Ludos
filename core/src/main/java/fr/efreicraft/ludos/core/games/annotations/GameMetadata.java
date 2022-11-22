@@ -42,4 +42,11 @@ public @interface GameMetadata {
      */
     GameRules rules() default @GameRules;
 
+
+    /**
+     * Customisation du core en fonction du jeu.
+     * @return Annotation des customisation.
+     */
+    CustomGameData customData() default @CustomGameData;
+
 }
