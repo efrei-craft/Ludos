@@ -59,13 +59,20 @@ public class LudosGame extends Game {
     }
 
     @Override
-    public void setupScoreboard(Player player) {
+    public void beginGame() {
+        super.beginGame();
+        gameLogic.startStopwatch();
+    }
 
+    @Override
+    public void setupScoreboard(Player player) {
+        player.getBoard().clearFields();
     }
 
     @Override
     public EnumMap<Material, String> getGamePointsMaterials() {
         EnumMap<Material, String> gamePointsMaterials = new EnumMap<>(Material.class);
+
         /* Le générateur d'items des teams */
         gamePointsMaterials.put(Material.REDSTONE_BLOCK, "TEAM1_GENERATOR");
         gamePointsMaterials.put(Material.LAPIS_BLOCK, "TEAM2_GENERATOR");
