@@ -130,7 +130,10 @@ public class TeamManager implements IManager {
                 team = next;
             }
         }*/
-        return teams.values().stream().min(Comparator.comparingInt(t -> t.getPlayers().size())).get();
+        return teams.values().stream().filter(t -> t == null || t.isPlayingTeam()).min(Comparator.comparingInt(t -> {
+            if (t == null) return 0;
+            return t.getPlayers().size();
+        })).get();
     }
 
     /**
