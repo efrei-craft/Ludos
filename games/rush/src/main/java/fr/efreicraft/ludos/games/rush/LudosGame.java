@@ -4,6 +4,7 @@ import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
+import fr.efreicraft.ludos.core.maps.points.GamePoint;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
@@ -13,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,9 +56,12 @@ public class LudosGame extends Game {
 
     @Override
     public void postMapParse() {
-        Location killZoneLocation = Core.get().getMapManager().getCurrentMap().getGamePoints()
-                .get("MERCHANT").get(0).getLocation().subtract(0, 64, 0);
+        ArrayList<GamePoint> merchants = Core.get().getMapManager().getCurrentMap().getGamePoints().get("MERCHANT");
+
+        Location killZoneLocation = merchants.get(0).getLocation().subtract(0, 64, 0);
         this.gameLogic.yDeath(killZoneLocation.getBlockY());
+
+
     }
 
     public void getTeamItemSpawner() {

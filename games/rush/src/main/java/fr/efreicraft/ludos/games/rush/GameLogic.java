@@ -90,6 +90,13 @@ public class GameLogic {
      * @param killer Le tueur
      */
     public void handleFinishOffByPlayer(Player killer) {
+        fr.efreicraft.ludos.core.players.Player gamer = Utils.getLudosPlayer(killer);
+        if (gamer == null) return;
+
+        rewardTeam(gamer.getTeam());
+    }
+
+    public void rewardTeam(Team team, ItemStack... stacks) {
 
     }
 

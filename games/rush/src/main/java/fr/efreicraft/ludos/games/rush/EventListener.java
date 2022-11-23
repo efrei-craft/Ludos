@@ -9,11 +9,20 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.Set;
+
 public record EventListener(GameLogic logic) implements Listener {
+
+    private static final Set<Material> MAP_BLOCKS = Collections.unmodifiableSet(EnumSet.of(
+            Material.OBSIDIAN,
+            Material.NETHERITE_BLOCK
+    ));
 
     @EventHandler
     public void onBreakBlock(BlockBreakEvent event) {
-        if (event.getBlock().getType() == Material.OBSIDIAN) {
+        if (MAP_BLOCKS.contains(event.getBlock().getType()) || event.getBlock().getType().name().toUpperCase().contains("BED")) {
             event.setCancelled(true);
         }
     }
