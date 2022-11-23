@@ -1,21 +1,23 @@
 package fr.efreicraft.ludos.games.sumo;
 
+import com.google.common.collect.ImmutableMap;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 
 import fr.efreicraft.ludos.core.players.Player;
-import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
+
+import static fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder.DefaultTeamRecords.ONLY_SPECTATOR;
 
 @GameMetadata(
         name = "Sumo",
@@ -69,6 +71,28 @@ public class LudosGame extends Game {
 
     @Override
     public Map<String, TeamRecord> getTeamRecords() {
-        return new HashMap<>(DefaultTeamRecordBuilder.DefaultTeamRecords.DEFAULT_TEAMS_SOLO.getTeamRecords());
+        return ImmutableMap.<String, TeamRecord>builder()
+                .put("PLAYERS", new TeamRecord(
+                        "Joueurs",
+                        1,
+                        false,
+                        true,
+                        new ColorUtils.TeamColorSet(NamedTextColor.GRAY, DyeColor.WHITE, Color.WHITE),
+                        p -> {
+                            p.entity().setHealth(20);
+                            p.entity().setFoodLevel(20);
+                            p.entity().setSaturation(20);
+                            p.entity().setExp(0);
+                            p.entity().setLevel(0);
+                            p.entity().getInventory().clear();
+                            p.entity().getInventory().setArmorContents(null);
+                            p.entity().setGameMode(GameMode.ADVENTURE);
+                            ItemStack kbstick = new ItemStack(Material.STICK);
+                            kbstick.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
+                            p.entity().getInventory().setItem(0, kbstick);
+                        }
+                ))
+                .putAll(ONLY_SPECTATOR.getTeamRecords())
+                .build();
     }
 }
