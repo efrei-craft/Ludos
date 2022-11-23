@@ -184,7 +184,6 @@ public class Team {
             if(player.entity() != null) {
                 this.bukkitTeam.removeEntry(player.entity().getName());
             }
-            iterator.remove();
             if(player.isEphemeral() && !player.entity().hasPermission("ludos.admin")) {
                 player.entity().kick(Component.text("Fin de la partie."));
             }
