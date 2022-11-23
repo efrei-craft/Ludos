@@ -79,7 +79,7 @@ public class GameLogic {
         } else if (getTeamKills(vikingsTeam) < getTeamKills(romainsTeam)) {
             Core.get().getGameManager().getCurrentGame().setWinnerAndEndGame(new TeamWin(romainsTeam));
         } else {
-            MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&eEx aequo! &7Les deux équipes ont le même nombre de kills donc personne ne gagne...");
+            MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&eEx-æquo! &7Les deux équipes ont le même nombre de kills donc personne ne gagne...");
             Core.get().getGameManager().getCurrentGame().setWinnerAndEndGame(null);
         }
     }
