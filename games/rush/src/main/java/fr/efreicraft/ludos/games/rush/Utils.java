@@ -1,4 +1,4 @@
-package fr.efreicraft.ludos.games.blockparty;
+package fr.efreicraft.ludos.games.rush;
 
 import fr.efreicraft.ludos.core.Core;
 
