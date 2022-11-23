@@ -6,6 +6,7 @@ import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.players.Player;
 import org.bukkit.DyeColor;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -121,15 +122,15 @@ public class TeamManager implements IManager {
      * @return L'équipe avec le moins de joueurs.
      */
     private Team getTeamWithLeastPlayers() {
-        Iterator<Team> iterator = teams.values().iterator();
+        /*Iterator<Team> iterator = teams.values().iterator();
         Team team = null;
         while(iterator.hasNext()) {
             Team next = iterator.next();
             if(next.isPlayingTeam() && (team == null || (next.getPlayers().size() < team.getPlayers().size()))) {
                 team = next;
             }
-        }
-        return team;
+        }*/
+        return teams.values().stream().min(Comparator.comparingInt(t -> t.getPlayers().size())).get();
     }
 
     /**
