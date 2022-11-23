@@ -17,7 +17,6 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
-// TODO: écrire une desc
 @GameMetadata(
         name = "Rush",
         color = "&5",
@@ -49,6 +48,8 @@ public class LudosGame extends Game {
         world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
         world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+
+        this.gameLogic.world(world);
     }
 
     @Override
@@ -58,10 +59,23 @@ public class LudosGame extends Game {
         this.gameLogic.yDeath(killZoneLocation.getBlockY());
     }
 
+    public void getTeamItemSpawner() {
+
+    }
+
     @Override
     public void beginGame() {
         super.beginGame();
         gameLogic.startStopwatch();
+    }
+
+    /**
+     * Méthode standardisée de fin de jeu
+     */
+    @Override
+    public void endGame() {
+        gameLogic.stopStopwatch();
+        super.endGame();
     }
 
     @Override

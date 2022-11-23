@@ -7,6 +7,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.MerchantInventory;
 
 public record EventListener(GameLogic logic) implements Listener {
 
@@ -18,7 +22,7 @@ public record EventListener(GameLogic logic) implements Listener {
     }
 
     @EventHandler
-    public void onKill(EntityDamageEvent event) {
+    public void onDamage(EntityDamageEvent event) {
         if (event instanceof EntityDamageByEntityEvent) {
             Player victim = (Player) event.getEntity();
 
@@ -29,4 +33,12 @@ public record EventListener(GameLogic logic) implements Listener {
         }
     }
 
+    @EventHandler
+    public void onInteractVillager(PlayerInteractEntityEvent event) {
+        // Note : à changer si on ajoute une autre entité invulnérable :)
+        if (event.getRightClicked().isInvulnerable()) {
+            event.getPlayer().openMerchant(logic.merchant, true);
+            event.setCancelled(true);
+        }
+    }
 }
