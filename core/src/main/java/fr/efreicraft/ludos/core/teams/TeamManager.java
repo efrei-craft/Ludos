@@ -21,7 +21,7 @@ import java.util.Map;
 public class TeamManager implements IManager {
 
     /**
-     * Equipes chargées.
+     * Équipes chargées.
      */
     private Map<String, Team> teams;
 
