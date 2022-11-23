@@ -179,9 +179,7 @@ public class Team {
      * @param players Joueurs à supprimer.
      */
     public void removePlayers(Set<Player> players) {
-        Iterator<Player> iterator = players.iterator();
-        while (iterator.hasNext()) {
-            Player player = iterator.next();
+        for (Player player : players) {
             player.clearTeam();
             if(player.entity() != null) {
                 this.bukkitTeam.removeEntry(player.entity().getName());
