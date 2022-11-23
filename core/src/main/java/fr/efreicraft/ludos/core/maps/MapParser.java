@@ -62,7 +62,7 @@ public class MapParser {
      * - {@link GamePoint} : Le point est un point de jeu.<br />
      *
      * @param block Bloc actuel
-     * @param blockAbove Bloc au dessus du bloc actuel
+     * @param blockAbove Bloc au-dessus du bloc actuel
      * @param location Location du bloc actuel
      * @return Un {@link MapPoint} ou null si le bloc n'est pas un point.
      */
