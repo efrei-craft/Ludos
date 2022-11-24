@@ -130,10 +130,12 @@ public class TeamManager implements IManager {
                 team = next;
             }
         }*/
-        return teams.values().stream().filter(t -> t == null || t.isPlayingTeam()).min(Comparator.comparingInt(t -> {
-            if (t == null) return 0;
-            return t.getPlayers().size();
-        })).get();
+        return teams.values().stream()
+                .filter(t -> t == null || t.isPlayingTeam()) // ne garder que les teams null ou playing (on ne dispatch pas dans spectators, par ex.
+                .min(Comparator.comparingInt(t -> {
+                    if (t == null) return 0;
+                    return t.getPlayers().size(); // par quoi compare-t-on les teams ? Par leur nombre (int) de joueurs ! On extrait un int de l'abstraite Team, d'où "key extractor".
+        })).orElse(null); // Réponse null-safe
     }
 
     /**
