@@ -176,7 +176,7 @@ public class ParsedMap {
     }
 
     /**
-     * Change la point du milieu de la carte.
+     * Change le point du milieu de la carte.
      * @param middle Nouveau point de milieu de carte
      */
     public void setMiddleOfMap(Location middle) {
