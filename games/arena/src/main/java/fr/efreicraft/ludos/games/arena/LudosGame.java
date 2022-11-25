@@ -33,7 +33,7 @@ import java.util.Map;
         rules = @GameRules(
                 allowRespawn = true,
                 respawnTimer = 5,
-                minPlayers = 2,
+                minPlayers = 1,
                 minPlayersToStart = 2,
                 maxPlayers = 8
         ),
