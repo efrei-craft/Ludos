@@ -6,7 +6,6 @@ import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.maps.points.GamePoint;
-import fr.efreicraft.ludos.core.maps.points.SpawnPoint;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
 import fr.efreicraft.ludos.core.teams.Team;
@@ -57,14 +56,12 @@ public class LudosGame extends Game {
 
     @Override
     public void postMapParse() {
-        ArrayList<GamePoint> merchants = Core.get().getMapManager().getCurrentMap().getGamePoints().get("MERCHANT");
-
-        Location killZoneLocation = merchants.get(0).getLocation().subtract(0, 150, 0);
-        this.gameLogic.yDeath(killZoneLocation.getBlockY());
+        Location killZoneLocation = Core.get().getMapManager().getCurrentMap().getMiddleOfMap().subtract(0, 150, 0);
 
         Core.get().getMapManager().getCurrentMap().setMiddleOfMap(
                 Core.get().getMapManager().getCurrentMap().getGlobalPoints().get("MIDDLE").get(0).getLocation()
         );
+        this.gameLogic.yDeath(killZoneLocation.getBlockY());
 
         Team BLEUS = Utils.getTeam("BLEUS");
         Team ROUGES = Utils.getTeam("ROUGES");
@@ -78,9 +75,6 @@ public class LudosGame extends Game {
 
         // Les values de getSpawnPoints() sont des arraylist de 1 seul spawnpoint pour le rush, donc je le récupère directement.
         Core.get().getMapManager().getCurrentMap().getSpawnPoints().forEach((key, value) -> this.gameLogic.TEAMS_BED.put(key, value.get(0)));
-
-        Bukkit.getLogger().info(Core.get().getMapManager().getCurrentMap().getMiddleOfMap().toString());
-        Core.get().getMapManager().getCurrentMap().getMiddleOfMap()
     }
 
     @Override
@@ -88,7 +82,7 @@ public class LudosGame extends Game {
         super.beginGame();
 
         gameLogic.startStopwatch();
-        gameLogic.setMerchant();
+        gameLogic.setupMerchants();
         gameLogic.setupVillagers();
         gameLogic.setupBeds();
     }
@@ -120,7 +114,10 @@ public class LudosGame extends Game {
         gamePointsMaterials.put(Material.YELLOW_WOOL, "TEAM4_GENERATOR");
 
         /* Traders de cryptomonnaies */
-        gamePointsMaterials.put(Material.CUT_SANDSTONE, "MERCHANT");
+        gamePointsMaterials.put(Material.SANDSTONE, "MERCHANT_BATISSEUR");
+        gamePointsMaterials.put(Material.CHISELED_SANDSTONE, "MERCHANT_TERRORISTE");
+        gamePointsMaterials.put(Material.CUT_SANDSTONE, "MERCHANT_TAVERNIER");
+        gamePointsMaterials.put(Material.SMOOTH_SANDSTONE, "MERCHANT_ARMURIER");
         return gamePointsMaterials;
     }
 
