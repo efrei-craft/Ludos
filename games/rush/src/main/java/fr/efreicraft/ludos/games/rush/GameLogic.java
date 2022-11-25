@@ -241,6 +241,42 @@ public class GameLogic {
     private List<MerchantRecipe> getTradesArmurier() {
         List<MerchantRecipe> recipeList = new ArrayList<>();
 
+        ItemStack product = new ItemStack(Material.GOLDEN_LEGGINGS);
+        MerchantRecipe leggings = new MerchantRecipe(product, 0, 0, false, 0, 1, 1, 0, true);
+        leggings.addIngredient(new ItemStack(Material.IRON_INGOT, 3));
+        recipeList.add(leggings);
+
+        ItemStack product1 = new ItemStack(Material.GOLDEN_CHESTPLATE);
+        MerchantRecipe chestplate = new MerchantRecipe(product1, 0, 0, false, 0, 1, 1, 0, true);
+        chestplate.addIngredient(new ItemStack(Material.IRON_INGOT, 3));
+        recipeList.add(chestplate);
+
+        ItemStack product2 = new ItemStack(Material.IRON_HELMET);
+        MerchantRecipe helmet = new MerchantRecipe(product2, 0, 0, false, 0, 1, 1, 0, true);
+        helmet.addIngredient(new ItemStack(Material.GOLD_INGOT, 2));
+        recipeList.add(helmet);
+
+        ItemStack product3 = new ItemStack(Material.IRON_CHESTPLATE);
+        MerchantRecipe chestplate1 = new MerchantRecipe(product3, 0, 0, false, 0, 1, 1, 0, true);
+        chestplate1.addIngredient(new ItemStack(Material.GOLD_INGOT, 3));
+        recipeList.add(chestplate1);
+
+        ItemStack product4 = new ItemStack(Material.IRON_LEGGINGS);
+        MerchantRecipe leggings1 = new MerchantRecipe(product4, 0, 0, false, 0, 1, 1, 0, true);
+        leggings1.addIngredient(new ItemStack(Material.GOLD_INGOT, 3));
+        recipeList.add(leggings1);
+
+        ItemStack product5 = new ItemStack(Material.IRON_BOOTS);
+        MerchantRecipe boots = new MerchantRecipe(product5, 0, 0, false, 0, 1, 1, 0, true);
+        boots.addIngredient(new ItemStack(Material.GOLD_INGOT, 2));
+        recipeList.add(boots);
+
+        ItemStack product6 = new ItemStack(Material.DIAMOND_CHESTPLATE);
+        product6.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 4);
+        MerchantRecipe chestplate2 = new MerchantRecipe(product6, 0, 0, false, 0, 1, 1, 0, true);
+        chestplate2.addIngredient(new ItemStack(Material.EMERALD, 3));
+        recipeList.add(chestplate2);
+
         return recipeList;
     }
 
