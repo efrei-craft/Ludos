@@ -134,7 +134,8 @@ public class TeamManager implements IManager {
                 .min(Comparator.comparingInt(t -> {
                     if (t == null) return 0;
                     return t.getPlayers().size(); // par quoi compare-t-on les teams ? Par leur nombre (int) de joueurs ! On extrait un int de l'abstraite Team, d'où "key extractor".
-        })).orElse(null); // Réponse null-safe
+                }))
+                .orElse(null);
     }
 
     /**
