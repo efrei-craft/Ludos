@@ -130,6 +130,7 @@ public class GameLogic {
     //TODO
     /**
      * Vérifie si le lit de *team* a été détruit.
+     * Vérifie si le lit de team a été détruit.
      * @param team L'équipe à vérifier
      * @return {@code true} si le lit de team est détruit, sinon {@code false}.
      */
