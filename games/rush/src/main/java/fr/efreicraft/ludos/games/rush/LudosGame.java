@@ -34,7 +34,7 @@ public class LudosGame extends Game {
     /**
      * Constructeur de jeu.
      */
-    protected LudosGame() {
+    public LudosGame() {
         super();
         this.gameLogic = new GameLogic();
         this.setEventListener(new EventListener(gameLogic));
