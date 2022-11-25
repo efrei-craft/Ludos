@@ -5,6 +5,7 @@ import io.papermc.paper.event.entity.EntityMoveEvent;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -32,22 +33,29 @@ public record EventListener(GameLogic logic) implements Listener {
     }
 
 //    @EventHandler
-    public void onDamage(EntityDamageEvent event) {
-        if (event instanceof EntityDamageByEntityEvent) {
-            Player victim = (Player) event.getEntity();
-
-            // SI le coup est fatal...
-            if (victim.getHealth() - event.getFinalDamage() <= 0) {
-                logic.handleFinishOffByPlayer((Player) ((EntityDamageByEntityEvent) event).getDamager());
-            }
-        }
-    }
+//    public void onDamage(EntityDamageEvent event) {
+//        if (event instanceof EntityDamageByEntityEvent) {
+//            Player victim = (Player) event.getEntity();
+//
+//            // SI le coup est fatal...
+//            if (victim.getHealth() - event.getFinalDamage() <= 0) {
+//                logic.handleFinishOffByPlayer((Player) ((EntityDamageByEntityEvent) event).getDamager());
+//            }
+//        }
+//    }
 
     @EventHandler
     public void onInteractVillager(PlayerInteractEntityEvent event) {
-        // Note : à changer si on ajoute une autre entité invulnérable :)
         if (event.getRightClicked().isInvulnerable()) {
-            event.getPlayer().openMerchant(logic.merchantBatisseur, true);
+            if (event.getRightClicked().getType() != EntityType.VILLAGER) return;
+
+            Villager villager = (Villager) event.getRightClicked();
+            switch (villager.getProfession()) {
+                case TOOLSMITH -> event.getPlayer().openMerchant(logic.merchantBatisseur, true);
+                case WEAPONSMITH -> event.getPlayer().openMerchant(logic.merchantTerroriste, true);
+                case BUTCHER -> event.getPlayer().openMerchant(logic.merchantTavernier, true);
+                case MASON -> event.getPlayer().openMerchant(logic.merchantArmurier, true);
+            }
             event.setCancelled(true);
         }
     }

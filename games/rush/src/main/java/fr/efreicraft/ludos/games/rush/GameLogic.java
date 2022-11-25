@@ -12,10 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.MerchantRecipe;
@@ -54,6 +51,34 @@ public class GameLogic {
             Location loc = point.getLocation().add(0.5, 1, 0.5);
 
             Entity villager = world.spawnEntity(loc, EntityType.VILLAGER);
+            ((Villager) villager).setProfession(Villager.Profession.TOOLSMITH);
+            villager.setVelocity(new Vector(0, 1.4, 0));
+            villager.setInvulnerable(true);
+            villager.setSilent(true);
+        }
+        for (GamePoint point : Core.get().getMapManager().getCurrentMap().getGamePoints().get("MERCHANT_TERRORISTE")) {
+            Location loc = point.getLocation().add(0.5, 1, 0.5);
+
+            Entity villager = world.spawnEntity(loc, EntityType.VILLAGER);
+            ((Villager) villager).setProfession(Villager.Profession.WEAPONSMITH);
+            villager.setVelocity(new Vector(0, 1.4, 0));
+            villager.setInvulnerable(true);
+            villager.setSilent(true);
+        }
+        for (GamePoint point : Core.get().getMapManager().getCurrentMap().getGamePoints().get("MERCHANT_TAVERNIER")) {
+            Location loc = point.getLocation().add(0.5, 1, 0.5);
+
+            Entity villager = world.spawnEntity(loc, EntityType.VILLAGER);
+            ((Villager) villager).setProfession(Villager.Profession.BUTCHER);
+            villager.setVelocity(new Vector(0, 1.4, 0));
+            villager.setInvulnerable(true);
+            villager.setSilent(true);
+        }
+        for (GamePoint point : Core.get().getMapManager().getCurrentMap().getGamePoints().get("MERCHANT_ARMURIER")) {
+            Location loc = point.getLocation().add(0.5, 1, 0.5);
+
+            Entity villager = world.spawnEntity(loc, EntityType.VILLAGER);
+            ((Villager) villager).setProfession(Villager.Profession.MASON);
             villager.setVelocity(new Vector(0, 1.4, 0));
             villager.setInvulnerable(true);
             villager.setSilent(true);
