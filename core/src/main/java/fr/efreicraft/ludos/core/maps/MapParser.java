@@ -51,6 +51,7 @@ public class MapParser {
 
     static {
         MAP_POINTS.put(Material.GOLD_BLOCK, "BOUNDARY");
+        MAP_POINTS.put(Material.OBSIDIAN, "MIDDLE");
     }
 
     /**
@@ -157,6 +158,7 @@ public class MapParser {
                     block.setType(Material.AIR);
                 }
                 parsedMap.setParsed(true);
+                parsedMap.setMiddleOfMap(null);
                 callback.onMapParsed(parsedMap);
             });
         });

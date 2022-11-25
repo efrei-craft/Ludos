@@ -36,6 +36,11 @@ public class ParsedMap {
     private String author = "Unknown";
 
     /**
+     * Milieu de la carte
+     */
+    private Location middleOfMap = null;
+
+    /**
      * Map des {@link GamePoint} de la carte, mappé en KV sur (nom, point)
      */
     private final HashMap<String, ArrayList<GamePoint>> gamePoints;
@@ -171,10 +176,24 @@ public class ParsedMap {
     }
 
     /**
+     * Change le point du milieu de la carte.
+     * @param middle Nouveau point de milieu de carte
+     */
+    public void setMiddleOfMap(Location middle) {
+        this.middleOfMap = null; // L'intérêt est que getMiddleOfMap() renverra bien un recalcul si on nullifie this.middleOfMap
+        this.middleOfMap = middle != null ? middle : getMiddleOfMap();
+    }
+
+    /**
      * Calcule la location du milieu de la carte.
      * @return {@link Location} du milieu de la carte.
      */
     public Location getMiddleOfMap() {
+        if (middleOfMap != null) return middleOfMap;
+
+        if (globalPoints.containsKey("MIDDLE"))
+            return globalPoints.get("MIDDLE").get(0).getLocation();
+
         Location first = globalPoints.get("BOUNDARY").get(0).getLocation();
         Location second = globalPoints.get("BOUNDARY").get(1).getLocation();
 

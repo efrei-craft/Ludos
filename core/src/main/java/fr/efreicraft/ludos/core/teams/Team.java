@@ -11,7 +11,6 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -179,14 +178,11 @@ public class Team {
      * @param players Joueurs à supprimer.
      */
     public void removePlayers(Set<Player> players) {
-        Iterator<Player> iterator = players.iterator();
-        while (iterator.hasNext()) {
-            Player player = iterator.next();
+        for (Player player : players) {
             player.clearTeam();
             if(player.entity() != null) {
                 this.bukkitTeam.removeEntry(player.entity().getName());
             }
-            iterator.remove();
             if(player.isEphemeral() && !player.entity().hasPermission("ludos.admin")) {
                 player.entity().kick(Component.text("Fin de la partie."));
             }

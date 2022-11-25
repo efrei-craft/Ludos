@@ -49,7 +49,7 @@ public class MessageUtils {
         /**
          * Préfixe pour les messages concernant les équipes (assignations aux équipes etc).
          */
-        TEAM("&dEquipe"),
+        TEAM("&dÉquipe"),
 
         /**
          * Préfixe vide.
