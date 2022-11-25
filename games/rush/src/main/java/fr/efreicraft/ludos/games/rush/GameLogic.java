@@ -100,6 +100,11 @@ public class GameLogic {
         this.stopWatchTask = Bukkit.getScheduler().runTaskTimer(Core.get().getGameManager().getCurrentPlugin(), () -> {
             if (time % 5 == 0) {
 
+            for (Team team : Core.get().getTeamManager().getTeams().values()) {
+                if (time % 5 == 0){
+                    rewardTeam(team, new ItemStack(Material.GOLD_INGOT));
+                }
+                rewardTeam(team, new ItemStack(Material.BRICK));
             }
 
 
