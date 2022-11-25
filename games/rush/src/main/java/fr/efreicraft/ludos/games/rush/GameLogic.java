@@ -118,8 +118,9 @@ public class GameLogic {
         recipeList.add(pick2);
 
         ItemStack product5 = new ItemStack(Material.IRON_PICKAXE);
-        product5.addEnchantment(Enchantment.DIG_SPEED, 1);
-        product5.addEnchantment(Enchantment.DURABILITY, 1);
+        product5.addEnchantment(Enchantment.DIG_SPEED, 4);
+        product5.addEnchantment(Enchantment.DURABILITY, 3);
+        product5.addEnchantment(Enchantment.SILK_TOUCH, 1);
         MerchantRecipe pick3 = new MerchantRecipe(product5, 0, 0, false, 0, 1, 1, 0, true);
         pick3.addIngredient(new ItemStack(Material.IRON_INGOT, 10));
         pick3.addIngredient(new ItemStack(Material.GOLD_INGOT));
@@ -137,6 +138,55 @@ public class GameLogic {
 
     private List<MerchantRecipe> getTradesTerroriste() {
         List<MerchantRecipe> recipeList = new ArrayList<>();
+
+        ItemStack product = new ItemStack(Material.GOLDEN_SWORD);
+        product.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+        product.addEnchantment(Enchantment.KNOCKBACK, 1);
+        MerchantRecipe sword = new MerchantRecipe(product, 0, 0, false, 0, 1, 1, 0, true);
+        sword.addIngredient(new ItemStack(Material.IRON_INGOT, 2));
+        recipeList.add(sword);
+
+        ItemStack product1 = new ItemStack(Material.GOLDEN_SWORD);
+        product1.addEnchantment(Enchantment.DAMAGE_ALL, 2);
+        product1.addEnchantment(Enchantment.KNOCKBACK, 1);
+        product1.addEnchantment(Enchantment.DURABILITY, 1);
+        MerchantRecipe sword1 = new MerchantRecipe(product1, 0, 0, false, 0, 1, 1, 0, true);
+        sword1.addIngredient(new ItemStack(Material.GOLD_INGOT, 2));
+        recipeList.add(sword1);
+
+        ItemStack product2 = new ItemStack(Material.DIAMOND_SWORD);
+        product2.addEnchantment(Enchantment.DAMAGE_ALL, 4);
+        product2.addEnchantment(Enchantment.KNOCKBACK, 2);
+        MerchantRecipe sword2 = new MerchantRecipe(product2, 0, 0, false, 0, 1, 1, 0, true);
+        sword2.addIngredient(new ItemStack(Material.EMERALD, 5));
+        recipeList.add(sword2);
+
+        ItemStack product3 = new ItemStack(Material.BOW);
+        product3.addEnchantment(Enchantment.ARROW_INFINITE, 1);
+        MerchantRecipe bow = new MerchantRecipe(product3, 0, 0, false, 0, 1, 1, 0, true);
+        bow.addIngredient(new ItemStack(Material.IRON_INGOT, 3));
+        recipeList.add(bow);
+
+        ItemStack product4 = new ItemStack(Material.BOW);
+        product4.addEnchantment(Enchantment.ARROW_INFINITE, 1);
+        product4.addEnchantment(Enchantment.ARROW_DAMAGE, 2);
+        MerchantRecipe bow1 = new MerchantRecipe(product4, 0, 0, false, 0, 1, 1, 0, true);
+        bow1.addIngredient(new ItemStack(Material.GOLD_INGOT, 3));
+        recipeList.add(bow1);
+
+        ItemStack product5 = new ItemStack(Material.BOW);
+        product5.addEnchantment(Enchantment.ARROW_INFINITE, 1);
+        product5.addEnchantment(Enchantment.ARROW_DAMAGE, 4);
+        MerchantRecipe bow2 = new MerchantRecipe(product5, 0, 0, false, 0, 1, 1, 0, true);
+        bow2.addIngredient(new ItemStack(Material.EMERALD));
+        bow2.addIngredient(new ItemStack(Material.GOLD_INGOT, 3));
+        recipeList.add(bow2);
+
+        ItemStack product6 = new ItemStack(Material.ARROW);
+        MerchantRecipe arrow = new MerchantRecipe(product6, 0, 0, false, 0, 1, 1, 0, true);
+        arrow.addIngredient(new ItemStack(Material.GOLD_INGOT));
+        recipeList.add(arrow);
+
 
         return recipeList;
     }
