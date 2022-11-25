@@ -53,6 +53,17 @@ public class GameLogic {
     }
 
     private void setMerchant() {
+    public void setupVillagers() {
+        for (GamePoint point : Core.get().getMapManager().getCurrentMap().getGamePoints().get("MERCHANT")) {
+            Location loc = point.getLocation().add(0.5, 1, 0.5);
+
+            Entity villager = world.spawnEntity(loc, EntityType.VILLAGER);
+            villager.setVelocity(new Vector(0, 1.4, 0));
+            villager.setInvulnerable(true);
+            villager.setSilent(true);
+        }
+    }
+
         Merchant merchant = Bukkit.createMerchant(Component.text("Boutique").color(NamedTextColor.YELLOW).decorate(TextDecoration.BOLD));
         merchant.setRecipes(getTrades());
 
