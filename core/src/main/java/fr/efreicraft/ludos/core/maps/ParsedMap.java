@@ -187,6 +187,9 @@ public class ParsedMap {
     public Location getMiddleOfMap() {
         if (middleOfMap != null) return middleOfMap;
 
+        if (globalPoints.containsKey("MIDDLE"))
+            return globalPoints.get("MIDDLE").get(0).getLocation();
+
         Location first = globalPoints.get("BOUNDARY").get(0).getLocation();
         Location second = globalPoints.get("BOUNDARY").get(1).getLocation();
 
