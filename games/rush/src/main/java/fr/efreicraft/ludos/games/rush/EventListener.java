@@ -45,7 +45,7 @@ public record EventListener(GameLogic logic) implements Listener {
     public void onInteractVillager(PlayerInteractEntityEvent event) {
         // Note : à changer si on ajoute une autre entité invulnérable :)
         if (event.getRightClicked().isInvulnerable()) {
-            event.getPlayer().openMerchant(logic.merchant, true);
+            event.getPlayer().openMerchant(logic.merchantBatisseur, true);
             event.setCancelled(true);
         }
     }
