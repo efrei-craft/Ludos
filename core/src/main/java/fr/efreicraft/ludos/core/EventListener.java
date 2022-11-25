@@ -3,19 +3,20 @@ package fr.efreicraft.ludos.core;
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.games.GameManager;
-import fr.efreicraft.ludos.core.players.menus.ChestMenu;
-import fr.efreicraft.ludos.core.players.menus.interfaces.MenuItem;
+import fr.efreicraft.ludos.core.utils.NBTUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.jetbrains.annotations.NotNull;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
+
+import java.util.UUID;
 
 /**
  * Evenements de Core.
@@ -141,19 +142,24 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onInventoryClick(InventoryClickEvent event) {
         Player player = Core.get().getPlayerManager().getPlayer((org.bukkit.entity.Player) event.getWhoClicked());
-        if(player != null && player.getMenu().get() != null) {
-            event.setCancelled(true);
-            ChestMenu menu = (ChestMenu) player.getMenu().get();
-            MenuItem item = menu.getMenuItem(event.getSlot());
-            item.getCallback().onClick(player);
+        if(player != null && event.getCurrentItem() != null) {
+            String nbtValue = NBTUtils.getNBT(event.getCurrentItem(), "menu_item_uuid");
+            if(nbtValue != null) {
+                event.setCancelled(true);
+                player.getPlayerMenus().getMenuItemFromUUID(UUID.fromString(nbtValue)).getCallback().run();
+            }
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onInventoryClose(InventoryCloseEvent event) {
-        Player player = Core.get().getPlayerManager().getPlayer((org.bukkit.entity.Player) event.getPlayer());
-        if(player != null && player.getMenu().get() != null) {
-            player.getMenu().set(null);
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+        if(player != null && event.getItem() != null && event.getAction() == Action.RIGHT_CLICK_AIR) {
+            String nbtValue = NBTUtils.getNBT(event.getItem(), "menu_item_uuid");
+            if(nbtValue != null) {
+                event.setCancelled(true);
+                player.getPlayerMenus().getMenuItemFromUUID(UUID.fromString(nbtValue)).getCallback().run();
+            }
         }
     }
 

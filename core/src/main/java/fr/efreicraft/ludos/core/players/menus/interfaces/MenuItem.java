@@ -7,12 +7,18 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
  * @project Ludos
  */
 public abstract class MenuItem {
+
+    /**
+     * UUID du MenuItem pour une detection plus efficace d'une interaction avec.
+     */
+    private UUID uuid;
 
     private TextComponent name = null;
 
@@ -28,6 +34,7 @@ public abstract class MenuItem {
             IMenuClickCallback callback,
             IMenuItemRefresh refresh
     ) {
+        this.uuid = UUID.randomUUID();
         this.name = LegacyComponentSerializer.legacyAmpersand().deserialize(name).decoration(TextDecoration.ITALIC, false);
         this.description = new ArrayList<>();
         for (String line : description.split("\n")) {
@@ -48,25 +55,34 @@ public abstract class MenuItem {
             IMenuClickCallback callback,
             IMenuItemRefresh refresh
     ) {
+        this.uuid = UUID.randomUUID();
         this.callback = callback;
         this.refresh = refresh;
     }
 
+    public UUID getUUID() {
+        return uuid;
+    }
+
     public TextComponent getName() {
         if (this.refresh != null) {
-            return this.refresh.refresh().getName();
+            return this.refresh.run().getName();
         }
         return name;
     }
 
     public List<Component> getDescription() {
         if (this.refresh != null) {
-            return this.refresh.refresh().getDescription();
+            return this.refresh.run().getDescription();
         }
         return description;
     }
 
     public IMenuClickCallback getCallback() {
         return callback;
+    }
+
+    public IMenuItemRefresh getRefresh() {
+        return refresh;
     }
 }

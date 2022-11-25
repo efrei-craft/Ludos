@@ -3,7 +3,7 @@ package fr.efreicraft.ludos.core.commands;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.players.menus.ChestMenu;
-import fr.efreicraft.ludos.core.players.menus.ChestMenuItem;
+import fr.efreicraft.ludos.core.players.menus.ItemStackMenuItem;
 import fr.efreicraft.ludos.core.players.menus.interfaces.MenuItem;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import org.bukkit.Material;
@@ -28,19 +28,19 @@ public class TestCommand implements CommandExecutor {
 
         List<MenuItem> items = new ArrayList<>();
         items.add(
-                new ChestMenuItem(
-                        new ItemStack(Material.CRAFTING_TABLE),
+                new ItemStackMenuItem(
                         6,
-                        () -> new ChestMenuItem(
+                        () -> new ItemStackMenuItem(
                                 new ItemStack(Material.DIAMOND),
                                 "&6Test",
                                 "&8Test\n\npog!!! &7aaaa &k!!!! &f&l" + System.currentTimeMillis()
                         ),
-                        player1 -> player1.sendMessage(MessageUtils.ChatPrefix.GAME, "Test!!")
+                        () -> player.sendMessage(MessageUtils.ChatPrefix.GAME, "Test!!")
                 )
         );
 
-        player.getMenu().set(
+        player.getPlayerMenus().setMenu(
+                "TEST_MENU",
                 new ChestMenu(
                         player,
                         "&8» &6Test",
@@ -48,7 +48,7 @@ public class TestCommand implements CommandExecutor {
                         9
                 )
         );
-        player.getMenu().get().open();
+        player.getPlayerMenus().getMenu("TEST_MENU").show();
 
         return true;
     }

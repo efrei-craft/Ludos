@@ -8,6 +8,6 @@ package fr.efreicraft.ludos.core.players.menus.interfaces;
  */
 public interface IMenuItemRefresh {
 
-    MenuItem refresh();
+    MenuItem run();
 
 }

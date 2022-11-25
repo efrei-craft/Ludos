@@ -2,15 +2,12 @@ package fr.efreicraft.ludos.core.players.menus;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.players.Player;
-import fr.efreicraft.ludos.core.players.menus.interfaces.Menu;
 import fr.efreicraft.ludos.core.players.menus.interfaces.MenuItem;
+import fr.efreicraft.ludos.core.players.menus.interfaces.Menu;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
@@ -37,7 +34,7 @@ public class ChestMenu extends Menu {
     }
 
     @Override
-    public void open() {
+    public void show() {
         this.inventory = Bukkit.createInventory(null, this.size, this.menuName);
         this.prepareMenuItems();
         this.player.entity().openInventory(this.inventory);
@@ -54,16 +51,8 @@ public class ChestMenu extends Menu {
         inventory.clear();
 
         for (MenuItem item : this.items) {
-            ChestMenuItem menuItem = (ChestMenuItem) item;
-            ItemStack itemStack = menuItem.getItemStack();
-
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            itemMeta.displayName(menuItem.getName());
-            itemMeta.lore(menuItem.getDescription());
-            itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-            itemStack.setItemMeta(itemMeta);
-
-            inventory.setItem(menuItem.getSlot(), itemStack);
+            ItemStackMenuItem menuItem = (ItemStackMenuItem) item;
+            inventory.setItem(menuItem.getSlot(), menuItem.getItemStack());
         }
     }
 
@@ -80,21 +69,6 @@ public class ChestMenu extends Menu {
                 prepareMenuItems();
             }
         }.runTaskTimer(Core.get().getPlugin(), 0, 20);
-    }
-
-    /**
-     * Récupère l'item par rapport à son slot dans la liste de {@link MenuItem} de l'instance.
-     * @param slot Slot de l'item.
-     * @return L'item.
-     */
-    public MenuItem getMenuItem(Integer slot) {
-        for (MenuItem item : this.items) {
-            ChestMenuItem menuItem = (ChestMenuItem) item;
-            if(menuItem.getSlot().equals(slot)) {
-                return menuItem;
-            }
-        }
-        return null;
     }
 
 
