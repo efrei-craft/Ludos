@@ -21,14 +21,12 @@ import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class GameLogic {
 
     private World world;
 
-    public final Map<Team, ArrayList<GamePoint>> TEAMS = new HashMap<>();
     public final Map<Team, ArrayList<GamePoint>> TEAMS_ITEMSPAWNERS = new HashMap<>();
     public Map<Team, SpawnPoint> TEAMS_BED = new HashMap<>();
 
@@ -46,15 +44,10 @@ public class GameLogic {
 
     private final Set<Team> bedDestroyed = new HashSet<>(4);
 
-    public GameLogic() {
-    }
-
     public void world(World world) {
         this.world = world;
-        setMerchant();
     }
 
-    private void setMerchant() {
     public void setupVillagers() {
         for (GamePoint point : Core.get().getMapManager().getCurrentMap().getGamePoints().get("MERCHANT")) {
             Location loc = point.getLocation().add(0.5, 1, 0.5);
@@ -100,7 +93,6 @@ public class GameLogic {
 
     public void startStopwatch() {
         this.stopWatchTask = Bukkit.getScheduler().runTaskTimer(Core.get().getGameManager().getCurrentPlugin(), () -> {
-            if (time % 5 == 0) {
 
             for (Team team : Core.get().getTeamManager().getTeams().values()) {
                 if (time % 5 == 0){
@@ -108,7 +100,6 @@ public class GameLogic {
                 }
                 rewardTeam(team, new ItemStack(Material.BRICK));
             }
-
 
             time++;
         }, 0, 20);
@@ -126,8 +117,6 @@ public class GameLogic {
     public void handleFinishOffByPlayer(Player killer) {
         fr.efreicraft.ludos.core.players.Player gamer = Utils.getLudosPlayer(killer);
         if (gamer == null) return;
-
-        rewardTeam(gamer.getTeam());
     }
 
     /**
@@ -159,9 +148,7 @@ public class GameLogic {
         }
     }
 
-    //TODO
     /**
-     * Vérifie si le lit de *team* a été détruit.
      * Vérifie si le lit de team a été détruit.
      * @param team L'équipe à vérifier
      * @return {@code true} si le lit de team est détruit, sinon {@code false}.
@@ -179,10 +166,6 @@ public class GameLogic {
             bedDestroyed.add(team);
         else
             bedDestroyed.remove(team);
-    }
-
-    public void getTeamItemSpawner() {
-
     }
 
 }
