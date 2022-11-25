@@ -157,6 +157,7 @@ public class MapParser {
                     block.setType(Material.AIR);
                 }
                 parsedMap.setParsed(true);
+                parsedMap.setMiddleOfMap(null);
                 callback.onMapParsed(parsedMap);
             });
         });
