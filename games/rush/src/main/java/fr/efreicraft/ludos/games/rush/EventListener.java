@@ -1,7 +1,9 @@
 package fr.efreicraft.ludos.games.rush;
 
 import fr.efreicraft.ludos.core.Core;
+import io.papermc.paper.event.entity.EntityMoveEvent;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -51,13 +53,17 @@ public record EventListener(GameLogic logic) implements Listener {
     }
 
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        fr.efreicraft.ludos.core.players.Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
-        if (!player.getTeam().isPlayingTeam()) {
-            return;
-        }
-        if(logic.yDeath() >= event.getTo().getY()) {
-            player.entity().setHealth(0);
+    public void onPlayerMove(EntityMoveEvent event) {
+        if (event.getEntity() instanceof Player) {
+            fr.efreicraft.ludos.core.players.Player player = Core.get().getPlayerManager().getPlayer((Player) event.getEntity());
+            if (!player.getTeam().isPlayingTeam()) {
+                return;
+            }
+            if (logic.yDeath() >= event.getTo().getY()) {
+                player.entity().setHealth(0);
+            }
+        } else if (event.getEntity().getType() == EntityType.VILLAGER) {
+            event.setCancelled(true);
         }
     }
 }
