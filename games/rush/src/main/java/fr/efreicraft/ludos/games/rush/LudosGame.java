@@ -24,7 +24,11 @@ import java.util.*;
         rules = @GameRules(
                 allowRespawn = true,
                 minPlayersToStart = 1,
-                maxPlayers = 8
+                maxPlayers = 8,
+                allowEphemeralPlayers = true
+        ),
+        customData = @CustomGameData(
+                respawnTitles = {"Regarde des 2 côtés !!!", "ezclap", "Oof", "Vous êtes mort !"}
         )
 )
 public class LudosGame extends Game {
@@ -55,20 +59,38 @@ public class LudosGame extends Game {
     public void postMapParse() {
         ArrayList<GamePoint> merchants = Core.get().getMapManager().getCurrentMap().getGamePoints().get("MERCHANT");
 
-        Location killZoneLocation = merchants.get(0).getLocation().subtract(0, 64, 0);
+        Location killZoneLocation = merchants.get(0).getLocation().subtract(0, 150, 0);
         this.gameLogic.yDeath(killZoneLocation.getBlockY());
 
+        Core.get().getMapManager().getCurrentMap().setMiddleOfMap(
+                Core.get().getMapManager().getCurrentMap().getGlobalPoints().get("MIDDLE").get(0).getLocation()
+        );
 
-    }
+        Team BLEUS = Utils.getTeam("BLEUS");
+        Team ROUGES = Utils.getTeam("ROUGES");
+        Team VERTS = Utils.getTeam("VERTS");
+        Team JAUNES = Utils.getTeam("JAUNES");
 
-    public void getTeamItemSpawner() {
+        this.gameLogic.TEAMS_ITEMSPAWNERS.put(BLEUS, Core.get().getMapManager().getCurrentMap().getGamePoints().get("TEAM1_GENERATOR"));
+        this.gameLogic.TEAMS_ITEMSPAWNERS.put(ROUGES, Core.get().getMapManager().getCurrentMap().getGamePoints().get("TEAM2_GENERATOR"));
+        this.gameLogic.TEAMS_ITEMSPAWNERS.put(VERTS, Core.get().getMapManager().getCurrentMap().getGamePoints().get("TEAM3_GENERATOR"));
+        this.gameLogic.TEAMS_ITEMSPAWNERS.put(JAUNES, Core.get().getMapManager().getCurrentMap().getGamePoints().get("TEAM4_GENERATOR"));
 
+        // Les values de getSpawnPoints() sont des arraylist de 1 seul spawnpoint pour le rush, donc je le récupère directement.
+        Core.get().getMapManager().getCurrentMap().getSpawnPoints().forEach((key, value) -> this.gameLogic.TEAMS_BED.put(key, value.get(0)));
+
+        Bukkit.getLogger().info(Core.get().getMapManager().getCurrentMap().getMiddleOfMap().toString());
+        Core.get().getMapManager().getCurrentMap().getMiddleOfMap()
     }
 
     @Override
     public void beginGame() {
         super.beginGame();
+
         gameLogic.startStopwatch();
+        gameLogic.setMerchant();
+        gameLogic.setupVillagers();
+        gameLogic.setupBeds();
     }
 
     /**
@@ -89,11 +111,13 @@ public class LudosGame extends Game {
     public EnumMap<Material, String> getGamePointsMaterials() {
         EnumMap<Material, String> gamePointsMaterials = new EnumMap<>(Material.class);
 
+        gamePointsMaterials.put(Material.NETHERITE_BLOCK, "MIDDLE");
+
         /* Le générateur d'items des teams */
-        gamePointsMaterials.put(Material.REDSTONE_BLOCK, "TEAM1_GENERATOR");
-        gamePointsMaterials.put(Material.LAPIS_BLOCK, "TEAM2_GENERATOR");
-        gamePointsMaterials.put(Material.SLIME_BLOCK, "TEAM3_GENERATOR");
-        gamePointsMaterials.put(Material.COPPER_BLOCK, "TEAM4_GENERATOR");
+        gamePointsMaterials.put(Material.BLUE_WOOL, "TEAM1_GENERATOR");
+        gamePointsMaterials.put(Material.RED_WOOL, "TEAM2_GENERATOR");
+        gamePointsMaterials.put(Material.GREEN_WOOL, "TEAM3_GENERATOR");
+        gamePointsMaterials.put(Material.YELLOW_WOOL, "TEAM4_GENERATOR");
 
         /* Traders de cryptomonnaies */
         gamePointsMaterials.put(Material.CUT_SANDSTONE, "MERCHANT");
@@ -108,7 +132,7 @@ public class LudosGame extends Game {
                 2,
                 false,
                 true,
-                new ColorUtils.TeamColorSet(ColorUtils.TeamColors.GREEN),
+                new ColorUtils.TeamColorSet(ColorUtils.TeamColors.BLUE),
                 null
         ));
         teams.put("ROUGES", new TeamRecord(
@@ -116,7 +140,7 @@ public class LudosGame extends Game {
                 1,
                 false,
                 true,
-                new ColorUtils.TeamColorSet(ColorUtils.TeamColors.YELLOW),
+                new ColorUtils.TeamColorSet(ColorUtils.TeamColors.RED),
                 null
         ));
         teams.put("VERTS", new TeamRecord(
