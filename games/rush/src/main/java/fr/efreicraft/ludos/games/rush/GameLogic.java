@@ -64,6 +64,7 @@ public class GameLogic {
         }
     }
 
+    public void setMerchant() {
         Merchant merchant = Bukkit.createMerchant(Component.text("Boutique").color(NamedTextColor.YELLOW).decorate(TextDecoration.BOLD));
         merchant.setRecipes(getTrades());
 
@@ -74,12 +75,15 @@ public class GameLogic {
         List<MerchantRecipe> recipeList = new ArrayList<>();
 
         MerchantRecipe blocs = new MerchantRecipe(new ItemStack(Material.SANDSTONE, 4), 0, 0, false, 0, 1, 0, 0, true);
+        blocs.addIngredient(new ItemStack(Material.BRICK));
         recipeList.add(blocs);
 
         MerchantRecipe sword1 = new MerchantRecipe(new ItemStack(Material.STONE_SWORD), 0, 0, false, 0, 1, 0, 0, true);
+        sword1.addIngredient(new ItemStack(Material.IRON_INGOT, 4));
         recipeList.add(sword1);
 
         MerchantRecipe pick1 = new MerchantRecipe(new ItemStack(Material.STONE_PICKAXE), 0, 0, false, 0, 1, 0, 0, true);
+        pick1.addIngredient(new ItemStack(Material.IRON_INGOT, 2));
         recipeList.add(pick1);
 
         return recipeList;
