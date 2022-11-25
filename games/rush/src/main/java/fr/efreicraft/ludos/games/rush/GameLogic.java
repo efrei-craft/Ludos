@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.games.rush;
 
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.maps.points.GamePoint;
 import fr.efreicraft.ludos.core.teams.Team;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -15,11 +16,14 @@ import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class GameLogic {
 
     private World world;
+
+    public final Map<Team, ArrayList<GamePoint>> TEAMS = new HashMap<>();
 
     private int yDeath;
     Merchant merchant;
@@ -29,11 +33,11 @@ public class GameLogic {
     /**
      * Le temps écoulé depuis le début de la partie. Techniquement, rien
      * n'arrête l'incrémentation de cette variable, sauf la fin de partie,
-     * mais bon on aura pas d'overflow après
+     * mais bon, on n'aura pas d'overflow après.
      */
     int time = 0;
 
-    private Set<Team> bedDestroyed = new HashSet<>(4);
+    private final Set<Team> bedDestroyed = new HashSet<>(4);
 
     public GameLogic() {
     }
@@ -119,6 +123,10 @@ public class GameLogic {
             bedDestroyed.add(team);
         else
             bedDestroyed.remove(team);
+    }
+
+    public void getTeamItemSpawner() {
+
     }
 
 }
