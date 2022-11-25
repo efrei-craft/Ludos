@@ -29,6 +29,8 @@ public class GameLogic {
     private World world;
 
     public final Map<Team, ArrayList<GamePoint>> TEAMS = new HashMap<>();
+    public final Map<Team, ArrayList<GamePoint>> TEAMS_ITEMSPAWNERS = new HashMap<>();
+    public Map<Team, SpawnPoint> TEAMS_BED = new HashMap<>();
 
     private int yDeath;
     Merchant merchant;
