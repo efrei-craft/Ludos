@@ -123,8 +123,33 @@ public class GameLogic {
         rewardTeam(gamer.getTeam());
     }
 
+    /**
+     * Spawn stacks sur les spawners d'items de team, en les répartissant sur chaque point.
+     * @param team La team récompensée
+     * @param stacks Les stacks à distribuer
+     */
     public void rewardTeam(Team team, ItemStack... stacks) {
+        if (stacks == null) return;
+        List<GamePoint> points = TEAMS_ITEMSPAWNERS.get(team);
+        if (points == null) return;
 
+        for (ItemStack stackTotal : stacks) {
+            int distributed = stackTotal.getAmount();
+            ItemStack stack = stackTotal.clone();
+            stack.setAmount(1);
+
+            while (true) {
+                for (GamePoint gamePoint : points) {
+                    Location loc = gamePoint.getLocation().add(0.5, 0, 0.5);
+                    Item item = this.world.dropItem(loc, stack);
+                    item.setVelocity(new Vector(0, 1, 0));
+                    distributed--;
+
+                    if (distributed == 0) return;
+                }
+            }
+
+        }
     }
 
     //TODO
