@@ -175,6 +175,10 @@ public class ParsedMap {
         return spawnPoints;
     }
 
+    /**
+     * Change le point du milieu de la carte.
+     * @param middle Nouveau point de milieu de carte
+     */
     public void setMiddleOfMap(Location middle) {
         this.middleOfMap = null; // L'intérêt est que getMiddleOfMap() renverra bien un recalcul si on nullifie this.middleOfMap
         this.middleOfMap = middle != null ? middle : getMiddleOfMap();
@@ -186,6 +190,9 @@ public class ParsedMap {
      */
     public Location getMiddleOfMap() {
         if (middleOfMap != null) return middleOfMap;
+
+        if (globalPoints.containsKey("MIDDLE"))
+            return globalPoints.get("MIDDLE").get(0).getLocation();
 
         Location first = globalPoints.get("BOUNDARY").get(0).getLocation();
         Location second = globalPoints.get("BOUNDARY").get(1).getLocation();

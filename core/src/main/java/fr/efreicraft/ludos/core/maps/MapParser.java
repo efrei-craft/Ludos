@@ -51,6 +51,7 @@ public class MapParser {
 
     static {
         MAP_POINTS.put(Material.GOLD_BLOCK, "BOUNDARY");
+        MAP_POINTS.put(Material.OBSIDIAN, "MIDDLE");
     }
 
     /**

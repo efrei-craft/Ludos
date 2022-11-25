@@ -8,7 +8,6 @@ import org.bukkit.DyeColor;
 
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -122,20 +121,13 @@ public class TeamManager implements IManager {
      * @return L'équipe avec le moins de joueurs.
      */
     private Team getTeamWithLeastPlayers() {
-        /*Iterator<Team> iterator = teams.values().iterator();
-        Team team = null;
-        while(iterator.hasNext()) {
-            Team next = iterator.next();
-            if(next.isPlayingTeam() && (team == null || (next.getPlayers().size() < team.getPlayers().size()))) {
-                team = next;
-            }
-        }*/
         return teams.values().stream()
                 .filter(t -> t == null || t.isPlayingTeam()) // ne garder que les teams null ou playing (on ne dispatch pas dans spectators, par ex.
                 .min(Comparator.comparingInt(t -> {
                     if (t == null) return 0;
                     return t.getPlayers().size(); // par quoi compare-t-on les teams ? Par leur nombre (int) de joueurs ! On extrait un int de l'abstraite Team, d'où "key extractor".
-        })).orElse(null); // Réponse null-safe
+                }))
+                .orElse(null);
     }
 
     /**
