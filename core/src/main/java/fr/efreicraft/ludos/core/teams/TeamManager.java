@@ -8,7 +8,6 @@ import org.bukkit.DyeColor;
 
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
