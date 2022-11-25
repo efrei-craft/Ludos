@@ -92,6 +92,9 @@ public class GameLogic {
     public void yDeath(int yDeath) {
         this.yDeath = yDeath;
     }
+    public int yDeath() {
+        return this.yDeath;
+    }
 
     public void startStopwatch() {
         this.stopWatchTask = Bukkit.getScheduler().runTaskTimer(Core.get().getGameManager().getCurrentPlugin(), () -> {
