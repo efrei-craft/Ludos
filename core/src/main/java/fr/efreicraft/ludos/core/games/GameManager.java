@@ -124,7 +124,6 @@ public class GameManager implements IManager {
      * @param gameClass Classe du jeu
      */
     public void registerGame(Class<? extends Game> gameClass) throws GameRegisteringException {
-        Core.get().getLogger().log(Level.INFO, "Game {0} registered !", gameClass.getPackageName());
         try {
             currentGame = gameClass.getConstructor().newInstance();
             currentGame.prepareServer();
@@ -132,6 +131,7 @@ public class GameManager implements IManager {
                 lobbyCountdown.cancel();
             }
             lobbyCountdown = new LobbyCountdown(currentGame.getMetadata().rules().startTimer());
+            Core.get().getLogger().log(Level.INFO, "Game {0} registered !", gameClass.getPackageName());
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new GameRegisteringException(e.getMessage());
         }
