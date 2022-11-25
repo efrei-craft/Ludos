@@ -121,14 +121,6 @@ public class TeamManager implements IManager {
      * @return L'équipe avec le moins de joueurs.
      */
     private Team getTeamWithLeastPlayers() {
-        /*Iterator<Team> iterator = teams.values().iterator();
-        Team team = null;
-        while(iterator.hasNext()) {
-            Team next = iterator.next();
-            if(next.isPlayingTeam() && (team == null || (next.getPlayers().size() < team.getPlayers().size()))) {
-                team = next;
-            }
-        }*/
         return teams.values().stream()
                 .filter(t -> t == null || t.isPlayingTeam()) // ne garder que les teams null ou playing (on ne dispatch pas dans spectators, par ex.
                 .min(Comparator.comparingInt(t -> {
