@@ -194,6 +194,47 @@ public class GameLogic {
     private List<MerchantRecipe> getTradesTavernier() {
         List<MerchantRecipe> recipeList = new ArrayList<>();
 
+        ItemStack product = new ItemStack(Material.COOKED_BEEF);
+        MerchantRecipe meat = new MerchantRecipe(product, 0, 0, false, 0, 1, 1, 0, true);
+        meat.addIngredient(new ItemStack(Material.BRICK, 5));
+        recipeList.add(meat);
+
+        ItemStack product1 = new ItemStack(Material.GOLDEN_APPLE);
+        MerchantRecipe gapple = new MerchantRecipe(product1, 0, 0, false, 0, 1, 1, 0, true);
+        gapple.addIngredient(new ItemStack(Material.IRON_INGOT, 2));
+        recipeList.add(gapple);
+
+        ItemStack product2 = new ItemStack(Material.FISHING_ROD);
+        MerchantRecipe fishingrod = new MerchantRecipe(product2, 0, 0, false, 0, 1, 1, 0, true);
+        fishingrod.addIngredient(new ItemStack(Material.IRON_INGOT, 2));
+        recipeList.add(fishingrod);
+
+        ItemStack product3 = new ItemStack(Material.COBWEB);
+        MerchantRecipe cobweb = new MerchantRecipe(product3, 0, 0, false, 0, 1, 1, 0, true);
+        cobweb.addIngredient(new ItemStack(Material.BRICK, 6));
+        cobweb.addIngredient(new ItemStack(Material.IRON_INGOT, 3));
+        recipeList.add(cobweb);
+
+        ItemStack product4 = new ItemStack(Material.TNT);
+        MerchantRecipe bow1 = new MerchantRecipe(product4, 0, 0, false, 0, 1, 1, 0, true);
+        bow1.addIngredient(new ItemStack(Material.IRON_INGOT, 6));
+        recipeList.add(bow1);
+
+        ItemStack product5 = new ItemStack(Material.FLINT_AND_STEEL);
+        MerchantRecipe lighter = new MerchantRecipe(product5, 0, 0, false, 0, 1, 1, 0, true);
+        lighter.addIngredient(new ItemStack(Material.GOLD_INGOT, 3));
+        recipeList.add(lighter);
+
+        ItemStack product6 = new ItemStack(Material.REDSTONE_TORCH);
+        MerchantRecipe redstonetorch = new MerchantRecipe(product6, 0, 0, false, 0, 1, 1, 0, true);
+        redstonetorch.addIngredient(new ItemStack(Material.BRICK, 10));
+        recipeList.add(redstonetorch);
+
+        ItemStack product7 = new ItemStack(Material.ENDER_PEARL);
+        MerchantRecipe enderpearl = new MerchantRecipe(product7, 0, 0, false, 0, 1, 1, 0, true);
+        enderpearl.addIngredient(new ItemStack(Material.EMERALD));
+        recipeList.add(enderpearl);
+
         return recipeList;
     }
 
