@@ -29,7 +29,7 @@ public class ChestMenu extends Menu {
     /**
      * La taille du coffre à ouvrir.
      */
-    private int size;
+    private final int size;
 
     /**
      * Constructeur de base.
@@ -72,7 +72,7 @@ public class ChestMenu extends Menu {
     }
 
     /**
-     * Schedule une tâche qui va mettre à jour l'inventaire du joueur toutes les secondes (20 ticks).
+     * Schedule une tâche qui va mettre à jour l'inventaire du joueur toutes les demi-secondes (10 ticks).
      */
     private void scheduleUpdateInventoryTask() {
         new BukkitRunnable() {
@@ -86,7 +86,7 @@ public class ChestMenu extends Menu {
                 }
                 prepareMenuItems();
             }
-        }.runTaskTimer(Core.get().getPlugin(), 0, 20);
+        }.runTaskTimer(Core.get().getPlugin(), 0, 10);
     }
 
 

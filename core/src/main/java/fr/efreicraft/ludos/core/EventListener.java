@@ -154,7 +154,9 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
-        if(player != null && event.getItem() != null && event.getAction() == Action.RIGHT_CLICK_AIR) {
+        if(player != null
+                && event.getItem() != null
+                && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
             String nbtValue = NBTUtils.getNBT(event.getItem(), "menu_item_uuid");
             if(nbtValue != null) {
                 event.setCancelled(true);
