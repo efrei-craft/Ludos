@@ -13,18 +13,33 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.List;
 
 /**
- * Classe pour l'instanciation d'un menu de type chest.
+ * Classe représentant un menu de type <b>chest</b> (inventaire de coffre).<br />
+ * Nous ouvrons un inventaire de coffre et nous y insérons les items.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
  * @project Ludos
  */
 public class ChestMenu extends Menu {
 
-    Inventory inventory;
+    /**
+     * L'inventaire du menu.
+     */
+    private Inventory inventory;
 
-    int size;
+    /**
+     * La taille du coffre à ouvrir.
+     */
+    private int size;
 
-    public ChestMenu(Player player, String menuName, List<MenuItem> items, int size) {
+    /**
+     * Constructeur de base.
+     *
+     * @param player   Le joueur concerné par le menu.
+     * @param menuName Le titre du menu.
+     * @param size     La taille du coffre à ouvrir.
+     * @param items    Les items à afficher dans le menu.
+     */
+    public ChestMenu(Player player, String menuName, int size, List<MenuItem> items) {
         super(
                 player,
                 LegacyComponentSerializer.legacyAmpersand().deserialize(menuName),
@@ -56,6 +71,9 @@ public class ChestMenu extends Menu {
         }
     }
 
+    /**
+     * Schedule une tâche qui va mettre à jour l'inventaire du joueur toutes les secondes (20 ticks).
+     */
     private void scheduleUpdateInventoryTask() {
         new BukkitRunnable() {
             @Override

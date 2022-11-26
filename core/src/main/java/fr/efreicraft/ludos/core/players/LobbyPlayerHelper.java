@@ -40,6 +40,10 @@ public class LobbyPlayerHelper {
         preparePlayerItems(player);
     }
 
+    /**
+     * Prépare les items de lobby du joueur.
+     * @param player Joueur à préparer.
+     */
     public static void preparePlayerItems(Player player) {
         List<MenuItem> items = new ArrayList<>();
 
@@ -86,6 +90,10 @@ public class LobbyPlayerHelper {
         ).show();
     }
 
+    /**
+     * Ouvre le menu de sélection d'équipe.
+     * @param player Joueur à préparer.
+     */
     public static void openTeamSelectionMenu(Player player) {
         if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
             player.sendMessage(MessageUtils.ChatPrefix.GAME, "&cVous ne pouvez pas changer d'équipe en cours de partie.");
@@ -134,8 +142,8 @@ public class LobbyPlayerHelper {
                 new ChestMenu(
                         player,
                         "&8» &6Choix d'équipe",
-                        items,
-                        18
+                        18,
+                        items
                 )
         ).show();
     }
