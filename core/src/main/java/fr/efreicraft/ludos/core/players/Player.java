@@ -106,7 +106,6 @@ public class Player {
                     1,
                     new ScoreboardField(
                             "&6&lJoueurs",
-                            this,
                             true,
                             player1 -> {
                                 ChatColor color = ChatColor.WHITE;
@@ -130,7 +129,6 @@ public class Player {
                     2,
                     new ScoreboardField(
                             "&6&lJeu",
-                            this,
                             player1 -> {
                                 if (Core.get().getGameManager().getCurrentGame() == null) {
                                     return EMPTY;
@@ -145,7 +143,6 @@ public class Player {
                     3,
                     new ScoreboardField(
                             "&6&lCarte",
-                            this,
                             player1 -> {
                                 if (Core.get().getGameManager().getCurrentGame() == null) {
                                     return EMPTY + "e";
@@ -164,7 +161,6 @@ public class Player {
                     4,
                     new ScoreboardField(
                             "&6&lEquipe",
-                            this,
                             player1 -> {
                                 Team team1 = player1.getTeam();
                                 if (team1 == null) {

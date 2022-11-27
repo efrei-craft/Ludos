@@ -73,7 +73,7 @@ public class LudosGame extends Game {
 
         player.getBoard().setField(
                 0,
-                new ScoreboardField("&b&lJoueurs en vie", player, true, player1 -> String.valueOf(Core.get().getTeamManager().getTeam("PLAYERS").getPlayers().size()))
+                new ScoreboardField("&b&lJoueurs en vie", true, player1 -> String.valueOf(Core.get().getTeamManager().getTeam("PLAYERS").getPlayers().size()))
         );
         player.getBoard().setField(
                 1,

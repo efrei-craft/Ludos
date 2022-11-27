@@ -86,19 +86,18 @@ public class LudosGame extends Game {
 
         player.getBoard().setField(
                 0,
-                new ScoreboardField("&c&lKills Vikings", player, true, player1 -> String.valueOf(gameLogic.getTeamKills(Core.get().getTeamManager().getTeam("VIKINGS"))))
+                new ScoreboardField("&c&lKills Vikings", true, player1 -> String.valueOf(gameLogic.getTeamKills(Core.get().getTeamManager().getTeam("VIKINGS"))))
         );
 
         player.getBoard().setField(
                 1,
-                new ScoreboardField("&9&lKills Romains", player, true, player1 -> String.valueOf(gameLogic.getTeamKills(Core.get().getTeamManager().getTeam("ROMAINS"))))
+                new ScoreboardField("&9&lKills Romains", true, player1 -> String.valueOf(gameLogic.getTeamKills(Core.get().getTeamManager().getTeam("ROMAINS"))))
         );
 
         player.getBoard().setField(
                 2,
                 new ScoreboardField(
                         "&6&lTimer",
-                        player,
                         false,
                         player1 -> gameLogic.getTimerString()
                 )
