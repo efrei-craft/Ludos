@@ -146,7 +146,7 @@ public class EventListener implements Listener {
             String nbtValue = NBTUtils.getNBT(event.getCurrentItem(), "menu_item_uuid");
             if(nbtValue != null) {
                 event.setCancelled(true);
-                player.getPlayerMenus().getMenuItemFromUUID(UUID.fromString(nbtValue)).getCallback().run();
+                player.getPlayerMenus().getMenuItemFromUUID(UUID.fromString(nbtValue)).getCallback().run(event);
             }
         }
     }
@@ -160,7 +160,7 @@ public class EventListener implements Listener {
             String nbtValue = NBTUtils.getNBT(event.getItem(), "menu_item_uuid");
             if(nbtValue != null) {
                 event.setCancelled(true);
-                player.getPlayerMenus().getMenuItemFromUUID(UUID.fromString(nbtValue)).getCallback().run();
+                player.getPlayerMenus().getMenuItemFromUUID(UUID.fromString(nbtValue)).getCallback().run(event);
             }
         }
     }
