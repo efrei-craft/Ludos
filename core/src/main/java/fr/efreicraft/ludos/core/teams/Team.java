@@ -10,6 +10,7 @@ import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import org.bukkit.Location;
 
 import java.util.HashSet;
 import java.util.List;
@@ -227,9 +228,18 @@ public class Team {
         if(spawnIndex >= spawnPoints.size()) {
             spawnIndex = 0;
         }
-        SpawnPoint spawnPoint = spawnPoints.get(spawnIndex);
+        Location spawnPoint = spawnPoints.get(spawnIndex).getLocation();
+        setYawOfLocation(spawnPoint, Core.get().getMapManager().getCurrentMap().getMiddleOfMap());
         spawnIndex++;
-        player.entity().teleport(spawnPoint.getLocation());
+
+        player.entity().teleport(spawnPoint);
+    }
+
+    private void setYawOfLocation(Location playerPos, Location locationToLookAt) {
+        double dx = locationToLookAt.getX() - playerPos.getX();
+        double dz = locationToLookAt.getZ() - playerPos.getZ();
+        double yaw = (Math.atan2(dz, dx) * 180 / Math.PI) - 90;
+        playerPos.setYaw((float) yaw);
     }
 
     /**

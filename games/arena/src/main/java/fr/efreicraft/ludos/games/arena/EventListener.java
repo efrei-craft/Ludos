@@ -1,9 +1,9 @@
 package fr.efreicraft.ludos.games.arena;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.Team;
+import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -45,7 +45,8 @@ public record EventListener(GameLogic arenaLogic) implements Listener {
         if (!player.getTeam().isPlayingTeam()) {
             return;
         }
-        if((Core.get().getMapManager().getCurrentMap().getLowestBoundary().getY() - 5) > event.getTo().getY()) {
+        if(player.entity().getGameMode() == GameMode.ADVENTURE
+                && (Core.get().getMapManager().getCurrentMap().getLowestBoundary().getY() - 5) > event.getTo().getY()) {
             player.entity().setHealth(0);
         }
     }
