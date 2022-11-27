@@ -28,7 +28,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
  * Joueur des mini-jeux.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
- * @project EFREI-Minigames
  */
 public class Player {
 
@@ -357,13 +356,13 @@ public class Player {
             this.respawnLocation = event.getEntity().getLocation();
             if(event.getEntity().getKiller() != null) {
                 Player killer = Core.get().getPlayerManager().getPlayer(event.getEntity().getKiller());
-                MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, getName() + "&7 a été tué par " + killer.getName() + "&7.");
+                MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.GAME, getName() + "&7 a été tué par " + killer.getName() + "&7.");
             } else if (event.getEntity().getLastDamageCause() != null &&
                     event.getEntity().getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.VOID) {
                 this.respawnLocation = Core.get().getMapManager().getCurrentMap().getMiddleOfMap();
-                MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, getName() + "&7 est mort en tombant dans le vide.");
+                MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.GAME, getName() + "&7 est mort en tombant dans le vide.");
             } else {
-                MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, getName() + "&7 est mort.");
+                MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.GAME, getName() + "&7 est mort.");
             }
         }
     }

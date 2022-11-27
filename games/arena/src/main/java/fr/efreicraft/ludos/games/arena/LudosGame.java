@@ -22,7 +22,6 @@ import java.util.Map;
  * Jeu Arena pour tester les équipes.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
- * @project EFREI-Minigames
  */
 
 @GameMetadata(
@@ -100,6 +99,15 @@ public class LudosGame extends Game {
                         "&6&lTimer",
                         false,
                         player1 -> gameLogic.getTimerString()
+                )
+        );
+
+        player.getBoard().setField(
+                3,
+                new ScoreboardField(
+                        "&e&lKillstreak",
+                        false,
+                        player1 -> gameLogic.getPlayerKillstreak(player1) + " (Meilleur: " + gameLogic.getPlayerBestKillstreak(player1) + ")"
                 )
         );
     }
