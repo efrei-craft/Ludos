@@ -1,22 +1,26 @@
 package fr.efreicraft.ludos.games.rush;
 
+import com.destroystokyo.paper.entity.villager.ReputationType;
 import fr.efreicraft.ludos.core.Core;
 import io.papermc.paper.event.entity.EntityMoveEvent;
+import net.kyori.adventure.text.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.VillagerCareerChangeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
+
+import static org.bukkit.Bukkit.getLogger;
 
 public record EventListener(GameLogic logic) implements Listener {
 
@@ -50,18 +54,18 @@ public record EventListener(GameLogic logic) implements Listener {
             if (event.getRightClicked().getType() != EntityType.VILLAGER) return;
 
             Villager villager = (Villager) event.getRightClicked();
-            switch (villager.getProfession()) {
-                case TOOLSMITH -> event.getPlayer().openMerchant(logic.merchantBatisseur, true);
-                case WEAPONSMITH -> event.getPlayer().openMerchant(logic.merchantTerroriste, true);
-                case BUTCHER -> event.getPlayer().openMerchant(logic.merchantTavernier, true);
-                case MASON -> event.getPlayer().openMerchant(logic.merchantArmurier, true);
+            switch (( (TextComponent) villager.customName()).content()) {
+                case "Bâtisseur" -> event.getPlayer().openMerchant(logic.merchantBatisseur, true);
+                case "Terroriste" -> event.getPlayer().openMerchant(logic.merchantTerroriste, true);
+                case "Tavernier" -> event.getPlayer().openMerchant(logic.merchantTavernier, true);
+                case "Armurier" -> event.getPlayer().openMerchant(logic.merchantArmurier, true);
             }
             event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void onPlayerMove(EntityMoveEvent event) {
+    public void onEntityMove(EntityMoveEvent event) {
         if (event.getEntity() instanceof Player) {
             fr.efreicraft.ludos.core.players.Player player = Core.get().getPlayerManager().getPlayer((Player) event.getEntity());
             if (!player.getTeam().isPlayingTeam()) {
@@ -71,7 +75,27 @@ public record EventListener(GameLogic logic) implements Listener {
                 player.entity().setHealth(0);
             }
         } else if (event.getEntity().getType() == EntityType.VILLAGER) {
-            event.setCancelled(true);
+            event.setTo(event.getFrom());
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void test(VillagerCareerChangeEvent e) {
+        getLogger().info(String.valueOf(e.isCancelled()));
+        getLogger().info(e.getProfession().name());
+//        [01:01:27 INFO]: false
+//                [01:01:27 INFO]: NONE
+//                [01:01:27 INFO]: false
+//                [01:01:27 INFO]: NONE
+//                [01:01:27 INFO]: false
+//                [01:01:27 INFO]: NONE
+//                [01:01:27 INFO]: false
+//                [01:01:27 INFO]: NONE
+//                [01:01:27 INFO]: false
+//                [01:01:27 INFO]: NONE
+//                [01:01:27 INFO]: false
+//                [01:01:27 INFO]: NONE
+//                [01:01:27 INFO]: false
+//
     }
 }

@@ -48,40 +48,40 @@ public class GameLogic {
 
     public void setupVillagers() {
         for (GamePoint point : Core.get().getMapManager().getCurrentMap().getGamePoints().get("MERCHANT_BATISSEUR")) {
-            Location loc = point.getLocation().add(0.5, 1, 0.5);
+            Location loc = point.getLocation().add(0.5, 0, 0.5);
 
-            Entity villager = world.spawnEntity(loc, EntityType.VILLAGER);
-            ((Villager) villager).setProfession(Villager.Profession.TOOLSMITH);
-            villager.setVelocity(new Vector(0, 1.4, 0));
+            Villager villager = (Villager) world.spawnEntity(loc, EntityType.VILLAGER);
+            villager.customName(Component.text("Bâtisseur"));
             villager.setInvulnerable(true);
             villager.setSilent(true);
+            villager.clearReputations();
         }
         for (GamePoint point : Core.get().getMapManager().getCurrentMap().getGamePoints().get("MERCHANT_TERRORISTE")) {
-            Location loc = point.getLocation().add(0.5, 1, 0.5);
+            Location loc = point.getLocation().add(0.5, 0, 0.5);
 
-            Entity villager = world.spawnEntity(loc, EntityType.VILLAGER);
-            ((Villager) villager).setProfession(Villager.Profession.WEAPONSMITH);
-            villager.setVelocity(new Vector(0, 1.4, 0));
+            Villager villager = (Villager) world.spawnEntity(loc, EntityType.VILLAGER);
+            villager.customName(Component.text("Terroriste"));
             villager.setInvulnerable(true);
             villager.setSilent(true);
+            villager.clearReputations();
         }
         for (GamePoint point : Core.get().getMapManager().getCurrentMap().getGamePoints().get("MERCHANT_TAVERNIER")) {
-            Location loc = point.getLocation().add(0.5, 1, 0.5);
+            Location loc = point.getLocation().add(0.5, 0, 0.5);
 
-            Entity villager = world.spawnEntity(loc, EntityType.VILLAGER);
-            ((Villager) villager).setProfession(Villager.Profession.BUTCHER);
-            villager.setVelocity(new Vector(0, 1.4, 0));
+            Villager villager = (Villager) world.spawnEntity(loc, EntityType.VILLAGER);
+            villager.customName(Component.text("Tavernier"));
             villager.setInvulnerable(true);
             villager.setSilent(true);
+            villager.clearReputations();
         }
         for (GamePoint point : Core.get().getMapManager().getCurrentMap().getGamePoints().get("MERCHANT_ARMURIER")) {
-            Location loc = point.getLocation().add(0.5, 1, 0.5);
+            Location loc = point.getLocation().add(0.5, 0, 0.5);
 
-            Entity villager = world.spawnEntity(loc, EntityType.VILLAGER);
-            ((Villager) villager).setProfession(Villager.Profession.MASON);
-            villager.setVelocity(new Vector(0, 1.4, 0));
+            Villager villager = (Villager) world.spawnEntity(loc, EntityType.VILLAGER);
+            villager.customName(Component.text("Armurier"));
             villager.setInvulnerable(true);
             villager.setSilent(true);
+            villager.clearReputations();
         }
     }
 
@@ -106,7 +106,7 @@ public class GameLogic {
         this.merchantTavernier = tavernier;
 
         Merchant armurier = Bukkit.createMerchant(Component.text("Armurier").color(NamedTextColor.YELLOW).decorate(TextDecoration.BOLD));
-        batisseur.setRecipes(getTradesArmurier());
+        armurier.setRecipes(getTradesArmurier());
         this.merchantArmurier = armurier;
     }
 
@@ -267,27 +267,27 @@ public class GameLogic {
         List<MerchantRecipe> recipeList = new ArrayList<>();
 
         ItemStack product = new ItemStack(Material.GOLDEN_LEGGINGS);
-        MerchantRecipe leggings = new MerchantRecipe(product, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe leggings = new MerchantRecipe(product, 0, 9999, false, 0, 1, 1, 0, true);
         leggings.addIngredient(new ItemStack(Material.IRON_INGOT, 3));
         recipeList.add(leggings);
 
         ItemStack product1 = new ItemStack(Material.GOLDEN_CHESTPLATE);
-        MerchantRecipe chestplate = new MerchantRecipe(product1, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe chestplate = new MerchantRecipe(product1, 0, 9999, false, 0, 1, 1, 0, true);
         chestplate.addIngredient(new ItemStack(Material.IRON_INGOT, 3));
         recipeList.add(chestplate);
 
         ItemStack product2 = new ItemStack(Material.IRON_HELMET);
-        MerchantRecipe helmet = new MerchantRecipe(product2, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe helmet = new MerchantRecipe(product2, 0, 9999, false, 0, 1, 1, 0, true);
         helmet.addIngredient(new ItemStack(Material.GOLD_INGOT, 2));
         recipeList.add(helmet);
 
         ItemStack product3 = new ItemStack(Material.IRON_CHESTPLATE);
-        MerchantRecipe chestplate1 = new MerchantRecipe(product3, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe chestplate1 = new MerchantRecipe(product3, 0, 9999, false, 0, 1, 1, 0, true);
         chestplate1.addIngredient(new ItemStack(Material.GOLD_INGOT, 3));
         recipeList.add(chestplate1);
 
         ItemStack product4 = new ItemStack(Material.IRON_LEGGINGS);
-        MerchantRecipe leggings1 = new MerchantRecipe(product4, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe leggings1 = new MerchantRecipe(product4, 0, 9999, false, 0, 1, 1, 0, true);
         leggings1.addIngredient(new ItemStack(Material.GOLD_INGOT, 3));
         recipeList.add(leggings1);
 
