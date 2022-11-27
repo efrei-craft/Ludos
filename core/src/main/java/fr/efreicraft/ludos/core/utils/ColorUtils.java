@@ -21,33 +21,47 @@ public class ColorUtils {
      * Enum des {@link DyeColor} au {@link Material} pour permettre de retrouver une équipe.
      * @see TeamManager#getTeamByDyeColor(DyeColor)
      */
-    private static final Map<Material, DyeColor> DYE_COLOR_MAP = new EnumMap<>(Material.class);
+    private static final Map<Material, DyeColor> WOOL_DYE_COLOR_MAP = new EnumMap<>(Material.class);
 
     static {
-        DYE_COLOR_MAP.put(Material.WHITE_WOOL, DyeColor.WHITE);
-        DYE_COLOR_MAP.put(Material.ORANGE_WOOL, DyeColor.ORANGE);
-        DYE_COLOR_MAP.put(Material.MAGENTA_WOOL, DyeColor.MAGENTA);
-        DYE_COLOR_MAP.put(Material.LIGHT_BLUE_WOOL, DyeColor.LIGHT_BLUE);
-        DYE_COLOR_MAP.put(Material.YELLOW_WOOL, DyeColor.YELLOW);
-        DYE_COLOR_MAP.put(Material.LIME_WOOL, DyeColor.LIME);
-        DYE_COLOR_MAP.put(Material.PINK_WOOL, DyeColor.PINK);
-        DYE_COLOR_MAP.put(Material.GRAY_WOOL, DyeColor.GRAY);
-        DYE_COLOR_MAP.put(Material.LIGHT_GRAY_WOOL, DyeColor.LIGHT_GRAY);
-        DYE_COLOR_MAP.put(Material.CYAN_WOOL, DyeColor.CYAN);
-        DYE_COLOR_MAP.put(Material.PURPLE_WOOL, DyeColor.PURPLE);
-        DYE_COLOR_MAP.put(Material.BLUE_WOOL, DyeColor.BLUE);
-        DYE_COLOR_MAP.put(Material.BROWN_WOOL, DyeColor.BROWN);
-        DYE_COLOR_MAP.put(Material.GREEN_WOOL, DyeColor.GREEN);
-        DYE_COLOR_MAP.put(Material.RED_WOOL, DyeColor.RED);
-        DYE_COLOR_MAP.put(Material.BLACK_WOOL, DyeColor.BLACK);
+        WOOL_DYE_COLOR_MAP.put(Material.WHITE_WOOL, DyeColor.WHITE);
+        WOOL_DYE_COLOR_MAP.put(Material.ORANGE_WOOL, DyeColor.ORANGE);
+        WOOL_DYE_COLOR_MAP.put(Material.MAGENTA_WOOL, DyeColor.MAGENTA);
+        WOOL_DYE_COLOR_MAP.put(Material.LIGHT_BLUE_WOOL, DyeColor.LIGHT_BLUE);
+        WOOL_DYE_COLOR_MAP.put(Material.YELLOW_WOOL, DyeColor.YELLOW);
+        WOOL_DYE_COLOR_MAP.put(Material.LIME_WOOL, DyeColor.LIME);
+        WOOL_DYE_COLOR_MAP.put(Material.PINK_WOOL, DyeColor.PINK);
+        WOOL_DYE_COLOR_MAP.put(Material.GRAY_WOOL, DyeColor.GRAY);
+        WOOL_DYE_COLOR_MAP.put(Material.LIGHT_GRAY_WOOL, DyeColor.LIGHT_GRAY);
+        WOOL_DYE_COLOR_MAP.put(Material.CYAN_WOOL, DyeColor.CYAN);
+        WOOL_DYE_COLOR_MAP.put(Material.PURPLE_WOOL, DyeColor.PURPLE);
+        WOOL_DYE_COLOR_MAP.put(Material.BLUE_WOOL, DyeColor.BLUE);
+        WOOL_DYE_COLOR_MAP.put(Material.BROWN_WOOL, DyeColor.BROWN);
+        WOOL_DYE_COLOR_MAP.put(Material.GREEN_WOOL, DyeColor.GREEN);
+        WOOL_DYE_COLOR_MAP.put(Material.RED_WOOL, DyeColor.RED);
+        WOOL_DYE_COLOR_MAP.put(Material.BLACK_WOOL, DyeColor.BLACK);
     }
 
     /**
      * Récupérer la map des DyeColor au Material.
      * @return Map des DyeColor au Material.
      */
-    public static Map<Material, DyeColor> getDyeColorMap() {
-        return DYE_COLOR_MAP;
+    public static Map<Material, DyeColor> getWoolDyeColorMap() {
+        return WOOL_DYE_COLOR_MAP;
+    }
+
+    /**
+     * Récupère une laine {@link Material} à partir d'un {@link DyeColor}.
+     * @param dyeColor Couleur de la laine.
+     * @return Laine {@link Material} de la couleur.
+     */
+    public static Material getWoolByDyeColor(DyeColor dyeColor) {
+        for (Map.Entry<Material, DyeColor> entry : WOOL_DYE_COLOR_MAP.entrySet()) {
+            if (entry.getValue().equals(dyeColor)) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 
     /**

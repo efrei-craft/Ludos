@@ -59,23 +59,23 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                 }
             }
             case "start" -> {
-                MessageUtils.broadcast(
-                        MessageUtils.ChatPrefix.ADMIN,
-                        "&b" + sender.getName() + "&7 a forcé le démarrage de la partie."
-                );
                 try {
                     Core.get().getGameManager().startCurrentGame();
+                    MessageUtils.broadcast(
+                            MessageUtils.ChatPrefix.ADMIN,
+                            "&b" + sender.getName() + "&7 a forcé le démarrage de la partie."
+                    );
                 } catch (GameStatusException e) {
                     player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
                 }
             }
             case "stop" -> {
-                MessageUtils.broadcast(
-                        MessageUtils.ChatPrefix.ADMIN,
-                        "&b" + sender.getName() + "&7 a forcé l'arrêt de la partie."
-                );
                 try {
                     Core.get().getGameManager().endCurrentGame();
+                    MessageUtils.broadcast(
+                            MessageUtils.ChatPrefix.ADMIN,
+                            "&b" + sender.getName() + "&7 a forcé l'arrêt de la partie."
+                    );
                 } catch (GameStatusException e) {
                     player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
                 }

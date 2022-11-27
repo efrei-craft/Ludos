@@ -28,7 +28,7 @@ import java.util.logging.Level;
  * Permet de récupérer les informations d'une carte grâce à une convention de création de points.<br /><br />
  *
  * Un bloc avec une plaque de pression {@link Material#HEAVY_WEIGHTED_PRESSURE_PLATE} est considérée comme un {@link GlobalPoint} sauf
- * dans le cas que le bloc sous la plaque fait partie de la map {@link ColorUtils#getDyeColorMap()}, ou celui-ci est un {@link SpawnPoint}.<br /><br />
+ * dans le cas que le bloc sous la plaque fait partie de la map {@link ColorUtils#getWoolDyeColorMap()}, ou celui-ci est un {@link SpawnPoint}.<br /><br />
  *
  * Un bloc avec une plaque de pression {@link Material#LIGHT_WEIGHTED_PRESSURE_PLATE} est considérée comme un {@link GamePoint}.<br /><br />
  *
@@ -51,6 +51,7 @@ public class MapParser {
 
     static {
         MAP_POINTS.put(Material.GOLD_BLOCK, "BOUNDARY");
+        MAP_POINTS.put(Material.OBSIDIAN, "MIDDLE");
     }
 
     /**
@@ -68,8 +69,8 @@ public class MapParser {
      */
     private static MapPoint parseMapPoint(Material block, Material blockAbove, Location location) {
         if (blockAbove == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
-            if(ColorUtils.getDyeColorMap().containsKey(block)) {
-                Team team = Core.get().getTeamManager().getTeamByDyeColor(ColorUtils.getDyeColorMap().get(block));
+            if(ColorUtils.getWoolDyeColorMap().containsKey(block)) {
+                Team team = Core.get().getTeamManager().getTeamByDyeColor(ColorUtils.getWoolDyeColorMap().get(block));
                 if(team != null) {
                     return new SpawnPoint(team, location);
                 }
@@ -157,6 +158,7 @@ public class MapParser {
                     block.setType(Material.AIR);
                 }
                 parsedMap.setParsed(true);
+                parsedMap.setMiddleOfMap(null);
                 callback.onMapParsed(parsedMap);
             });
         });
