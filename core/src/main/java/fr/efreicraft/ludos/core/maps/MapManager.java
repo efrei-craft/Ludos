@@ -31,7 +31,6 @@ import java.util.logging.Level;
  * Cette classe est un singleton géré par le Core.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
- * @project EFREI-Minigames
  */
 public class MapManager implements IManager {
 
@@ -224,7 +223,7 @@ public class MapManager implements IManager {
                     lastBoundary,
                     parsedMap -> {
                         Core.get().getGameManager().getCurrentGame().postMapParse();
-                        MessageUtils.broadcast(MessageUtils.ChatPrefix.MAP, "&7La prochaine carte est &b" + currentMap.getName() + "&7!");
+                        MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.MAP, "&7La prochaine carte est &b" + currentMap.getName() + "&7!");
                     }
             );
         }

@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
  * Utilitaire de formatteur de messages.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
- * @project EFREI-Minigames
  */
 public class MessageUtils {
 
@@ -130,7 +129,7 @@ public class MessageUtils {
      * @param prefix Préfixe du message.
      * @param message Message (coloration par esperluette).
      */
-    public static void broadcast(ChatPrefix prefix, String message) {
+    public static void broadcastMessage(ChatPrefix prefix, String message) {
         sendMessage(Bukkit.getOnlinePlayers().toArray(new Player[0]), prefix, message);
     }
 
@@ -138,7 +137,7 @@ public class MessageUtils {
      * Envoyer un message à tous les joueurs sans préfixe.
      * @param message Message (coloration par esperluette).
      */
-    public static void broadcast(String message) {
+    public static void broadcastMessage(String message) {
         sendMessage(Bukkit.getOnlinePlayers().toArray(new Player[0]), ChatPrefix.EMPTY, message);
     }
 

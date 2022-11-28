@@ -18,7 +18,6 @@ import java.util.List;
  * Interface définissant les gagnants des mini-jeux.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
- * @project Ludos
  */
 public interface GameWinner {
 
@@ -60,18 +59,18 @@ public interface GameWinner {
         Game game = Core.get().getGameManager().getCurrentGame();
         ParsedMap map = Core.get().getMapManager().getCurrentMap();
 
-        MessageUtils.broadcast("");
-        MessageUtils.broadcast("&7&m--------------------------------------");
-        MessageUtils.broadcast("  " + game.getMetadata().color() + ChatColor.BOLD + game.getMetadata().name());
-        MessageUtils.broadcast("");
-        MessageUtils.broadcast("  " + getWinnerColoredName() + " &fa gagné la partie!");
-        MessageUtils.broadcast("");
-        MessageUtils.broadcast("  &7Carte: "
+        MessageUtils.broadcastMessage("");
+        MessageUtils.broadcastMessage("&7&m--------------------------------------");
+        MessageUtils.broadcastMessage("  " + game.getMetadata().color() + ChatColor.BOLD + game.getMetadata().name());
+        MessageUtils.broadcastMessage("");
+        MessageUtils.broadcastMessage("  " + getWinnerColoredName() + " &fa gagné la partie!");
+        MessageUtils.broadcastMessage("");
+        MessageUtils.broadcastMessage("  &7Carte: "
                 + game.getMetadata().color() + "&l" + map.getName()
                 + "&7 par " + game.getMetadata().color() + map.getAuthor()
         );
-        MessageUtils.broadcast("&7&m--------------------------------------");
-        MessageUtils.broadcast("");
+        MessageUtils.broadcastMessage("&7&m--------------------------------------");
+        MessageUtils.broadcastMessage("");
 
         TitleUtils.broadcastTitle(
                 getWinnerColoredName(),

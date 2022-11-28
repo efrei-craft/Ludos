@@ -19,7 +19,6 @@ import java.util.List;
  * Commande /game
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
- * @project EFREI-Minigames
  */
 public class GameCommand implements CommandExecutor, TabCompleter {
 
@@ -47,7 +46,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                     player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cUn jeu est déjà chargé. &7Déchargez le avec &e/game reset&7.");
                     return false;
                 }
-                MessageUtils.broadcast(
+                MessageUtils.broadcastMessage(
                         MessageUtils.ChatPrefix.ADMIN,
                         "&b" + sender.getName() + "&7 a changé le prochain jeu."
                 );
@@ -61,7 +60,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
             case "start" -> {
                 try {
                     Core.get().getGameManager().startCurrentGame();
-                    MessageUtils.broadcast(
+                    MessageUtils.broadcastMessage(
                             MessageUtils.ChatPrefix.ADMIN,
                             "&b" + sender.getName() + "&7 a forcé le démarrage de la partie."
                     );
@@ -72,7 +71,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
             case "stop" -> {
                 try {
                     Core.get().getGameManager().endCurrentGame();
-                    MessageUtils.broadcast(
+                    MessageUtils.broadcastMessage(
                             MessageUtils.ChatPrefix.ADMIN,
                             "&b" + sender.getName() + "&7 a forcé l'arrêt de la partie."
                     );
