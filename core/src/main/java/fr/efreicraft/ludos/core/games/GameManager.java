@@ -77,7 +77,7 @@ public class GameManager implements IManager {
     }
 
     /**
-     * Charge les plguins de jeu disponibles dans le dossier "games" du datafolder.
+     * Charge les plugins de jeu disponibles dans le dossier "games" du datafolder.
      */
     public void loadAllGameJars() {
         gamePlugins = new ArrayList<>();

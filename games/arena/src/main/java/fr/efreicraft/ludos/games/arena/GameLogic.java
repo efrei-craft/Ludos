@@ -5,9 +5,9 @@ import fr.efreicraft.ludos.core.games.runnables.GameTimer;
 import fr.efreicraft.ludos.core.games.TeamWin;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.Team;
+import fr.efreicraft.ludos.core.utils.ActionBarUtils;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import fr.efreicraft.ludos.core.utils.SoundUtils;
-import fr.efreicraft.ludos.core.utils.TitleUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -63,7 +63,7 @@ public class GameLogic {
                 makeBestTeamWin();
             } else if (timeLambda % 60 == 0 && timeLambda != GAME_TIMER) {
                 int minutes = timeLambda / 60;
-                TitleUtils.broadcastTitle("&c" + minutes + " minute" + (minutes != 1 ? "s" : ""), "&7pour faire un maximum de kills!", 0, 2, 0.5f);
+                ActionBarUtils.broadcastActionBar("&c&l" + minutes + " minute" + (minutes != 1 ? "s" : "") + " pour faire un maximum de kills!");
                 SoundUtils.broadcastSound(Sound.ENTITY_BLAZE_HURT, 1, 0.8f);
             }
             this.time = timeLambda;

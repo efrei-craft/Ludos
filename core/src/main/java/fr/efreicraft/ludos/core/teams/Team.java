@@ -3,6 +3,7 @@ package fr.efreicraft.ludos.core.teams;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.maps.points.SpawnPoint;
+import fr.efreicraft.ludos.core.players.LobbyPlayerHelper;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnBehavior;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
@@ -147,13 +148,18 @@ public class Team {
      * @param player Joueur à ajouter.
      */
     public void addPlayer(Player player) {
+        if(this.players.contains(player)) {
+            return;
+        }
         if(player.getTeam() != null) {
             player.getTeam().removePlayer(player);
         }
         this.players.add(player);
         player.setTeam(this);
         this.bukkitTeam.addEntry(player.entity().getName());
-        if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
+        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
+            LobbyPlayerHelper.preparePlayerItems(player);
+        } else {
             this.spawnBehavior.spawnPlayer(player);
         }
     }
@@ -163,6 +169,9 @@ public class Team {
      * @param player Joueur à supprimer.
      */
     public void removePlayer(Player player) {
+        if(!this.players.contains(player)) {
+            return;
+        }
         this.players.remove(player);
         player.clearTeam();
         if(player.entity() != null) {
@@ -170,6 +179,9 @@ public class Team {
         }
         if(Core.get().getGameManager().getCurrentGame() != null) {
             Core.get().getGameManager().getCurrentGame().checkIfGameHasToBeEnded();
+        }
+        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
+            LobbyPlayerHelper.preparePlayerItems(player);
         }
     }
 
@@ -185,6 +197,9 @@ public class Team {
             }
             if(player.isEphemeral() && !player.entity().hasPermission("ludos.admin")) {
                 player.entity().kick(Component.text("Fin de la partie."));
+            }
+            if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
+                LobbyPlayerHelper.preparePlayerItems(player);
             }
         }
     }

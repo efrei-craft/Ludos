@@ -1,5 +1,6 @@
 package fr.efreicraft.ludos.core.players;
 
+import fr.efreicraft.ludos.core.players.menus.PlayerMenus;
 import fr.efreicraft.ludos.core.players.runnables.PlayerRespawnCountdown;
 import fr.efreicraft.ludos.core.players.scoreboards.PlayerScoreboard;
 import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
@@ -42,6 +43,11 @@ public class Player {
     private final PlayerScoreboard scoreboard;
 
     /**
+     * Instance du menu du joueur.
+     */
+    private final PlayerMenus playerMenus;
+
+    /**
      * Instance de l'équipe du joueur.
      */
     private Team team;
@@ -55,11 +61,11 @@ public class Player {
 
     /**
      * Constructeur du joueur.
-     *
      * @param playerEntity Instance du joueur Bukkit.
      */
     public Player(org.bukkit.entity.Player playerEntity) {
         this.playerEntity = playerEntity;
+        this.playerMenus = new PlayerMenus();
         this.scoreboard = new PlayerScoreboard(this);
         this.setupScoreboard();
 
@@ -199,11 +205,18 @@ public class Player {
 
     /**
      * Retourne le {@link PlayerScoreboard} du joueur.
-     *
      * @return Le {@link PlayerScoreboard} du joueur.
      */
     public PlayerScoreboard getBoard() {
         return scoreboard;
+    }
+
+    /**
+     * Retourne le {@link PlayerMenus} du joueur.
+     * @return Le {@link PlayerMenus} du joueur.
+     */
+    public PlayerMenus getPlayerMenus() {
+        return playerMenus;
     }
 
     /**
@@ -228,6 +241,14 @@ public class Player {
                     LegacyComponentSerializer.legacyAmpersand().serialize(msgComponent)
             );
         }
+
+        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.INGAME && !team.isPlayingTeam()) {
+            for (Player p : Core.get().getPlayerManager().getPlayers()) {
+                if(p != this && p.getTeam().isPlayingTeam()) {
+                    p.entity().hidePlayer(Core.get().getPlugin(), entity());
+                }
+            }
+        }
     }
 
     /**
@@ -235,6 +256,13 @@ public class Player {
      */
     public void clearTeam() {
         this.team = null;
+        if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
+            for (Player p : Core.get().getPlayerManager().getPlayers()) {
+                if(p != this) {
+                    p.entity().showPlayer(Core.get().getPlugin(), entity());
+                }
+            }
+        }
     }
 
     /**
@@ -318,13 +346,7 @@ public class Player {
      * Spawn le joueur dans le monde d'attente.
      */
     public void spawnAtWaitingLobby() {
-        entity().teleport(Core.get().getMapManager().getLobbyWorld().getSpawnLocation().add(-0.5, 0, -0.5));
-        resetPlayer();
-
-        for (Player p : Core.get().getPlayerManager().getPlayers()) {
-            entity().showPlayer(Core.get().getPlugin(), p.entity());
-            p.entity().showPlayer(Core.get().getPlugin(), entity());
-        }
+        LobbyPlayerHelper.preparePlayerForLobby(this);
     }
 
     /**
@@ -386,5 +408,4 @@ public class Player {
             }
         }
     }
-
 }
