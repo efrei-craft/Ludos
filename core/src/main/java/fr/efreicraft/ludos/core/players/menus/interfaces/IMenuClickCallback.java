@@ -1,5 +1,7 @@
 package fr.efreicraft.ludos.core.players.menus.interfaces;
 
+import org.bukkit.event.Event;
+
 /**
  * Interface fonctionnelle permettant de définir une action à effectuer lors d'un clic sur un item d'un menu.
  *
@@ -8,6 +10,6 @@ package fr.efreicraft.ludos.core.players.menus.interfaces;
  */
 public interface IMenuClickCallback {
 
-    void run();
+    void run(Event event);
 
 }

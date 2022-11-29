@@ -78,6 +78,7 @@ public class LudosGame extends Game {
                         false,
                         true,
                         new ColorUtils.TeamColorSet(NamedTextColor.GRAY, DyeColor.WHITE, Color.WHITE),
+                        null,
                         p -> {
                             p.entity().setHealth(20);
                             p.entity().setFoodLevel(20);

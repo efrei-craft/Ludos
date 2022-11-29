@@ -19,7 +19,6 @@ import java.util.logging.Level;
  * Classe abstraite représentant un jeu.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
- * @project EFREI-Minigames
  */
 public abstract class Game implements IGame {
 
@@ -44,7 +43,7 @@ public abstract class Game implements IGame {
         Core.get().getLogger().info("Preparing server for " + this.getClass().getName() + "...");
 
         GameMetadata metadata = getMetadata();
-        MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&7Le prochain jeu sera " + metadata.color() + metadata.name() + "&7!");
+        MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.GAME, "&7Le prochain jeu sera " + metadata.color() + metadata.name() + "&7!");
 
         List<String> maps = getMaps();
         if (maps.isEmpty()) {
@@ -86,18 +85,18 @@ public abstract class Game implements IGame {
     }
 
     private void broadcastGameInfo() {
-        MessageUtils.broadcast("");
-        MessageUtils.broadcast("&7&m--------------------------------------");
-        MessageUtils.broadcast("  " + this.getMetadata().color() + ChatColor.BOLD + this.getMetadata().name());
-        MessageUtils.broadcast("");
-        MessageUtils.broadcast("  &f" + this.getMetadata().description());
-        MessageUtils.broadcast("");
-        MessageUtils.broadcast("  &7Carte: "
+        MessageUtils.broadcastMessage("");
+        MessageUtils.broadcastMessage("&7&m--------------------------------------");
+        MessageUtils.broadcastMessage("  " + this.getMetadata().color() + ChatColor.BOLD + this.getMetadata().name());
+        MessageUtils.broadcastMessage("");
+        MessageUtils.broadcastMessage("  &f" + this.getMetadata().description());
+        MessageUtils.broadcastMessage("");
+        MessageUtils.broadcastMessage("  &7Carte: "
                 + this.getMetadata().color() + "&l" + Core.get().getMapManager().getCurrentMap().getName()
                 + "&7 par " + this.getMetadata().color() + Core.get().getMapManager().getCurrentMap().getAuthor()
         );
-        MessageUtils.broadcast("&7&m--------------------------------------");
-        MessageUtils.broadcast("");
+        MessageUtils.broadcastMessage("&7&m--------------------------------------");
+        MessageUtils.broadcastMessage("");
     }
 
     /**
@@ -130,7 +129,7 @@ public abstract class Game implements IGame {
                 }
             }
             if(this.winner == null) {
-                MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&cIl n'y a plus assez de joueurs pour continuer le jeu.");
+                MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.GAME, "&cIl n'y a plus assez de joueurs pour continuer le jeu.");
             }
             Core.get().getGameManager().setStatus(GameManager.GameStatus.ENDING);
             return true;

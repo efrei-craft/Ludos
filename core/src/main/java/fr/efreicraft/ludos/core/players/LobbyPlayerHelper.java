@@ -66,7 +66,7 @@ public class LobbyPlayerHelper {
                                         "&7Clic droit pour choisir une équipe."
                                 );
                             },
-                            () -> openTeamSelectionMenu(player)
+                            event -> openTeamSelectionMenu(player)
                     )
             );
         }
@@ -77,7 +77,7 @@ public class LobbyPlayerHelper {
                         8,
                         "&cRevenir au hub&r &7• Clic droit",
                         "&7Clic droit pour retourner au hub.",
-                        () -> player.sendMessage(MessageUtils.ChatPrefix.SERVER, "&cRetour au hub...")
+                        event -> player.sendMessage(MessageUtils.ChatPrefix.SERVER, "&cRetour au hub...")
                 )
         );
 
@@ -130,7 +130,7 @@ public class LobbyPlayerHelper {
                                                     + "\n\n&8» &6Cliquez pour rejoindre l'équipe."
                                     );
                                 },
-                                () -> team.addPlayer(player)
+                                event -> team.addPlayer(player)
                         )
                 );
                 slot++;

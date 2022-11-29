@@ -28,7 +28,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
  * Joueur des mini-jeux.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
- * @project EFREI-Minigames
  */
 public class Player {
 
@@ -106,7 +105,6 @@ public class Player {
                     1,
                     new ScoreboardField(
                             "&6&lJoueurs",
-                            this,
                             true,
                             player1 -> {
                                 ChatColor color = ChatColor.WHITE;
@@ -130,7 +128,6 @@ public class Player {
                     2,
                     new ScoreboardField(
                             "&6&lJeu",
-                            this,
                             player1 -> {
                                 if (Core.get().getGameManager().getCurrentGame() == null) {
                                     return EMPTY;
@@ -145,7 +142,6 @@ public class Player {
                     3,
                     new ScoreboardField(
                             "&6&lCarte",
-                            this,
                             player1 -> {
                                 if (Core.get().getGameManager().getCurrentGame() == null) {
                                     return EMPTY + "e";
@@ -164,7 +160,6 @@ public class Player {
                     4,
                     new ScoreboardField(
                             "&6&lEquipe",
-                            this,
                             player1 -> {
                                 Team team1 = player1.getTeam();
                                 if (team1 == null) {
@@ -361,13 +356,13 @@ public class Player {
             this.respawnLocation = event.getEntity().getLocation();
             if(event.getEntity().getKiller() != null) {
                 Player killer = Core.get().getPlayerManager().getPlayer(event.getEntity().getKiller());
-                MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, getName() + "&7 a été tué par " + killer.getName() + "&7.");
+                MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.GAME, getName() + "&7 a été tué par " + killer.getName() + "&7.");
             } else if (event.getEntity().getLastDamageCause() != null &&
                     event.getEntity().getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.VOID) {
                 this.respawnLocation = Core.get().getMapManager().getCurrentMap().getMiddleOfMap();
-                MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, getName() + "&7 est mort en tombant dans le vide.");
+                MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.GAME, getName() + "&7 est mort en tombant dans le vide.");
             } else {
-                MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, getName() + "&7 est mort.");
+                MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.GAME, getName() + "&7 est mort.");
             }
         }
     }
@@ -396,7 +391,7 @@ public class Player {
             entity().setGameMode(GameMode.SPECTATOR);
             Game game = Core.get().getGameManager().getCurrentGame();
             if(game != null) {
-                if(game.getMetadata().rules().allowRespawn()) {
+                if(game.getMetadata().rules().allowRespawn() && this.getTeam().getSpawnCondition(this)) {
                     PlayerRespawnCountdown countdown = new PlayerRespawnCountdown(this);
                     countdown.runTaskTimer(Core.get().getPlugin(), 0, 20);
                 } else {

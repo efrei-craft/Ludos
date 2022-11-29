@@ -22,7 +22,6 @@ import java.util.Map;
  * Jeu Arena pour tester les équipes.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
- * @project EFREI-Minigames
  */
 
 @GameMetadata(
@@ -86,21 +85,29 @@ public class LudosGame extends Game {
 
         player.getBoard().setField(
                 0,
-                new ScoreboardField("&c&lKills Vikings", player, true, player1 -> String.valueOf(gameLogic.getTeamKills(Core.get().getTeamManager().getTeam("VIKINGS"))))
+                new ScoreboardField("&c&lKills Vikings", true, player1 -> String.valueOf(gameLogic.getTeamKills(Core.get().getTeamManager().getTeam("VIKINGS"))))
         );
 
         player.getBoard().setField(
                 1,
-                new ScoreboardField("&9&lKills Romains", player, true, player1 -> String.valueOf(gameLogic.getTeamKills(Core.get().getTeamManager().getTeam("ROMAINS"))))
+                new ScoreboardField("&9&lKills Romains", true, player1 -> String.valueOf(gameLogic.getTeamKills(Core.get().getTeamManager().getTeam("ROMAINS"))))
         );
 
         player.getBoard().setField(
                 2,
                 new ScoreboardField(
                         "&6&lTimer",
-                        player,
                         false,
                         player1 -> gameLogic.getTimerString()
+                )
+        );
+
+        player.getBoard().setField(
+                3,
+                new ScoreboardField(
+                        "&e&lKillstreak",
+                        false,
+                        player1 -> gameLogic.getPlayerKillstreak(player1) + " (Meilleur: " + gameLogic.getPlayerBestKillstreak(player1) + ")"
                 )
         );
     }
@@ -119,6 +126,7 @@ public class LudosGame extends Game {
                 true,
                 true,
                 new ColorUtils.TeamColorSet(ColorUtils.TeamColors.RED),
+                player -> this.gameLogic.isNotDeathMatch(),
                 this.gameLogic::preparePlayerToSpawn
         ));
         teams.put("ROMAINS", new TeamRecord(
@@ -127,6 +135,7 @@ public class LudosGame extends Game {
                 true,
                 true,
                 new ColorUtils.TeamColorSet(ColorUtils.TeamColors.BLUE),
+                player -> this.gameLogic.isNotDeathMatch(),
                 this.gameLogic::preparePlayerToSpawn
         ));
         teams.putAll(DefaultTeamRecordBuilder.DefaultTeamRecords.ONLY_SPECTATOR.getTeamRecords());

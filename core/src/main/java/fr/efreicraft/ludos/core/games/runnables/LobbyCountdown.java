@@ -14,7 +14,6 @@ import org.bukkit.scheduler.BukkitRunnable;
  * Timer de lancement automatique de la partie.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
- * @project Ludos
  */
 public class LobbyCountdown extends BukkitRunnable {
 
@@ -42,7 +41,7 @@ public class LobbyCountdown extends BukkitRunnable {
         if(players < rules.minPlayers() || (!countingDown && players < rules.minPlayersToStart())) {
             timer = originalTime;
             if(countingDown) {
-                MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&cDémarrage annulé... &7Il n'y a plus assez de joueurs.");
+                MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.GAME, "&cDémarrage annulé... &7Il n'y a plus assez de joueurs.");
             }
             countingDown = false;
             updateScoreboardOfPlayers();
