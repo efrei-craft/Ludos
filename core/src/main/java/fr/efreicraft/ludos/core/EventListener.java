@@ -164,4 +164,11 @@ public class EventListener implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
+        if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME){
+            event.setCancelled(true);
+        }
+    }
+
 }
