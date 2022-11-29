@@ -22,7 +22,6 @@ import java.util.UUID;
  * Evenements de Core.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
- * @project EFREI-Minigames
  */
 public class EventListener implements Listener {
 
@@ -30,7 +29,7 @@ public class EventListener implements Listener {
      * Evenement de connexion d'un joueur.
      * @param event Evenement Bukkit
      */
-    @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerSpawn(PlayerSpawnLocationEvent event) {
         if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
             event.setSpawnLocation(Core.get().getMapManager().getLobbyWorld().getSpawnLocation().add(-0.5, 0, -0.5));
@@ -43,7 +42,7 @@ public class EventListener implements Listener {
      * Evenement de spawn d'un joueur sur le serveur.
      * @param event Evenement Bukkit
      */
-    @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.joinMessage(null);
         Core.get().getPlayerManager().addPlayer(new Player(event.getPlayer()));
@@ -53,7 +52,7 @@ public class EventListener implements Listener {
      * Evenement de deconnexion d'un joueur du serveur.
      * @param event Evenement Bukkit
      */
-    @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
         event.quitMessage(null);
         Core.get().getPlayerManager().removePlayer(event.getPlayer());
@@ -72,7 +71,7 @@ public class EventListener implements Listener {
      * Evenement de deplacement d'un joueur.
      * @param event Evenement Bukkit
      */
-    @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerMove(PlayerMoveEvent event) {
         if(
                 hasMovedInBlockXAndBlockZ(event)
@@ -85,7 +84,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
         if(event.getEntity() instanceof org.bukkit.entity.Player
                 && Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
@@ -96,7 +95,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         if(player != null) {
@@ -104,7 +103,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         if(player != null) {
@@ -112,7 +111,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerPostRespawn(PlayerPostRespawnEvent event) {
         Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         if(player != null) {
@@ -120,19 +119,19 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
             event.setCancelled(true);
         }
     }
 
-    @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerPortalEvent(PlayerPortalEvent event) {
         event.setCancelled(true);
     }
 
-    @EventHandler(priority = org.bukkit.event.EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING){
             event.setCancelled(true);

@@ -55,24 +55,21 @@ public class ScoreboardField {
 
     /**
      * Constructeur d'un field de scoreboard dynamique.
-     * @param name Nom du field.
-     * @param player Joueur lié au field.
+     * @param name         Nom du field.
      * @param dynamicValue Lambda de type {@link IDynamicScoreboardFieldValue} qui retourne la valeur du field.
      */
-    public ScoreboardField(String name, Player player, boolean oneLine, IDynamicScoreboardFieldValue dynamicValue) {
+    public ScoreboardField(String name, boolean oneLine, IDynamicScoreboardFieldValue dynamicValue) {
         this(name, null, oneLine);
-        this.player = player;
         this.dynamicValue = dynamicValue;
     }
 
     /**
      * Constructeur d'un field de scoreboard dynamique.
      * @param name Nom du field.
-     * @param player Joueur lié au field.
      * @param dynamicValue Lambda de type {@link IDynamicScoreboardFieldValue} qui retourne la valeur du field.
      */
-    public ScoreboardField(String name, Player player, IDynamicScoreboardFieldValue dynamicValue) {
-        this(name, player, false, dynamicValue);
+    public ScoreboardField(String name, IDynamicScoreboardFieldValue dynamicValue) {
+        this(name, false, dynamicValue);
     }
 
     /**
@@ -108,6 +105,14 @@ public class ScoreboardField {
      */
     protected void value(TextComponent value) {
         this.value = value;
+    }
+
+    /**
+     * Change le joueur du field.
+     * @param player Nouveau joueur du field.
+     */
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     /**

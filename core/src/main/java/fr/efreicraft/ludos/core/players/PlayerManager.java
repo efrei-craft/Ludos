@@ -14,7 +14,6 @@ import java.util.Set;
  * Cette classe est un singleton géré par le Core.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
- * @project EFREI-Minigames
  */
 public class PlayerManager implements IManager {
 
@@ -47,7 +46,7 @@ public class PlayerManager implements IManager {
 
         if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
             p.spawnAtWaitingLobby();
-            MessageUtils.broadcast(MessageUtils.ChatPrefix.SERVER, "&b" + p.getName() + " &7a &arejoint&7 la partie.");
+            MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.SERVER, "&b" + p.getName() + " &7a &arejoint&7 la partie.");
         }
     }
 
@@ -64,7 +63,7 @@ public class PlayerManager implements IManager {
         player.unload();
         this.players.remove(player);
         if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
-            MessageUtils.broadcast(MessageUtils.ChatPrefix.SERVER, "&b" + player.getName() + " &7a &cquitté&7 la partie.");
+            MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.SERVER, "&b" + player.getName() + " &7a &cquitté&7 la partie.");
         }
     }
 

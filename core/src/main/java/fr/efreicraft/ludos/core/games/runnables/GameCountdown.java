@@ -12,7 +12,6 @@ import org.bukkit.scheduler.BukkitRunnable;
  * Décompte avant le début de la partie.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
- * @project EFREI-Minigames
  */
 public class GameCountdown extends BukkitRunnable {
 
@@ -31,7 +30,7 @@ public class GameCountdown extends BukkitRunnable {
         } else if (countdown == 0) {
             SoundUtils.broadcastSound(Sound.BLOCK_NOTE_BLOCK_PLING, 1, 2);
             TitleUtils.broadcastTitle(Core.get().getGameManager().getCurrentGame().getMetadata().color() + "GO", "&7Que la partie commence !", 0, 2, 0.5f);
-            MessageUtils.broadcast(MessageUtils.ChatPrefix.GAME, "&7Que la partie commence !");
+            MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.GAME, "&7Que la partie commence !");
             Core.get().getGameManager().setStatus(GameManager.GameStatus.INGAME);
             this.cancel();
         }

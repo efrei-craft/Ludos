@@ -180,6 +180,7 @@ public class PlayerScoreboard {
      * @see ScoreboardField
      */
     public void setField(int pos, ScoreboardField field) {
+        field.setPlayer(this.player);
         this.fields.put(pos, field);
     }
 
