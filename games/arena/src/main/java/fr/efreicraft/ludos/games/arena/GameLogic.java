@@ -140,4 +140,8 @@ public class GameLogic {
         return GameTimer.getTimeString(time);
     }
 
+    public boolean isNotDeathMatch(){
+        return this.time > 15;
+    }
+
 }

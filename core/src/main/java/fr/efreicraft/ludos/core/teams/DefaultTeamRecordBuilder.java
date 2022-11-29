@@ -3,6 +3,7 @@ package fr.efreicraft.ludos.core.teams;
 import com.google.common.collect.ImmutableMap;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlawerSpawnCondition;
 import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnBehavior;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -29,6 +30,7 @@ public class DefaultTeamRecordBuilder {
                         false,
                         false,
                         new ColorUtils.TeamColorSet(NamedTextColor.DARK_GRAY, DyeColor.GRAY, Color.GRAY),
+                        null,
                         player -> {
                             player.entity().setGameMode(org.bukkit.GameMode.SPECTATOR);
                             for (Player p : Core.get().getPlayerManager().getPlayers()) {
@@ -54,6 +56,7 @@ public class DefaultTeamRecordBuilder {
                         false,
                         true,
                         new ColorUtils.TeamColorSet(NamedTextColor.GRAY, DyeColor.WHITE, Color.WHITE),
+                        null,
                         null
                 ))
                 .putAll(ONLY_SPECTATOR.getTeamRecords())
@@ -83,16 +86,22 @@ public class DefaultTeamRecordBuilder {
     /**
      * Méthode permettant de copier un team record pour modifier son comportement de spawn joueur.
      * @param teamRecord Team record à copier.
+     * @param spawnCondition Verification de la respawnabilité du joueur mort.
      * @param behavior Nouveau comportement de spawn joueur.
      * @return Nouveau team record avec le comportement de spawn joueur modifié.
      */
-    public static TeamRecord copyTeamRecordWithCustomBehavior(TeamRecord teamRecord, ITeamPlayerSpawnBehavior behavior) {
+    public static TeamRecord copyTeamRecordWithCustomBehavior(
+            TeamRecord teamRecord,
+            ITeamPlawerSpawnCondition spawnCondition,
+            ITeamPlayerSpawnBehavior behavior
+    ) {
         return new TeamRecord(
                 teamRecord.name(),
                 teamRecord.priority(),
                 teamRecord.showTeamName(),
                 teamRecord.playingTeam(),
                 teamRecord.colorSet(),
+                spawnCondition,
                 behavior
         );
     }

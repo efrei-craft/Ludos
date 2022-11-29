@@ -391,7 +391,7 @@ public class Player {
             entity().setGameMode(GameMode.SPECTATOR);
             Game game = Core.get().getGameManager().getCurrentGame();
             if(game != null) {
-                if(game.getMetadata().rules().allowRespawn()) {
+                if(game.getMetadata().rules().allowRespawn() && this.getTeam().getSpawnCondition(this)) {
                     PlayerRespawnCountdown countdown = new PlayerRespawnCountdown(this);
                     countdown.runTaskTimer(Core.get().getPlugin(), 0, 20);
                 } else {
