@@ -1,10 +1,8 @@
 package fr.efreicraft.ludos.games.rush;
 
-import com.destroystokyo.paper.entity.villager.ReputationType;
 import fr.efreicraft.ludos.core.Core;
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import net.kyori.adventure.text.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -14,6 +12,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.VillagerCareerChangeEvent;
+import org.bukkit.event.entity.VillagerReplenishTradeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 import java.util.Collections;
@@ -54,6 +53,8 @@ public record EventListener(GameLogic logic) implements Listener {
             if (event.getRightClicked().getType() != EntityType.VILLAGER) return;
 
             Villager villager = (Villager) event.getRightClicked();
+            if (villager.customName() == null) return;
+
             switch (( (TextComponent) villager.customName()).content()) {
                 case "Bâtisseur" -> event.getPlayer().openMerchant(logic.merchantBatisseur, true);
                 case "Terroriste" -> event.getPlayer().openMerchant(logic.merchantTerroriste, true);
@@ -79,23 +80,10 @@ public record EventListener(GameLogic logic) implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void test(VillagerCareerChangeEvent e) {
-        getLogger().info(String.valueOf(e.isCancelled()));
-        getLogger().info(e.getProfession().name());
-//        [01:01:27 INFO]: false
-//                [01:01:27 INFO]: NONE
-//                [01:01:27 INFO]: false
-//                [01:01:27 INFO]: NONE
-//                [01:01:27 INFO]: false
-//                [01:01:27 INFO]: NONE
-//                [01:01:27 INFO]: false
-//                [01:01:27 INFO]: NONE
-//                [01:01:27 INFO]: false
-//                [01:01:27 INFO]: NONE
-//                [01:01:27 INFO]: false
-//                [01:01:27 INFO]: NONE
-//                [01:01:27 INFO]: false
-//
+    @EventHandler
+    public void onTradeChange(VillagerReplenishTradeEvent event) {
+        event.getRecipe().setDemand(-1);
+        event.getRecipe().setPriceMultiplier(1);
+        event.getRecipe().setSpecialPrice(0);
     }
 }

@@ -3,7 +3,12 @@ package fr.efreicraft.ludos.games.rush;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.maps.points.GamePoint;
 import fr.efreicraft.ludos.core.maps.points.SpawnPoint;
+import fr.efreicraft.ludos.core.players.menus.ItemStackMenuItem;
+import fr.efreicraft.ludos.core.players.menus.PlayerInventoryMenu;
+import fr.efreicraft.ludos.core.players.menus.interfaces.MenuItem;
 import fr.efreicraft.ludos.core.teams.Team;
+import fr.efreicraft.ludos.core.utils.ColorUtils;
+import fr.efreicraft.ludos.core.utils.MessageUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -88,6 +93,9 @@ public class GameLogic {
     public void setupBeds() {
         Location mid = Core.get().getMapManager().getCurrentMap().getMiddleOfMap();
         for (SpawnPoint point : TEAMS_BED.values()) {
+            Location bed = point.getLocation();
+
+
 
         }
     }
@@ -114,31 +122,31 @@ public class GameLogic {
         List<MerchantRecipe> recipeList = new ArrayList<>();
 
         ItemStack product = new ItemStack(Material.SANDSTONE, 2);
-        MerchantRecipe sandstone = new MerchantRecipe(product, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe sandstone = new MerchantRecipe(product, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         sandstone.addIngredient(new ItemStack(Material.BRICK));
         recipeList.add(sandstone);
 
         ItemStack product1 = new ItemStack(Material.END_STONE);
-        MerchantRecipe endstone = new MerchantRecipe(product1, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe endstone = new MerchantRecipe(product1, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         endstone.addIngredient(new ItemStack(Material.BRICK, 4));
         recipeList.add(endstone);
 
         ItemStack product2 = new ItemStack(Material.SOUL_SAND);
-        MerchantRecipe soulsand = new MerchantRecipe(product2, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe soulsand = new MerchantRecipe(product2, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         soulsand.addIngredient(new ItemStack(Material.IRON_INGOT));
         recipeList.add(soulsand);
 
         ItemStack product3 = new ItemStack(Material.WOODEN_PICKAXE);
         product3.addEnchantment(Enchantment.DIG_SPEED, 1); // Dig_speed = Efficiency
         product3.addEnchantment(Enchantment.DURABILITY, 1);
-        MerchantRecipe pick1 = new MerchantRecipe(product3, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe pick1 = new MerchantRecipe(product3, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         pick1.addIngredient(new ItemStack(Material.BRICK, 10));
         recipeList.add(pick1);
 
         ItemStack product4 = new ItemStack(Material.STONE_PICKAXE);
         product4.addEnchantment(Enchantment.DIG_SPEED, 2);
         product4.addEnchantment(Enchantment.DURABILITY, 1);
-        MerchantRecipe pick2 = new MerchantRecipe(product4, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe pick2 = new MerchantRecipe(product4, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         pick2.addIngredient(new ItemStack(Material.IRON_INGOT, 5));
         recipeList.add(pick2);
 
@@ -146,13 +154,13 @@ public class GameLogic {
         product5.addEnchantment(Enchantment.DIG_SPEED, 4);
         product5.addEnchantment(Enchantment.DURABILITY, 3);
         product5.addEnchantment(Enchantment.SILK_TOUCH, 1);
-        MerchantRecipe pick3 = new MerchantRecipe(product5, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe pick3 = new MerchantRecipe(product5, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         pick3.addIngredient(new ItemStack(Material.IRON_INGOT, 10));
         pick3.addIngredient(new ItemStack(Material.GOLD_INGOT));
         recipeList.add(pick3);
 
         ItemStack product6 = new ItemStack(Material.LADDER);
-        MerchantRecipe ladder = new MerchantRecipe(product6, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe ladder = new MerchantRecipe(product6, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         ladder.addIngredient(new ItemStack(Material.BRICK, 5));
         recipeList.add(ladder);
 
@@ -167,7 +175,7 @@ public class GameLogic {
         ItemStack product = new ItemStack(Material.GOLDEN_SWORD);
         product.addEnchantment(Enchantment.DAMAGE_ALL, 1);
         product.addEnchantment(Enchantment.KNOCKBACK, 1);
-        MerchantRecipe sword = new MerchantRecipe(product, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe sword = new MerchantRecipe(product, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         sword.addIngredient(new ItemStack(Material.IRON_INGOT, 2));
         recipeList.add(sword);
 
@@ -175,40 +183,40 @@ public class GameLogic {
         product1.addEnchantment(Enchantment.DAMAGE_ALL, 2);
         product1.addEnchantment(Enchantment.KNOCKBACK, 1);
         product1.addEnchantment(Enchantment.DURABILITY, 1);
-        MerchantRecipe sword1 = new MerchantRecipe(product1, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe sword1 = new MerchantRecipe(product1, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         sword1.addIngredient(new ItemStack(Material.GOLD_INGOT, 2));
         recipeList.add(sword1);
 
         ItemStack product2 = new ItemStack(Material.DIAMOND_SWORD);
         product2.addEnchantment(Enchantment.DAMAGE_ALL, 4);
         product2.addEnchantment(Enchantment.KNOCKBACK, 2);
-        MerchantRecipe sword2 = new MerchantRecipe(product2, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe sword2 = new MerchantRecipe(product2, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         sword2.addIngredient(new ItemStack(Material.EMERALD, 5));
         recipeList.add(sword2);
 
         ItemStack product3 = new ItemStack(Material.BOW);
         product3.addEnchantment(Enchantment.ARROW_INFINITE, 1);
-        MerchantRecipe bow = new MerchantRecipe(product3, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe bow = new MerchantRecipe(product3, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         bow.addIngredient(new ItemStack(Material.IRON_INGOT, 3));
         recipeList.add(bow);
 
         ItemStack product4 = new ItemStack(Material.BOW);
         product4.addEnchantment(Enchantment.ARROW_INFINITE, 1);
         product4.addEnchantment(Enchantment.ARROW_DAMAGE, 2);
-        MerchantRecipe bow1 = new MerchantRecipe(product4, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe bow1 = new MerchantRecipe(product4, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         bow1.addIngredient(new ItemStack(Material.GOLD_INGOT, 3));
         recipeList.add(bow1);
 
         ItemStack product5 = new ItemStack(Material.BOW);
         product5.addEnchantment(Enchantment.ARROW_INFINITE, 1);
         product5.addEnchantment(Enchantment.ARROW_DAMAGE, 4);
-        MerchantRecipe bow2 = new MerchantRecipe(product5, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe bow2 = new MerchantRecipe(product5, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         bow2.addIngredient(new ItemStack(Material.EMERALD));
         bow2.addIngredient(new ItemStack(Material.GOLD_INGOT, 3));
         recipeList.add(bow2);
 
         ItemStack product6 = new ItemStack(Material.ARROW);
-        MerchantRecipe arrow = new MerchantRecipe(product6, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe arrow = new MerchantRecipe(product6, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         arrow.addIngredient(new ItemStack(Material.GOLD_INGOT));
         recipeList.add(arrow);
 
@@ -220,43 +228,43 @@ public class GameLogic {
         List<MerchantRecipe> recipeList = new ArrayList<>();
 
         ItemStack product = new ItemStack(Material.COOKED_BEEF);
-        MerchantRecipe meat = new MerchantRecipe(product, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe meat = new MerchantRecipe(product, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         meat.addIngredient(new ItemStack(Material.BRICK, 5));
         recipeList.add(meat);
 
         ItemStack product1 = new ItemStack(Material.GOLDEN_APPLE);
-        MerchantRecipe gapple = new MerchantRecipe(product1, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe gapple = new MerchantRecipe(product1, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         gapple.addIngredient(new ItemStack(Material.IRON_INGOT, 2));
         recipeList.add(gapple);
 
         ItemStack product2 = new ItemStack(Material.FISHING_ROD);
-        MerchantRecipe fishingrod = new MerchantRecipe(product2, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe fishingrod = new MerchantRecipe(product2, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         fishingrod.addIngredient(new ItemStack(Material.IRON_INGOT, 2));
         recipeList.add(fishingrod);
 
         ItemStack product3 = new ItemStack(Material.COBWEB);
-        MerchantRecipe cobweb = new MerchantRecipe(product3, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe cobweb = new MerchantRecipe(product3, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         cobweb.addIngredient(new ItemStack(Material.BRICK, 6));
         cobweb.addIngredient(new ItemStack(Material.IRON_INGOT, 3));
         recipeList.add(cobweb);
 
         ItemStack product4 = new ItemStack(Material.TNT);
-        MerchantRecipe bow1 = new MerchantRecipe(product4, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe bow1 = new MerchantRecipe(product4, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         bow1.addIngredient(new ItemStack(Material.IRON_INGOT, 6));
         recipeList.add(bow1);
 
         ItemStack product5 = new ItemStack(Material.FLINT_AND_STEEL);
-        MerchantRecipe lighter = new MerchantRecipe(product5, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe lighter = new MerchantRecipe(product5, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         lighter.addIngredient(new ItemStack(Material.GOLD_INGOT, 3));
         recipeList.add(lighter);
 
         ItemStack product6 = new ItemStack(Material.REDSTONE_TORCH);
-        MerchantRecipe redstonetorch = new MerchantRecipe(product6, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe redstonetorch = new MerchantRecipe(product6, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         redstonetorch.addIngredient(new ItemStack(Material.BRICK, 10));
         recipeList.add(redstonetorch);
 
         ItemStack product7 = new ItemStack(Material.ENDER_PEARL);
-        MerchantRecipe enderpearl = new MerchantRecipe(product7, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe enderpearl = new MerchantRecipe(product7, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         enderpearl.addIngredient(new ItemStack(Material.EMERALD));
         recipeList.add(enderpearl);
 
@@ -267,38 +275,38 @@ public class GameLogic {
         List<MerchantRecipe> recipeList = new ArrayList<>();
 
         ItemStack product = new ItemStack(Material.GOLDEN_LEGGINGS);
-        MerchantRecipe leggings = new MerchantRecipe(product, 0, 9999, false, 0, 1, 1, 0, true);
+        MerchantRecipe leggings = new MerchantRecipe(product, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         leggings.addIngredient(new ItemStack(Material.IRON_INGOT, 3));
         recipeList.add(leggings);
 
         ItemStack product1 = new ItemStack(Material.GOLDEN_CHESTPLATE);
-        MerchantRecipe chestplate = new MerchantRecipe(product1, 0, 9999, false, 0, 1, 1, 0, true);
+        MerchantRecipe chestplate = new MerchantRecipe(product1, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         chestplate.addIngredient(new ItemStack(Material.IRON_INGOT, 3));
         recipeList.add(chestplate);
 
         ItemStack product2 = new ItemStack(Material.IRON_HELMET);
-        MerchantRecipe helmet = new MerchantRecipe(product2, 0, 9999, false, 0, 1, 1, 0, true);
+        MerchantRecipe helmet = new MerchantRecipe(product2, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         helmet.addIngredient(new ItemStack(Material.GOLD_INGOT, 2));
         recipeList.add(helmet);
 
         ItemStack product3 = new ItemStack(Material.IRON_CHESTPLATE);
-        MerchantRecipe chestplate1 = new MerchantRecipe(product3, 0, 9999, false, 0, 1, 1, 0, true);
+        MerchantRecipe chestplate1 = new MerchantRecipe(product3, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         chestplate1.addIngredient(new ItemStack(Material.GOLD_INGOT, 3));
         recipeList.add(chestplate1);
 
         ItemStack product4 = new ItemStack(Material.IRON_LEGGINGS);
-        MerchantRecipe leggings1 = new MerchantRecipe(product4, 0, 9999, false, 0, 1, 1, 0, true);
+        MerchantRecipe leggings1 = new MerchantRecipe(product4, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         leggings1.addIngredient(new ItemStack(Material.GOLD_INGOT, 3));
         recipeList.add(leggings1);
 
         ItemStack product5 = new ItemStack(Material.IRON_BOOTS);
-        MerchantRecipe boots = new MerchantRecipe(product5, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe boots = new MerchantRecipe(product5, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         boots.addIngredient(new ItemStack(Material.GOLD_INGOT, 2));
         recipeList.add(boots);
 
         ItemStack product6 = new ItemStack(Material.DIAMOND_CHESTPLATE);
         product6.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 4);
-        MerchantRecipe chestplate2 = new MerchantRecipe(product6, 0, 0, false, 0, 1, 1, 0, true);
+        MerchantRecipe chestplate2 = new MerchantRecipe(product6, 0, Integer.MAX_VALUE, false, 0, -1, 1, 0, true);
         chestplate2.addIngredient(new ItemStack(Material.EMERALD, 3));
         recipeList.add(chestplate2);
 
