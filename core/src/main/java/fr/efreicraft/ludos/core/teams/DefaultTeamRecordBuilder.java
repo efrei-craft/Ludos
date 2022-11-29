@@ -86,7 +86,7 @@ public class DefaultTeamRecordBuilder {
     /**
      * Méthode permettant de copier un team record pour modifier son comportement de spawn joueur.
      * @param teamRecord Team record à copier.
-     * @param spawnCondition Verification de la repwnabilite du joueur mort.
+     * @param spawnCondition Verification de la respawnabilité du joueur mort.
      * @param behavior Nouveau comportement de spawn joueur.
      * @return Nouveau team record avec le comportement de spawn joueur modifié.
      */

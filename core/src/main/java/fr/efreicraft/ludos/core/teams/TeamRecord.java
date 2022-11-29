@@ -15,7 +15,7 @@ import org.bukkit.GameMode;
  * @param colorSet Set de couleurs de l'équipe (voir {@link ColorUtils}).
  * @param spawnBehavior Lambda de spawn des joueurs de l'équipe en jeu, si elle est nulle alors un comportement
  *                      par défaut est utilisé.
- * @param spawnCondition Lambda de respawn des joueurs de l'équipe en jeu, si elle est nulle alors les joeurs
+ * @param spawnCondition Lambda de respawn des joueurs de l'équipe en jeu, si elle est nulle alors les joueurs
  *                       de l'équipe pourront respawn.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
