@@ -126,6 +126,7 @@ public class LudosGame extends Game {
                 true,
                 true,
                 new ColorUtils.TeamColorSet(ColorUtils.TeamColors.RED),
+                player -> this.gameLogic.isNotDeathMatch(),
                 this.gameLogic::preparePlayerToSpawn
         ));
         teams.put("ROMAINS", new TeamRecord(
@@ -134,6 +135,7 @@ public class LudosGame extends Game {
                 true,
                 true,
                 new ColorUtils.TeamColorSet(ColorUtils.TeamColors.BLUE),
+                player -> this.gameLogic.isNotDeathMatch(),
                 this.gameLogic::preparePlayerToSpawn
         ));
         teams.putAll(DefaultTeamRecordBuilder.DefaultTeamRecords.ONLY_SPECTATOR.getTeamRecords());
