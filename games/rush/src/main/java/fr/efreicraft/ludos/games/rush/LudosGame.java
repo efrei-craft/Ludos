@@ -1,10 +1,13 @@
 package fr.efreicraft.ludos.games.rush;
 
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.games.PlayerWin;
+import fr.efreicraft.ludos.core.games.TeamWin;
 import fr.efreicraft.ludos.core.games.annotations.CustomGameData;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
+import fr.efreicraft.ludos.core.games.interfaces.GameWinner;
 import fr.efreicraft.ludos.core.maps.points.GamePoint;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
@@ -14,6 +17,8 @@ import fr.efreicraft.ludos.core.utils.ColorUtils;
 import org.bukkit.*;
 
 import java.util.*;
+
+import static org.bukkit.Bukkit.getLogger;
 
 @GameMetadata(
         name = "Rush",
@@ -33,6 +38,16 @@ import java.util.*;
 public class LudosGame extends Game {
 
     private final GameLogic gameLogic;
+
+    /**
+     * Calculé par rapport au milieu de la carte.
+     */
+    public static final int maxBuildHeight = 30;
+
+    /**
+     * Rayon autour duquel le joueur ne peut pas poser de TNT, par rapport à son point de spawn.
+     */
+    public static final int noTNTRadius = 16;
 
     /**
      * Constructeur de jeu.
@@ -56,7 +71,13 @@ public class LudosGame extends Game {
 
     @Override
     public void postMapParse() {
-        Location killZoneLocation = Core.get().getMapManager().getCurrentMap().getMiddleOfMap().subtract(0, 150, 0);
+        Location mid = Core.get().getMapManager().getCurrentMap().getMiddleOfMap();
+        Location killZoneLocation = new Location(
+                mid.getWorld(),
+                mid.getX(),
+                mid.getY() - 150,
+                mid.getZ()
+        );
 
         Core.get().getMapManager().getCurrentMap().setMiddleOfMap(
                 Core.get().getMapManager().getCurrentMap().getGlobalPoints().get("MIDDLE").get(0).getLocation()
@@ -73,8 +94,10 @@ public class LudosGame extends Game {
         this.gameLogic.TEAMS_ITEMSPAWNERS.put(VERTS, Core.get().getMapManager().getCurrentMap().getGamePoints().get("TEAM3_GENERATOR"));
         this.gameLogic.TEAMS_ITEMSPAWNERS.put(JAUNES, Core.get().getMapManager().getCurrentMap().getGamePoints().get("TEAM4_GENERATOR"));
 
-        // Les values de getSpawnPoints() sont des arraylist de 1 seul spawnpoint pour le rush, donc je le récupère directement.
-        Core.get().getMapManager().getCurrentMap().getSpawnPoints().forEach((key, value) -> this.gameLogic.TEAMS_BED.put(key, value.get(0)));
+        this.gameLogic.TEAMS_BED[0] = Core.get().getMapManager().getCurrentMap().getGamePoints().get("TEAM1_BED").get(0);
+        this.gameLogic.TEAMS_BED[1] = Core.get().getMapManager().getCurrentMap().getGamePoints().get("TEAM2_BED").get(0);
+        this.gameLogic.TEAMS_BED[2] = Core.get().getMapManager().getCurrentMap().getGamePoints().get("TEAM3_BED").get(0);
+        this.gameLogic.TEAMS_BED[3] = Core.get().getMapManager().getCurrentMap().getGamePoints().get("TEAM4_BED").get(0);
     }
 
     @Override
@@ -85,6 +108,28 @@ public class LudosGame extends Game {
         gameLogic.setupMerchants();
         gameLogic.setupVillagers();
         gameLogic.setupBeds();
+    }
+
+    /**
+     * Vérifie si le jeu doit se terminer
+     *
+     * @return true si le jeu doit se terminer, false sinon
+     */
+    @Override
+    public boolean checkIfGameHasToBeEnded() {
+        return super.checkIfGameHasToBeEnded();
+    }
+
+    /**
+     * Change le joueur ou l'équipe gagnant(e) du jeu.
+     * Peut-être soit {@link PlayerWin} soit {@link TeamWin}
+     *
+     * @param winner Le joueur ou l'équipe gagnant(e)
+     */
+    @Override
+    public void setWinnerAndEndGame(GameWinner winner) {
+        // Ici faut mettre un new TeamWin(Team)
+        super.setWinnerAndEndGame(winner);
     }
 
     /**
@@ -105,13 +150,17 @@ public class LudosGame extends Game {
     public EnumMap<Material, String> getGamePointsMaterials() {
         EnumMap<Material, String> gamePointsMaterials = new EnumMap<>(Material.class);
 
-        gamePointsMaterials.put(Material.NETHERITE_BLOCK, "MIDDLE");
-
         /* Le générateur d'items des teams */
         gamePointsMaterials.put(Material.BLUE_WOOL, "TEAM1_GENERATOR");
         gamePointsMaterials.put(Material.RED_WOOL, "TEAM2_GENERATOR");
-        gamePointsMaterials.put(Material.GREEN_WOOL, "TEAM3_GENERATOR");
+        gamePointsMaterials.put(Material.LIME_WOOL, "TEAM3_GENERATOR");
         gamePointsMaterials.put(Material.YELLOW_WOOL, "TEAM4_GENERATOR");
+
+        /* Les lits */
+        gamePointsMaterials.put(Material.BLUE_CONCRETE, "TEAM1_BED");
+        gamePointsMaterials.put(Material.RED_CONCRETE, "TEAM2_BED");
+        gamePointsMaterials.put(Material.LIME_CONCRETE, "TEAM3_BED");
+        gamePointsMaterials.put(Material.YELLOW_CONCRETE, "TEAM4_BED");
 
         /* Traders de cryptomonnaies */
         gamePointsMaterials.put(Material.SANDSTONE, "MERCHANT_BATISSEUR");
@@ -126,35 +175,35 @@ public class LudosGame extends Game {
         HashMap<String, TeamRecord> teams = new HashMap<>();
         teams.put("BLEUS", new TeamRecord(
                 "Bleus",
-                2,
+                1,
                 false,
                 true,
                 new ColorUtils.TeamColorSet(ColorUtils.TeamColors.BLUE),
-                null
+                gameLogic::preparePlayerToSpawn
         ));
         teams.put("ROUGES", new TeamRecord(
                 "Rouges",
-                1,
-                false,
-                true,
-                new ColorUtils.TeamColorSet(ColorUtils.TeamColors.RED),
-                null
-        ));
-        teams.put("VERTS", new TeamRecord(
-                "Verts",
                 2,
                 false,
                 true,
+                new ColorUtils.TeamColorSet(ColorUtils.TeamColors.RED),
+                gameLogic::preparePlayerToSpawn
+        ));
+        teams.put("VERTS", new TeamRecord(
+                "Verts",
+                3,
+                false,
+                true,
                 new ColorUtils.TeamColorSet(ColorUtils.TeamColors.GREEN),
-                null
+                gameLogic::preparePlayerToSpawn
         ));
         teams.put("JAUNES", new TeamRecord(
                 "Jaunes",
-                1,
+                4,
                 false,
                 true,
                 new ColorUtils.TeamColorSet(ColorUtils.TeamColors.YELLOW),
-                null
+                gameLogic::preparePlayerToSpawn
         ));
         teams.putAll(DefaultTeamRecordBuilder.DefaultTeamRecords.ONLY_SPECTATOR.getTeamRecords());
         return teams;

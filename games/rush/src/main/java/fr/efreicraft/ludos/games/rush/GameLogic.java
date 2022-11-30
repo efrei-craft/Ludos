@@ -2,13 +2,7 @@ package fr.efreicraft.ludos.games.rush;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.maps.points.GamePoint;
-import fr.efreicraft.ludos.core.maps.points.SpawnPoint;
-import fr.efreicraft.ludos.core.players.menus.ItemStackMenuItem;
-import fr.efreicraft.ludos.core.players.menus.PlayerInventoryMenu;
-import fr.efreicraft.ludos.core.players.menus.interfaces.MenuItem;
 import fr.efreicraft.ludos.core.teams.Team;
-import fr.efreicraft.ludos.core.utils.ColorUtils;
-import fr.efreicraft.ludos.core.utils.MessageUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -16,13 +10,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.type.Bed;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.MerchantRecipe;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.Vector;
 
 import java.util.*;
 
@@ -31,7 +31,7 @@ public class GameLogic {
     private World world;
 
     public final Map<Team, ArrayList<GamePoint>> TEAMS_ITEMSPAWNERS = new HashMap<>();
-    public Map<Team, SpawnPoint> TEAMS_BED = new HashMap<>();
+    public GamePoint[] TEAMS_BED = new GamePoint[4];
 
     private int yDeath;
     Merchant merchantBatisseur, merchantTerroriste, merchantTavernier, merchantArmurier;
@@ -49,6 +49,24 @@ public class GameLogic {
 
     public void world(World world) {
         this.world = world;
+    }
+
+    public void preparePlayerToSpawn(fr.efreicraft.ludos.core.players.Player player) {
+//        ItemStack sword = new ItemStack(Material.IRON_SWORD);
+//        sword.addEnchantment(Enchantment.DURABILITY, 3);
+//        player.entity().getInventory().addItem(sword);
+
+        ItemStack[] armor = new ItemStack[4];
+        armor[0] = new ItemStack(Material.LEATHER_BOOTS);
+        armor[1] = new ItemStack(Material.LEATHER_LEGGINGS);
+        armor[2] = new ItemStack(Material.LEATHER_CHESTPLATE);
+        armor[3] = new ItemStack(Material.LEATHER_HELMET);
+        for (ItemStack item : armor) {
+            LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
+            meta.setColor(player.getTeam().getColor().bukkitColor());
+            item.setItemMeta(meta);
+        }
+        player.entity().getInventory().setArmorContents(armor);
     }
 
     public void setupVillagers() {
@@ -92,11 +110,40 @@ public class GameLogic {
 
     public void setupBeds() {
         Location mid = Core.get().getMapManager().getCurrentMap().getMiddleOfMap();
-        for (SpawnPoint point : TEAMS_BED.values()) {
-            Location bed = point.getLocation();
+        for (GamePoint point : TEAMS_BED) {
+            Location bedFoot = point.getLocation();
+            Block blockAtFeet = world.getBlockAt(bedFoot);
+            // À vos souhaits.
+            String colorBlockBelow = world.getBlockAt(bedFoot.clone().subtract(0, 1, 0)).getType().name().split("_", 2)[0];
 
+            BlockFace face = Utils.whereAmIRelatedTo(mid, bedFoot);
+            
+            blockAtFeet.setType(Material.valueOf(  colorBlockBelow + "_BED"));
 
+            Bed feet = (Bed) Bukkit.createBlockData(Material.valueOf(  colorBlockBelow + "_BED"), (data) -> {
+                ((Bed) data).setFacing(face);
+                ((Bed) data).setPart(Bed.Part.FOOT);
+            });
+            blockAtFeet.setBlockData(feet);
 
+            /*BlockData feetData = blockAtFeet.getBlockData();
+            feetData.setPart(Bed.Part.FOOT);
+            feetData.setFacing(face);
+            blockAtFeet.setBlockData(feetData);*/
+
+            Block blockAtHead = world.getBlockAt(bedFoot.clone().add(bedFoot, face.getModX(), 0, face.getModZ()));
+
+            Bed head = (Bed) Bukkit.createBlockData(Material.valueOf(  colorBlockBelow + "_BED"), (data) -> {
+                ((Bed) data).setFacing(face);
+                ((Bed) data).setPart(Bed.Part.HEAD);
+            });
+            blockAtHead.setBlockData(head);
+
+            /*blockAtHead.setType(Material.valueOf(  colorBlockBelow + "_BED"));
+            BlockData headData = blockAtHead.getBlockData();
+            headData.setPart(Bed.Part.HEAD);
+            headData.setFacing(face);
+            blockAtHead.setBlockData(headData);*/
         }
     }
 
@@ -324,8 +371,14 @@ public class GameLogic {
         this.stopWatchTask = Bukkit.getScheduler().runTaskTimer(Core.get().getGameManager().getCurrentPlugin(), () -> {
 
             for (Team team : Core.get().getTeamManager().getTeams().values()) {
-                if (time % 5 == 0){
+                if (time % 10 == 9){
+                    rewardTeam(team, new ItemStack(Material.IRON_INGOT));
+                }
+                if (time % 30 == 29){
                     rewardTeam(team, new ItemStack(Material.GOLD_INGOT));
+                }
+                if (time % 300 == 299){
+                    rewardTeam(team, new ItemStack(Material.EMERALD));
                 }
                 rewardTeam(team, new ItemStack(Material.BRICK));
             }
@@ -357,6 +410,7 @@ public class GameLogic {
         if (stacks == null) return;
         List<GamePoint> points = TEAMS_ITEMSPAWNERS.get(team);
         if (points == null) return;
+        Collections.shuffle(points);
 
         for (ItemStack stackTotal : stacks) {
             int distributed = stackTotal.getAmount();
@@ -365,9 +419,9 @@ public class GameLogic {
 
             while (true) {
                 for (GamePoint gamePoint : points) {
-                    Location loc = gamePoint.getLocation().add(0.5, 0, 0.5);
+                    Location loc = gamePoint.getLocation().clone().add(0.5, 0, 0.5);
                     Item item = this.world.dropItem(loc, stack);
-                    item.setVelocity(new Vector(0, 1, 0));
+                    item.setVelocity(item.getVelocity().setX(0).setZ(0));
                     distributed--;
 
                     if (distributed == 0) return;
@@ -388,7 +442,9 @@ public class GameLogic {
 
     /**
      * Déclare le lit de *team* comme étant détruit.
+     * Il n'y a jamais vraiment de raison de mettre destroyed sur {@code false}.
      * @param team L'équipe qui a perdu son lit
+     * @param destroyed La valeur à mettre
      */
     public void bedDestroyed(Team team, boolean destroyed) {
         if (destroyed)
