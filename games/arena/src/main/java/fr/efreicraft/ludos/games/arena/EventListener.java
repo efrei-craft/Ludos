@@ -1,5 +1,4 @@
 package fr.efreicraft.ludos.games.arena;
-
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.Team;
@@ -8,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.Map;
@@ -55,6 +55,11 @@ public record EventListener(GameLogic arenaLogic) implements Listener {
                 && (Core.get().getMapManager().getCurrentMap().getLowestBoundary().getY() - 5) > event.getTo().getY()) {
             player.entity().setHealth(0);
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
+        event.setCancelled(true);
     }
 
 }

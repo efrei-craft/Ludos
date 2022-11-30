@@ -5,6 +5,7 @@ import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.maps.points.SpawnPoint;
 import fr.efreicraft.ludos.core.players.LobbyPlayerHelper;
 import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlawerSpawnCondition;
 import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnBehavior;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
@@ -66,6 +67,11 @@ public class Team {
     private final ITeamPlayerSpawnBehavior spawnBehavior;
 
     /**
+     * Verifie si les joueurs peuvent respawn
+     */
+    private final ITeamPlawerSpawnCondition spawnCondition;
+
+    /**
      * Indice du spawn point à utiliser pour le prochain spawn de joueur.
      */
     private int spawnIndex = 0;
@@ -81,6 +87,7 @@ public class Team {
         this.playingTeam = teamRecord.playingTeam();
         this.colorSet = teamRecord.colorSet();
         this.spawnBehavior = teamRecord.spawnBehavior();
+        this.spawnCondition = teamRecord.spawnCondition();
         this.players = new HashSet<>();
     }
 
@@ -276,5 +283,13 @@ public class Team {
      */
     public void setFriendlyFire(boolean friendlyFire) {
         this.bukkitTeam.setAllowFriendlyFire(friendlyFire);
+    }
+
+    /**
+     * Renvoie si l'equipe peut respawn ou non.
+     * @return Si l'equipe peut respawn ou non.
+     */
+    public boolean getSpawnCondition(Player player) {
+        return this.spawnCondition.respawnable(player);
     }
 }

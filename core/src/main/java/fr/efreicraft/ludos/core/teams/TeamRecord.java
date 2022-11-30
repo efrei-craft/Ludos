@@ -1,5 +1,6 @@
 package fr.efreicraft.ludos.core.teams;
 
+import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlawerSpawnCondition;
 import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnBehavior;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import org.bukkit.GameMode;
@@ -14,6 +15,8 @@ import org.bukkit.GameMode;
  * @param colorSet Set de couleurs de l'équipe (voir {@link ColorUtils}).
  * @param spawnBehavior Lambda de spawn des joueurs de l'équipe en jeu, si elle est nulle alors un comportement
  *                      par défaut est utilisé.
+ * @param spawnCondition Lambda de respawn des joueurs de l'équipe en jeu, si elle est nulle alors les joueurs
+ *                       de l'équipe pourront respawn.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
  * @project EFREI-Minigames
@@ -24,6 +27,7 @@ public record TeamRecord(
         boolean showTeamName,
         boolean playingTeam,
         ColorUtils.TeamColorSet colorSet,
+        ITeamPlawerSpawnCondition spawnCondition,
         ITeamPlayerSpawnBehavior spawnBehavior
 ) {
 
@@ -48,6 +52,9 @@ public record TeamRecord(
                 p.entity().getInventory().setArmorContents(null);
                 p.entity().setGameMode(GameMode.ADVENTURE);
             };
+        }
+        if(spawnCondition == null){
+            spawnCondition = p -> true;
         }
     }
 
