@@ -27,7 +27,8 @@ public class PlayerRespawnCountdown extends BukkitRunnable {
         this.player = player;
         this.countdown = Core.get().getGameManager().getCurrentGame().getMetadata().rules().respawnTimer();
         String[] intermediaire = Core.get().getGameManager().getCurrentGame().getMetadata().customData().respawnTitles();
-        this.respawnTitle = intermediaire[Core.get().getGameManager().getCurrentGame().getRandom().nextInt(intermediaire.length)];
+        this.respawnTitle = intermediaire[Core.get()
+                .getGameManager().getCurrentGame().getRandom().nextInt(intermediaire.length)];
     }
 
     @Override
