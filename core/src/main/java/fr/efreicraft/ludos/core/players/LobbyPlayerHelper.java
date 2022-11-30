@@ -102,39 +102,37 @@ public class LobbyPlayerHelper {
 
         List<MenuItem> items = new ArrayList<>();
         int slot = 0;
-        for(Team team : Core.get().getTeamManager().getTeams().values()) {
-            if(team.isPlayingTeam()) {
-                String teamName = LegacyComponentSerializer.legacyAmpersand().serialize(
-                        Component.text("Équipe ").color(team.getColor().textColor()).append(team.name())
-                );
-                items.add(
-                        new ItemStackMenuItem(
-                                slot,
-                                () -> {
-                                    List<String> teamPlayers = new ArrayList<>();
-                                    for(Player teamPlayer : team.getPlayers()) {
-                                        teamPlayers.add("&7• " + teamPlayer.getName());
-                                    }
-                                    if(teamPlayers.isEmpty()) {
-                                        teamPlayers.add("&8Personne.");
-                                    }
-                                    Material material = Material.WHITE_WOOL;
-                                    if(ColorUtils.getWoolByDyeColor(team.getColor().dyeColor()) != null) {
-                                        material = ColorUtils.getWoolByDyeColor(team.getColor().dyeColor());
-                                    }
-                                    return new ItemStackMenuItem(
-                                            new ItemStack(material),
-                                            teamName,
-                                            "&7Membres de l'équipe:\n"
-                                                    + String.join("\n", teamPlayers)
-                                                    + "\n\n&8» &6Cliquez pour rejoindre l'équipe."
-                                    );
-                                },
-                                event -> team.addPlayer(player)
-                        )
-                );
-                slot++;
-            }
+        for(Team team : Core.get().getTeamManager().getPlayingTeams().values()) {
+            String teamName = LegacyComponentSerializer.legacyAmpersand().serialize(
+                    Component.text("Équipe ").color(team.getColor().textColor()).append(team.name())
+            );
+            items.add(
+                    new ItemStackMenuItem(
+                            slot,
+                            () -> {
+                                List<String> teamPlayers = new ArrayList<>();
+                                for(Player teamPlayer : team.getPlayers()) {
+                                    teamPlayers.add("&7• " + teamPlayer.getName());
+                                }
+                                if(teamPlayers.isEmpty()) {
+                                    teamPlayers.add("&8Personne.");
+                                }
+                                Material material = Material.WHITE_WOOL;
+                                if(ColorUtils.getWoolByDyeColor(team.getColor().dyeColor()) != null) {
+                                    material = ColorUtils.getWoolByDyeColor(team.getColor().dyeColor());
+                                }
+                                return new ItemStackMenuItem(
+                                        new ItemStack(material),
+                                        teamName,
+                                        "&7Membres de l'équipe:\n"
+                                                + String.join("\n", teamPlayers)
+                                                + "\n\n&8» &6Cliquez pour rejoindre l'équipe."
+                                );
+                            },
+                            event -> team.addPlayer(player)
+                    )
+            );
+            slot++;
         }
 
         player.getPlayerMenus().setMenu(

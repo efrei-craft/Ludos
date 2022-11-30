@@ -6,9 +6,9 @@ import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.players.Player;
 import org.bukkit.DyeColor;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Gestionnaire des équipes.<br /><br />
@@ -121,8 +121,7 @@ public class TeamManager implements IManager {
      * @return L'équipe avec le moins de joueurs.
      */
     private Team getTeamWithLeastPlayers() {
-        return teams.values().stream()
-                .filter(t -> t == null || t.isPlayingTeam()) // ne garder que les teams null ou playing (on ne dispatch pas dans spectators, par ex.
+        return getPlayingTeams().values().stream()
                 .min(Comparator.comparingInt(t -> {
                     if (t == null) return 0;
                     return t.getPlayers().size(); // par quoi compare-t-on les teams ? Par leur nombre (int) de joueurs ! On extrait un int de l'abstraite Team, d'où "key extractor".
@@ -150,6 +149,16 @@ public class TeamManager implements IManager {
      */
     public Map<String, Team> getTeams() {
         return this.teams;
+    }
+
+    /**
+     * Retourne les équipes qui jouent.
+     * @return Les équipes qui jouent
+     */
+    public Map<String, Team> getPlayingTeams() {
+        return getTeams().entrySet().stream()
+                .filter((entry) -> entry.getValue().isPlayingTeam())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
 }
