@@ -6,10 +6,7 @@ import fr.efreicraft.ludos.core.teams.Team;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Bed;
@@ -54,6 +51,8 @@ public class GameLogic {
 //        ItemStack sword = new ItemStack(Material.IRON_SWORD);
 //        sword.addEnchantment(Enchantment.DURABILITY, 3);
 //        player.entity().getInventory().addItem(sword);
+        player.entity().setGameMode(GameMode.SURVIVAL);
+
         player.entity().getInventory().clear();
         ItemStack sword = new ItemStack(Material.STONE_SWORD);
         ItemStack pickaxe = new ItemStack(Material.WOODEN_PICKAXE);
