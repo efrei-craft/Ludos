@@ -16,7 +16,6 @@ import org.bukkit.block.data.type.Bed;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Merchant;
@@ -55,17 +54,26 @@ public class GameLogic {
 //        ItemStack sword = new ItemStack(Material.IRON_SWORD);
 //        sword.addEnchantment(Enchantment.DURABILITY, 3);
 //        player.entity().getInventory().addItem(sword);
+        player.entity().getInventory().clear();
+        ItemStack sword = new ItemStack(Material.STONE_SWORD);
+        ItemStack pickaxe = new ItemStack(Material.WOODEN_PICKAXE);
+        pickaxe.addEnchantment(Enchantment.DURABILITY, 1);
 
         ItemStack[] armor = new ItemStack[4];
         armor[0] = new ItemStack(Material.LEATHER_BOOTS);
         armor[1] = new ItemStack(Material.LEATHER_LEGGINGS);
         armor[2] = new ItemStack(Material.LEATHER_CHESTPLATE);
         armor[3] = new ItemStack(Material.LEATHER_HELMET);
+
         for (ItemStack item : armor) {
             LeatherArmorMeta meta = (LeatherArmorMeta) item.getItemMeta();
             meta.setColor(player.getTeam().getColor().bukkitColor());
+            meta.addEnchant(Enchantment.DURABILITY, 1, false);
             item.setItemMeta(meta);
         }
+
+        player.entity().getInventory().setItem(0, sword);
+        player.entity().getInventory().setItem(1, pickaxe);
         player.entity().getInventory().setArmorContents(armor);
     }
 
@@ -390,15 +398,6 @@ public class GameLogic {
     public void stopStopwatch() {
         if (this.stopWatchTask != null)
             this.stopWatchTask.cancel();
-    }
-
-    /**
-     * Donne les récompenses à la team du joueur ayant donné le coup de grâce au mort
-     * @param killer Le tueur
-     */
-    public void handleFinishOffByPlayer(Player killer) {
-        fr.efreicraft.ludos.core.players.Player gamer = Utils.getLudosPlayer(killer);
-        if (gamer == null) return;
     }
 
     /**
