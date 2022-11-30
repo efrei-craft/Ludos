@@ -37,7 +37,11 @@ public record EventListener(GameLogic logic) implements Listener {
             Material.BLUE_WALL_BANNER,
             Material.RED_WALL_BANNER,
             Material.LIME_WALL_BANNER,
-            Material.YELLOW_WALL_BANNER
+            Material.YELLOW_WALL_BANNER,
+            Material.BLUE_CONCRETE,
+            Material.RED_CONCRETE,
+            Material.LIME_CONCRETE,
+            Material.YELLOW_CONCRETE
     ));
 
     @EventHandler
