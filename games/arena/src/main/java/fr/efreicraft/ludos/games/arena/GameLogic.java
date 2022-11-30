@@ -141,7 +141,7 @@ public class GameLogic {
     }
 
     public boolean isNotDeathMatch(){
-        return this.time > 15;
+        return this.time > 300;
     }
 
 }

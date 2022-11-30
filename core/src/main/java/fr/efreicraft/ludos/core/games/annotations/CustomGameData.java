@@ -12,4 +12,6 @@ public @interface CustomGameData {
      */
     String[] respawnTitles() default { "Vous êtes mort !" };
 
+    String[] deathTitles() default {"C'est la fin pour toi !"};
+
 }
