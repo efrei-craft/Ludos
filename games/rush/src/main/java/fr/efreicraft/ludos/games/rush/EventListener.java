@@ -19,6 +19,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 import java.util.ArrayList;
@@ -136,5 +138,11 @@ public record EventListener(GameLogic logic) implements Listener {
         event.getRecipe().setDemand(-1);
         event.getRecipe().setPriceMultiplier(1);
         event.getRecipe().setSpecialPrice(0);
+    }
+
+    @EventHandler
+    public void onCraft(CraftItemEvent event) {
+        // Nooo mooore crafting!
+        event.setCancelled(true);
     }
 }
