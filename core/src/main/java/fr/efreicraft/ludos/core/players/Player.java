@@ -1,12 +1,12 @@
 package fr.efreicraft.ludos.core.players;
 
+import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.games.GameManager;
+import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.players.menus.PlayerMenus;
 import fr.efreicraft.ludos.core.players.runnables.PlayerRespawnCountdown;
 import fr.efreicraft.ludos.core.players.scoreboards.PlayerScoreboard;
 import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
-import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.games.GameManager;
-import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import fr.efreicraft.ludos.core.utils.SoundUtils;

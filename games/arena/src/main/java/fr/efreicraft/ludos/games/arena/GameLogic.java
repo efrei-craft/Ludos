@@ -1,8 +1,8 @@
 package fr.efreicraft.ludos.games.arena;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.games.runnables.GameTimer;
 import fr.efreicraft.ludos.core.games.TeamWin;
+import fr.efreicraft.ludos.core.games.runnables.GameTimer;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.ActionBarUtils;

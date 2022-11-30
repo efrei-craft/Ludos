@@ -1,9 +1,9 @@
 package fr.efreicraft.ludos.core.commands;
 
-import fr.efreicraft.ludos.core.games.GameManager;
-import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.games.exceptions.GameStatusException;
+import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

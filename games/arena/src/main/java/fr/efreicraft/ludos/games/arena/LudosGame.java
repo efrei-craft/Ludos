@@ -2,9 +2,9 @@ package fr.efreicraft.ludos.games.arena;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.annotations.CustomGameData;
+import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
-import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;

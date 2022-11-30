@@ -6,8 +6,9 @@ import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.players.Player;
 import org.bukkit.DyeColor;
 
-import java.util.*;
-import java.util.stream.Collector;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**

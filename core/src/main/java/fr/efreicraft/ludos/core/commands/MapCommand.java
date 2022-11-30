@@ -1,10 +1,10 @@
 package fr.efreicraft.ludos.core.commands;
 
-import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.maps.exceptions.MapLoadingException;
 import fr.efreicraft.ludos.core.maps.ParsedMap;
+import fr.efreicraft.ludos.core.maps.exceptions.MapLoadingException;
 import fr.efreicraft.ludos.core.maps.points.SpawnPoint;
+import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import net.kyori.adventure.text.Component;
