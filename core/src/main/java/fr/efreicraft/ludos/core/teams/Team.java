@@ -286,8 +286,8 @@ public class Team {
     }
 
     /**
-     * Renvoie si l'equipe peut respawn ou non.
-     * @return Si l'equipe peut respawn ou non.
+     * Renvoie si l'équipe peut respawn ou non.
+     * @return Si l'équipe peut respawn ou non.
      */
     public boolean getSpawnCondition(Player player) {
         return this.spawnCondition.respawnable(player);
