@@ -111,28 +111,6 @@ public class LudosGame extends Game {
     }
 
     /**
-     * Vérifie si le jeu doit se terminer
-     *
-     * @return true si le jeu doit se terminer, false sinon
-     */
-    @Override
-    public boolean checkIfGameHasToBeEnded() {
-        return super.checkIfGameHasToBeEnded();
-    }
-
-    /**
-     * Change le joueur ou l'équipe gagnant(e) du jeu.
-     * Peut-être soit {@link PlayerWin} soit {@link TeamWin}
-     *
-     * @param winner Le joueur ou l'équipe gagnant(e)
-     */
-    @Override
-    public void setWinnerAndEndGame(GameWinner winner) {
-        // Ici faut mettre un new TeamWin(Team)
-        super.setWinnerAndEndGame(winner);
-    }
-
-    /**
      * Méthode standardisée de fin de jeu
      */
     @Override
@@ -179,6 +157,7 @@ public class LudosGame extends Game {
                 false,
                 true,
                 new ColorUtils.TeamColorSet(ColorUtils.TeamColors.BLUE),
+                (player) -> !gameLogic.bedDestroyed(player.getTeam()),
                 gameLogic::preparePlayerToSpawn
         ));
         teams.put("ROUGES", new TeamRecord(
@@ -187,6 +166,7 @@ public class LudosGame extends Game {
                 false,
                 true,
                 new ColorUtils.TeamColorSet(ColorUtils.TeamColors.RED),
+                (player) -> !gameLogic.bedDestroyed(player.getTeam()),
                 gameLogic::preparePlayerToSpawn
         ));
         teams.put("VERTS", new TeamRecord(
@@ -195,6 +175,7 @@ public class LudosGame extends Game {
                 false,
                 true,
                 new ColorUtils.TeamColorSet(ColorUtils.TeamColors.GREEN),
+                (player) -> !gameLogic.bedDestroyed(player.getTeam()),
                 gameLogic::preparePlayerToSpawn
         ));
         teams.put("JAUNES", new TeamRecord(
@@ -203,6 +184,7 @@ public class LudosGame extends Game {
                 false,
                 true,
                 new ColorUtils.TeamColorSet(ColorUtils.TeamColors.YELLOW),
+                (player) -> !gameLogic.bedDestroyed(player.getTeam()),
                 gameLogic::preparePlayerToSpawn
         ));
         teams.putAll(DefaultTeamRecordBuilder.DefaultTeamRecords.ONLY_SPECTATOR.getTeamRecords());
