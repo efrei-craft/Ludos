@@ -67,7 +67,7 @@ public class Team {
     private final ITeamPlayerSpawnBehavior spawnBehavior;
 
     /**
-     * Verifie si les joueurs peuvent respawn
+     * Vérifie si les joueurs peuvent respawn
      */
     private final ITeamPlawerSpawnCondition spawnCondition;
 
