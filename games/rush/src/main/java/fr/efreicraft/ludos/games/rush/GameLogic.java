@@ -26,6 +26,16 @@ public class GameLogic {
 
     private World world;
 
+    /**
+     * Calculé par rapport au milieu de la carte.
+     */
+    public static final int MAX_BUILD_HEIGHT = 30;
+
+    /**
+     * Rayon autour duquel le joueur ne peut pas poser de TNT, par rapport à son point de spawn.
+     */
+    public static final int NO_TNT_RADIUS = 16;
+
     public final Map<Team, ArrayList<GamePoint>> TEAMS_ITEMSPAWNERS = new HashMap<>();
     public GamePoint[] TEAMS_BED = new GamePoint[4];
 

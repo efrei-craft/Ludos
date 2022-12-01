@@ -35,19 +35,6 @@ public class LudosGame extends Game {
 
     private final GameLogic gameLogic;
 
-    /**
-     * Calculé par rapport au milieu de la carte.
-     */
-    public static final int maxBuildHeight = 30;
-
-    /**
-     * Rayon autour duquel le joueur ne peut pas poser de TNT, par rapport à son point de spawn.
-     */
-    public static final int noTNTRadius = 16;
-
-    /**
-     * Constructeur de jeu.
-     */
     public LudosGame() {
         super();
         this.gameLogic = new GameLogic();
