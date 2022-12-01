@@ -17,10 +17,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityInteractEvent;
-import org.bukkit.event.entity.VillagerReplenishTradeEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
@@ -55,7 +52,7 @@ public record EventListener(GameLogic logic) implements Listener {
     public void onPlaceBlock(BlockPlaceEvent event) {
         Location mid = Core.get().getMapManager().getCurrentMap().getMiddleOfMap();
         // Math.abs c'est pour mettre une limite en dessous aussi lol
-        if (Math.abs(event.getBlock().getY() - mid.getBlockY()) > LudosGame.maxBuildHeight) {
+        if (Math.abs(event.getBlock().getY() - mid.getBlockY()) > GameLogic.MAX_BUILD_HEIGHT) {
             event.setCancelled(true);
             return;
         }
@@ -65,7 +62,7 @@ public record EventListener(GameLogic logic) implements Listener {
         if (placer == null) return;
 
         Location spawnPoint = placer.getTeam().getSpawnPointsForCurrentMap().get(0).getLocation();
-        if (spawnPoint.distance(event.getBlock().getLocation()) < LudosGame.noTNTRadius) {
+        if (spawnPoint.distance(event.getBlock().getLocation()) < GameLogic.NO_TNT_RADIUS) {
             event.setCancelled(true);
             placer.sendMessage(MessageUtils.ChatPrefix.GAME, "&cVous ne pouvez pas placer de TNT aussi près de votre spawn !");
         }
@@ -111,6 +108,12 @@ public record EventListener(GameLogic logic) implements Listener {
     }
 
     @EventHandler
+    public void onDamage(EntityDamageEvent event) {
+        if (event.getEntityType() == EntityType.PLAYER)
+            if (event.getCause() == EntityDamageEvent.DamageCause.VOID) ((Player) event.getEntity()).setHealth(0);
+    }
+
+    @EventHandler
     public void onEntityMove(EntityMoveEvent event) {
         if (event.getEntity() instanceof Player) {
             fr.efreicraft.ludos.core.players.Player player = Core.get().getPlayerManager().getPlayer((Player) event.getEntity());
@@ -123,12 +126,6 @@ public record EventListener(GameLogic logic) implements Listener {
         } else if (event.getEntity().getType() == EntityType.VILLAGER) {
             event.setTo(event.getFrom());
         }
-    }
-
-    @EventHandler
-    public void onDeath(EntityDeathEvent event) {
-        if (!(event.getEntity() instanceof Player player)) return;
-
     }
 
     @EventHandler
