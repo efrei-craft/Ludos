@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.core;
 
 import com.comphenix.protocol.ProtocolManager;
+import fr.efreicraft.ludos.core.clients.RedisClient;
 import fr.efreicraft.ludos.core.commands.CommandManager;
 import fr.efreicraft.ludos.core.players.PlayerManager;
 import fr.efreicraft.ludos.core.games.GameManager;
@@ -61,6 +62,11 @@ public class Core {
     private PlayerManager playerManager;
 
     /**
+     * RedisClient pour gérer la connexion au serveur Redis.
+     */
+    private RedisClient redisClient;
+
+    /**
      * Constructeur de la classe Core.
      * @param plugin Plugin Java Bukkit pour interfacer avec l'API Bukkit.
      * @param protocolManager ProtocolManager pour interfacer avec l'API ProtocolLib pour la manipulation des packets.
@@ -70,6 +76,7 @@ public class Core {
         this.protocolManager = protocolManager;
         plugin.getLogger().info("Loading core...");
         this.plugin = plugin;
+        this.redisClient = new RedisClient();
         this.loadManagers();
         this.registerEvents();
     }
@@ -194,6 +201,14 @@ public class Core {
      */
     public ProtocolManager getProtocolManager() {
         return protocolManager;
+    }
+
+    /**
+     * Récupération du {@link RedisClient}.
+     * @return Client Redis.
+     */
+    public RedisClient getRedisClient() {
+        return redisClient;
     }
 
 }
