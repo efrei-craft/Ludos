@@ -2,12 +2,15 @@ package fr.efreicraft.ludos.games.rush;
 
 import com.destroystokyo.paper.MaterialTags;
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.maps.points.SpawnPoint;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import net.kyori.adventure.text.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Bed;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -20,7 +23,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.Merchant;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
@@ -51,6 +56,37 @@ public record EventListener(GameLogic logic) implements Listener {
     @EventHandler
     public void onPlaceBlock(BlockPlaceEvent event) {
         Location mid = Core.get().getMapManager().getCurrentMap().getMiddleOfMap();
+
+        ArrayList<Location> forbiddenGenerators = new ArrayList<>();
+
+        Core.get().getMapManager().getCurrentMap().getGamePoints().get("TEAM1_GENERATOR").forEach(point -> forbiddenGenerators.add(point.getLocation().toBlockLocation()));
+        Core.get().getMapManager().getCurrentMap().getGamePoints().get("TEAM2_GENERATOR").forEach(point -> forbiddenGenerators.add(point.getLocation().toBlockLocation()));
+        Core.get().getMapManager().getCurrentMap().getGamePoints().get("TEAM3_GENERATOR").forEach(point -> forbiddenGenerators.add(point.getLocation().toBlockLocation()));
+        Core.get().getMapManager().getCurrentMap().getGamePoints().get("TEAM4_GENERATOR").forEach(point -> forbiddenGenerators.add(point.getLocation().toBlockLocation()));
+
+        if (forbiddenGenerators.contains(event.getBlock().getLocation().toBlockLocation())) {
+            event.setCancelled(true);
+            return;
+        }
+
+        Core.get().getMapManager().getCurrentMap().getSpawnPoints().values()
+                .forEach(points -> {
+                    for (SpawnPoint point : points) {
+                        Location block = point.getLocation().clone().toBlockLocation();
+                        block.setPitch(0);
+                        block.setYaw(0);
+
+                        Location blockAbove = point.getLocation().clone().add(0, 1, 0).toBlockLocation();
+                        blockAbove.setPitch(0);
+                        blockAbove.setYaw(0);
+
+                        if (block.equals(event.getBlock().getLocation().toBlockLocation()) || blockAbove.equals(event.getBlock().getLocation().toBlockLocation())) {
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                });
+
         // Math.abs c'est pour mettre une limite en dessous aussi lol
         if (Math.abs(event.getBlock().getY() - mid.getBlockY()) > GameLogic.MAX_BUILD_HEIGHT) {
             event.setCancelled(true);
@@ -92,12 +128,17 @@ public record EventListener(GameLogic logic) implements Listener {
             villager.clearReputations();
             if (villager.customName() == null) return;
 
+            Merchant toOpen = null;
+
             switch (( (TextComponent) villager.customName()).content()) {
-                case "Bâtisseur" -> event.getPlayer().openMerchant(logic.merchantBatisseur, true);
-                case "Terroriste" -> event.getPlayer().openMerchant(logic.merchantTerroriste, true);
-                case "Tavernier" -> event.getPlayer().openMerchant(logic.merchantTavernier, true);
-                case "Armurier" -> event.getPlayer().openMerchant(logic.merchantArmurier, true);
+                case "Bâtisseur" -> toOpen = logic.merchantBatisseur;
+                case "Terroriste" -> toOpen = logic.merchantTerroriste;
+                case "Tavernier" -> toOpen = logic.merchantTavernier;
+                case "Armurier" -> toOpen = logic.merchantArmurier;
             }
+
+            event.getPlayer().openMerchant(toOpen, false);
+
             event.setCancelled(true);
         }
     }
