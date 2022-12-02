@@ -13,6 +13,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class PlayerRespawnCountdown extends BukkitRunnable {
 
     /**
+     * Séparateur utilisé pour les titles et subtitles
+      */
+    private static final String SPLITTER = "\u00A7";
+
+    /**
      * Temps restant avant le début de la partie.
      */
     private int countdown;
@@ -42,13 +47,24 @@ public class PlayerRespawnCountdown extends BukkitRunnable {
             this.player.entity().clearTitle();
             this.cancel();
         } else {
-            this.player.sendTitle(
-                    "&c" + this.respawnTitle,
-                    "&7Vous réapparaîtrez dans &f" + countdown + " &7secondes.",
-                    0,
-                    40,
-                    0
-            );
+            String[] toBeDisplayed = this.respawnTitle.split(SPLITTER);
+            if (toBeDisplayed.length <= 1 || toBeDisplayed[1].isBlank()) {
+                this.player.sendTitle(
+                        "&c" + this.respawnTitle,
+                        "&7Vous réapparaîtrez dans &f" + countdown + " &7secondes.",
+                        0,
+                        40,
+                        0
+                );
+            } else {
+                this.player.sendTitle(
+                        "&c" + toBeDisplayed[0],
+                        "&7" + toBeDisplayed[1],
+                        0,
+                        40,
+                        0
+                );
+            }
         }
         countdown--;
     }
