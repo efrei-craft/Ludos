@@ -2,6 +2,7 @@ package fr.efreicraft.ludos.core.players.runnables;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.utils.PlayerUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -11,11 +12,6 @@ import org.bukkit.scheduler.BukkitRunnable;
  * @project EFREI-Minigames
  */
 public class PlayerRespawnCountdown extends BukkitRunnable {
-
-    /**
-     * Séparateur utilisé pour les titles et subtitles
-      */
-    private static final String SPLITTER = "\u00A7";
 
     /**
      * Temps restant avant le début de la partie.
@@ -47,7 +43,7 @@ public class PlayerRespawnCountdown extends BukkitRunnable {
             this.player.entity().clearTitle();
             this.cancel();
         } else {
-            String[] toBeDisplayed = this.respawnTitle.split(SPLITTER);
+            String[] toBeDisplayed = this.respawnTitle.split(PlayerUtils.SPLITTER);
             if (toBeDisplayed.length <= 1 || toBeDisplayed[1].isBlank()) {
                 this.player.sendTitle(
                         "&c" + this.respawnTitle,
