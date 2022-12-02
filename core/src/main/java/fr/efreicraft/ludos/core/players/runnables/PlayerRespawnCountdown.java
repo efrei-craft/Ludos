@@ -39,7 +39,7 @@ public class PlayerRespawnCountdown extends BukkitRunnable {
         }
         if (countdown == 0) {
             this.player.getTeam().spawnPlayer(this.player);
-            this.player.sendTitle("", "", 0, 40, 0);
+            this.player.entity().clearTitle();
             this.cancel();
         } else {
             this.player.sendTitle(
