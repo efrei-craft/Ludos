@@ -4,9 +4,10 @@ import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.IManager;
 import fr.efreicraft.ludos.core.games.exceptions.GameRegisteringException;
 import fr.efreicraft.ludos.core.games.exceptions.GameStatusException;
-import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.games.runnables.LobbyCountdown;
 import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.games.interfaces.Game;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
@@ -61,6 +62,8 @@ public class GameManager implements IManager {
 
     private LobbyCountdown lobbyCountdown;
 
+    private String defaultGamePluginName;
+
     /**
      * Constructeur du gestionnaire de jeux. Il vérifie que la classe n'est pas déjà initialisée.
      */
@@ -73,6 +76,7 @@ public class GameManager implements IManager {
     @Override
     public void runManager() {
         setStatus(GameStatus.WAITING);
+        GameServerRedisDispatcher.serverReady();
         loadAllGameJars();
     }
 
@@ -120,6 +124,22 @@ public class GameManager implements IManager {
     }
 
     /**
+     * Permet de modifier le jeu par défaut. Dans ce cas, à la fin d'une partie, ce jeu sera chargé.<br />
+     * Utilisé dans les communications Redis avec le proxy.
+     * @param defaultGamePluginName Nom du plugin du jeu.
+     */
+    public void changeDefaultGame(String defaultGamePluginName) {
+        this.defaultGamePluginName = defaultGamePluginName;
+        Bukkit.getScheduler().runTask(Core.get().getPlugin(), () -> {
+            try {
+                loadGame(defaultGamePluginName);
+            } catch (GameStatusException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    /**
      * Méthode appelée par le plugin du jeu pour s'enregistrer.
      * @param gameClass Classe du jeu
      */
@@ -132,6 +152,7 @@ public class GameManager implements IManager {
             }
             lobbyCountdown = new LobbyCountdown(currentGame.getMetadata().rules().startTimer());
             Core.get().getLogger().log(Level.INFO, "Game {0} registered !", gameClass.getPackageName());
+            GameServerRedisDispatcher.game();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new GameRegisteringException(e.getMessage());
         }
@@ -150,6 +171,16 @@ public class GameManager implements IManager {
         Core.get().getServer().getPluginManager().disablePlugin(currentPlugin);
         currentGame = null;
         currentPlugin = null;
+    }
+
+    /**
+     * Réinitialise le serveur de jeu. Décharge la carte, les équipes, change le status
+     */
+    public void resetServer() {
+        Core.get().getMapManager().unloadMap();
+        Core.get().getTeamManager().unloadTeams();
+        this.defaultGamePluginName = null;
+        Core.get().getGameManager().setStatus(GameManager.GameStatus.WAITING);
     }
 
     /**
@@ -233,6 +264,7 @@ public class GameManager implements IManager {
      */
     public void setStatus(GameStatus status) {
         this.status = status;
+        GameServerRedisDispatcher.serverStatus();
 
         for(Player player : Core.get().getPlayerManager().getPlayers()) {
             player.setupScoreboard();
@@ -247,7 +279,14 @@ public class GameManager implements IManager {
         } else if(status == GameStatus.ENDING) {
             currentGame.endGame();
         } else if(status == GameStatus.WAITING) {
-            unregisterCurrentGame();
+            this.unregisterCurrentGame();
+            if(defaultGamePluginName != null) {
+                try {
+                    this.loadGame(defaultGamePluginName);
+                } catch (GameStatusException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
