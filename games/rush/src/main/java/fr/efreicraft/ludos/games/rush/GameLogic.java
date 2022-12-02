@@ -128,7 +128,6 @@ public class GameLogic {
             Location bedFoot = point.getLocation();
             Block blockAtFeet = world.getBlockAt(bedFoot);
 
-            // À vos souhaits.
             String colorBlockBelow = world.getBlockAt(bedFoot.clone().subtract(0, 1, 0)).getType().name().split("_", 2)[0];
 
             BlockFace face = Utils.whereAmIRelatedTo(mid, bedFoot);
