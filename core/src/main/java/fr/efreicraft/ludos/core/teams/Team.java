@@ -99,6 +99,10 @@ public class Team {
         return (char) (priority + 64) + "-" + this.name;
     }
 
+    public int getPriority() {
+        return this.priority;
+    }
+
     /**
      * Charge l'équipe dans le scoreboard de Bukkit.
      */
