@@ -1,18 +1,25 @@
 package fr.efreicraft.ludos.core.games.interfaces;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.games.*;
+import fr.efreicraft.ludos.core.games.GameEventManager;
+import fr.efreicraft.ludos.core.games.GameManager;
+import fr.efreicraft.ludos.core.games.PlayerWin;
+import fr.efreicraft.ludos.core.games.TeamWin;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.games.runnables.GameCountdown;
 import fr.efreicraft.ludos.core.maps.exceptions.MapLoadingException;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.event.Listener;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.logging.Level;
 
 /**
@@ -121,18 +128,34 @@ public abstract class Game implements IGame {
         if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
             return false;
         }
-        if(this.getMetadata().rules().minPlayers() > Core.get().getPlayerManager().getNumberOfPlayingPlayers()) {
-            if(Core.get().getPlayerManager().getNumberOfPlayingPlayers() > 0) {
+
+        if (Core.get().getTeamManager().getTeams().size() > 2) {
+            Set<Team> lastTeamsAlive = new HashSet<>();
+
+            for (Team team : Core.get().getTeamManager().getPlayingTeams().values()) {
+                if (team.getPlayers().size() > 0) lastTeamsAlive.add(team);
+            }
+
+            if (lastTeamsAlive.size() == 1) {
+                this.winner = new TeamWin(lastTeamsAlive.iterator().next());
+
+                Core.get().getGameManager().setStatus(GameManager.GameStatus.ENDING);
+                return true;
+            }
+
+        } else if (this.getMetadata().rules().minPlayers() > Core.get().getPlayerManager().getNumberOfPlayingPlayers()) {
+            if (Core.get().getPlayerManager().getNumberOfPlayingPlayers() > 0) {
                 Player lastPlayer = Core.get().getPlayerManager().getPlayingPlayers().iterator().next();
-                if(lastPlayer != null) {
+                if (lastPlayer != null) {
                     this.winner = new PlayerWin(lastPlayer);
                 }
             }
-            if(this.winner == null) {
+            if (this.winner == null) {
                 MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.GAME, "&cIl n'y a plus assez de joueurs pour continuer le jeu.");
             }
             Core.get().getGameManager().setStatus(GameManager.GameStatus.ENDING);
             return true;
+
         }
         return false;
     }

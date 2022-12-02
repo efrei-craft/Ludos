@@ -1,8 +1,8 @@
 package fr.efreicraft.ludos.core.players.menus;
 
-import fr.efreicraft.ludos.core.players.menus.interfaces.MenuItem;
 import fr.efreicraft.ludos.core.players.menus.interfaces.IMenuClickCallback;
 import fr.efreicraft.ludos.core.players.menus.interfaces.IMenuItemRefresh;
+import fr.efreicraft.ludos.core.players.menus.interfaces.MenuItem;
 import fr.efreicraft.ludos.core.utils.NBTUtils;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;

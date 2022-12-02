@@ -1,8 +1,8 @@
 package fr.efreicraft.ludos.core;
 
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
-import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.games.GameManager;
+import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.utils.NBTUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

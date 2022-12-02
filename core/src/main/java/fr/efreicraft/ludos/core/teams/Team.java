@@ -5,8 +5,8 @@ import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.maps.points.SpawnPoint;
 import fr.efreicraft.ludos.core.players.LobbyPlayerHelper;
 import fr.efreicraft.ludos.core.players.Player;
-import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnCondition;
 import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnBehavior;
+import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnCondition;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -67,7 +67,7 @@ public class Team {
     private final ITeamPlayerSpawnBehavior spawnBehavior;
 
     /**
-     * Verifie si les joueurs peuvent respawn
+     * Vérifie si les joueurs peuvent respawn
      */
     private final ITeamPlayerSpawnCondition spawnCondition;
 
@@ -97,6 +97,10 @@ public class Team {
      */
     private String generateTeamNameWithPriority() {
         return (char) (priority + 64) + "-" + this.name;
+    }
+
+    public int getPriority() {
+        return this.priority;
     }
 
     /**
@@ -286,8 +290,8 @@ public class Team {
     }
 
     /**
-     * Renvoie si l'equipe peut respawn ou non.
-     * @return Si l'equipe peut respawn ou non.
+     * Renvoie si l'équipe peut respawn ou non.
+     * @return Si l'équipe peut respawn ou non.
      */
     public boolean getSpawnCondition(Player player) {
         return this.spawnCondition.respawnable(player);
