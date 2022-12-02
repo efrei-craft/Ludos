@@ -6,25 +6,30 @@ import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.*;
 
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+/**
+ * Implémentation de la classe {@link Game}.
+ * @author Idir NAIT MEDDOUR
+ */
 @GameMetadata(
         name = "Rush",
         color = "&5",
         description = "Détruisez le lit de l'équipe adversaire, puis tuez-les pour remporter la victoire !",
-        authors = {"Idir 'Niilyx' NAIT MEDDOUR"},
+        authors = {"Niilyx"},
         rules = @GameRules(
                 allowRespawn = true,
-                minPlayersToStart = 1,
-                maxPlayers = 8,
+                minPlayersToStart = 2,
+                maxPlayers = 16,
                 allowEphemeralPlayers = true
         ),
         customData = @CustomGameData(
@@ -60,7 +65,7 @@ public class LudosGame extends Game {
         Location killZoneLocation = new Location(
                 mid.getWorld(),
                 mid.getX(),
-                mid.getY() - 150,
+                mid.getY() - 100,
                 mid.getZ()
         );
 
@@ -107,6 +112,26 @@ public class LudosGame extends Game {
     @Override
     public void setupScoreboard(Player player) {
         player.getBoard().clearFields();
+
+        List<Team> teamList = Core.get().getTeamManager().getPlayingTeams().values()
+                .stream()
+                .sorted(Comparator.comparingInt(Team::getPriority))
+                .toList();
+
+        for (int i = 0, teamListSize = teamList.size(); i < teamListSize; i++) {
+            Team team = teamList.get(i);
+            player.getBoard().setField(i, new ScoreboardField(
+                    LegacyComponentSerializer.legacyAmpersand().serialize(team.name()),
+                    true,
+                    (player1) -> {
+                        if (!gameLogic.bedDestroyed(team))
+                            return "&a\u2713";
+                        else
+                            return "&7" + team.getPlayers().size();
+                    }
+            ));
+        }
+
     }
 
     @Override
