@@ -130,6 +130,7 @@ public class GameLogic {
         for (GamePoint point : TEAMS_BED) {
             Location bedFoot = point.getLocation();
             Block blockAtFeet = world.getBlockAt(bedFoot);
+
             // À vos souhaits.
             String colorBlockBelow = world.getBlockAt(bedFoot.clone().subtract(0, 1, 0)).getType().name().split("_", 2)[0];
 
@@ -143,11 +144,6 @@ public class GameLogic {
             });
             blockAtFeet.setBlockData(feet);
 
-            /*BlockData feetData = blockAtFeet.getBlockData();
-            feetData.setPart(Bed.Part.FOOT);
-            feetData.setFacing(face);
-            blockAtFeet.setBlockData(feetData);*/
-
             Block blockAtHead = world.getBlockAt(bedFoot.clone().add(bedFoot, face.getModX(), 0, face.getModZ()));
 
             Bed head = (Bed) Bukkit.createBlockData(Material.valueOf(  colorBlockBelow + "_BED"), (data) -> {
@@ -155,12 +151,6 @@ public class GameLogic {
                 ((Bed) data).setPart(Bed.Part.HEAD);
             });
             blockAtHead.setBlockData(head);
-
-            /*blockAtHead.setType(Material.valueOf(  colorBlockBelow + "_BED"));
-            BlockData headData = blockAtHead.getBlockData();
-            headData.setPart(Bed.Part.HEAD);
-            headData.setFacing(face);
-            blockAtHead.setBlockData(headData);*/
         }
     }
 
