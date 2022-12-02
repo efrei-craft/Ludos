@@ -86,40 +86,28 @@ public class GameLogic {
     public void setupVillagers() {
         for (GamePoint point : Core.get().getMapManager().getCurrentMap().getGamePoints().get("MERCHANT_BATISSEUR")) {
             Location loc = point.getLocation().add(0.5, 0, 0.5);
-
-            Villager villager = (Villager) world.spawnEntity(loc, EntityType.VILLAGER);
-            villager.customName(Component.text("Bâtisseur"));
-            villager.setInvulnerable(true);
-            villager.setSilent(true);
-            villager.clearReputations();
+            makeVillager(loc, "Bâtisseur");
         }
         for (GamePoint point : Core.get().getMapManager().getCurrentMap().getGamePoints().get("MERCHANT_TERRORISTE")) {
             Location loc = point.getLocation().add(0.5, 0, 0.5);
-
-            Villager villager = (Villager) world.spawnEntity(loc, EntityType.VILLAGER);
-            villager.customName(Component.text("Terroriste"));
-            villager.setInvulnerable(true);
-            villager.setSilent(true);
-            villager.clearReputations();
+            makeVillager(loc, "Terroriste");
         }
         for (GamePoint point : Core.get().getMapManager().getCurrentMap().getGamePoints().get("MERCHANT_TAVERNIER")) {
             Location loc = point.getLocation().add(0.5, 0, 0.5);
-
-            Villager villager = (Villager) world.spawnEntity(loc, EntityType.VILLAGER);
-            villager.customName(Component.text("Tavernier"));
-            villager.setInvulnerable(true);
-            villager.setSilent(true);
-            villager.clearReputations();
+            makeVillager(loc, "Tavernier");
         }
         for (GamePoint point : Core.get().getMapManager().getCurrentMap().getGamePoints().get("MERCHANT_ARMURIER")) {
             Location loc = point.getLocation().add(0.5, 0, 0.5);
-
-            Villager villager = (Villager) world.spawnEntity(loc, EntityType.VILLAGER);
-            villager.customName(Component.text("Armurier"));
-            villager.setInvulnerable(true);
-            villager.setSilent(true);
-            villager.clearReputations();
+            makeVillager(loc, "Armurier");
         }
+    }
+
+    public void makeVillager(Location loc, String customName) {
+        Villager villager = (Villager) world.spawnEntity(loc, EntityType.VILLAGER);
+        villager.customName(Component.text(customName));
+        villager.setInvulnerable(true);
+        villager.setSilent(true);
+        villager.clearReputations();
     }
 
     public void setupBeds() {
