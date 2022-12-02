@@ -7,7 +7,7 @@ import fr.efreicraft.ludos.core.players.Player;
  * @author Aurelien D. {@literal <aurelien.dasse@efrei.net>}
  * @project EFREI-Minigames
  */
-public interface ITeamPlawerSpawnCondition {
+public interface ITeamPlayerSpawnCondition {
 
     /**
      * S'occupe de définir le comportement du respawn des joueurs de l'équipe.
