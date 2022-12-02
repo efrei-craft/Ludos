@@ -4,6 +4,7 @@ import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.GameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -108,8 +109,8 @@ public class MessageUtils {
      * @param prefix Préfixe du message.
      * @param message Message (coloration par esperluette).
      */
-    public static void sendMessage(Player[] players, ChatPrefix prefix, String message) {
-        for (Player player : players) {
+    public static void sendMessage(CommandSender[] players, ChatPrefix prefix, String message) {
+        for (CommandSender player : players) {
             player.sendMessage(getText(prefix, message));
         }
     }
@@ -120,8 +121,8 @@ public class MessageUtils {
      * @param prefix Préfixe du message.
      * @param message Message (coloration par esperluette).
      */
-    public static void sendMessage(Player player, ChatPrefix prefix, String message) {
-        sendMessage(new Player[]{player}, prefix, message);
+    public static void sendMessage(CommandSender player, ChatPrefix prefix, String message) {
+        sendMessage(new CommandSender[]{player}, prefix, message);
     }
 
     /**
