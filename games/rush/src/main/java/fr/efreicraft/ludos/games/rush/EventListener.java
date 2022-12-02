@@ -87,7 +87,6 @@ public record EventListener(GameLogic logic) implements Listener {
                     }
                 });
 
-        // Math.abs c'est pour mettre une limite en dessous aussi lol
         if (Math.abs(event.getBlock().getY() - mid.getBlockY()) > GameLogic.MAX_BUILD_HEIGHT) {
             event.setCancelled(true);
             return;
