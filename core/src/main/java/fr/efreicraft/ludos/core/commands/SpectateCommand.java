@@ -18,6 +18,10 @@ public class SpectateCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!(sender instanceof org.bukkit.entity.Player)) {
+            MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.TEAM, "&cVous devez être un joueur pour utiliser cette commande.");
+            return false;
+        }
         Player player = Core.get().getPlayerManager().getPlayer((org.bukkit.entity.Player) sender);
         if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
             player.sendMessage(MessageUtils.ChatPrefix.TEAM, "&cVous ne pouvez pas activer le mode spectateur en cours de partie.");

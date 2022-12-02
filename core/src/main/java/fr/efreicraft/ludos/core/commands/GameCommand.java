@@ -1,8 +1,9 @@
 package fr.efreicraft.ludos.core.commands;
 
-import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.games.exceptions.GameStatusException;
+import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,25 +25,23 @@ public class GameCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
-        Player player = Core.get().getPlayerManager().getPlayer((org.bukkit.entity.Player) sender);
-
         if(args.length == 0) {
-            player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /game <list | load | start | stop | reset> <name>");
+            MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /game <list | load | start | stop | reset> <name>");
             return false;
         }
 
         switch (args[0]) {
-            case "list" -> player.sendMessage(
+            case "list" -> MessageUtils.sendMessage(sender, 
                     MessageUtils.ChatPrefix.GAME,
                     "&7Jeux disponibles: &r" + Core.get().getGameManager().getAvailableGames()
             );
             case "load" -> {
                 if (args.length == 1) {
-                    player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /game load <name>");
+                    MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /game load <name>");
                     return false;
                 }
                 if(Core.get().getGameManager().getCurrentGame() != null) {
-                    player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cUn jeu est déjà chargé. &7Déchargez le avec &e/game reset&7.");
+                    MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&cUn jeu est déjà chargé. &7Déchargez le avec &e/game reset&7.");
                     return false;
                 }
                 MessageUtils.broadcastMessage(
@@ -52,7 +51,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                 try {
                     Core.get().getGameManager().loadGame(args[1]);
                 } catch (GameStatusException e) {
-                    player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
+                    MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
                     return false;
                 }
             }
@@ -64,7 +63,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                             "&b" + sender.getName() + "&7 a forcé le démarrage de la partie."
                     );
                 } catch (GameStatusException e) {
-                    player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
+                    MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
                 }
             }
             case "stop" -> {
@@ -75,18 +74,20 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                             "&b" + sender.getName() + "&7 a forcé l'arrêt de la partie."
                     );
                 } catch (GameStatusException e) {
-                    player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
+                    MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
                 }
             }
             case "reset" -> {
-                Core.get().getGameManager().resetServer();
-                player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&7La carte et le jeu ont bien été &anettoyés&7.");
+                Core.get().getMapManager().unloadMap();
+                Core.get().getTeamManager().unloadTeams();
+                Core.get().getGameManager().setStatus(GameManager.GameStatus.WAITING);
+                MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&7La carte et le jeu ont bien été &anettoyés&7.");
             }
             case "reload" -> {
                 Core.get().getGameManager().loadAllGameJars();
-                player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&7Jeux &arechargés&7.");
+                MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&7Jeux &arechargés&7.");
             }
-            default -> player.sendMessage(MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /game <list | load | start | stop | reset> <name>");
+            default -> MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /game <list | load | start | stop | reset> <name>");
         }
 
         return true;
