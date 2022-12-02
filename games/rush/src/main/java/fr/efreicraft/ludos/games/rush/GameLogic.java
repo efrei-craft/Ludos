@@ -58,9 +58,6 @@ public class GameLogic {
     }
 
     public void preparePlayerToSpawn(fr.efreicraft.ludos.core.players.Player player) {
-//        ItemStack sword = new ItemStack(Material.IRON_SWORD);
-//        sword.addEnchantment(Enchantment.DURABILITY, 3);
-//        player.entity().getInventory().addItem(sword);
         player.entity().setGameMode(GameMode.SURVIVAL);
 
         player.entity().getInventory().clear();
