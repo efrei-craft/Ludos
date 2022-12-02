@@ -7,22 +7,22 @@ import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import net.kyori.adventure.text.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Bed;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
+import org.bukkit.event.entity.VillagerReplenishTradeEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.Merchant;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public record EventListener(GameLogic logic) implements Listener {
 
     @EventHandler
     public void onBreakBlock(BlockBreakEvent event) {
-        if (MAP_BLOCKS.contains(event.getBlock().getType()) || event.getBlock().getBlockData().getAsString().contains("bed")) {
+        if (MAP_BLOCKS.contains(event.getBlock().getType()) || MaterialTags.BEDS.isTagged(event.getBlock().getType())) {
             event.setCancelled(true);
         }
     }
@@ -113,6 +113,7 @@ public record EventListener(GameLogic logic) implements Listener {
 
             for (Team team : Core.get().getTeamManager().getTeams().values()) {
                 if (((Bed) block.getState()).getColor() == team.getColor().dyeColor()) {
+                    event.blockList().remove(block);
                     logic.bedDestroyed(team, true);
                 }
             }
@@ -149,23 +150,23 @@ public record EventListener(GameLogic logic) implements Listener {
     }
 
     @EventHandler
-    public void onDamage(EntityDamageEvent event) {
-        if (event.getEntityType() == EntityType.PLAYER)
-            if (event.getCause() == EntityDamageEvent.DamageCause.VOID) ((Player) event.getEntity()).setHealth(0);
+    public void onEntityMove(EntityMoveEvent event) {
+
+        if (event.getEntity().getType() == EntityType.VILLAGER) {
+            event.setTo(event.getFrom());
+        }
     }
 
     @EventHandler
-    public void onEntityMove(EntityMoveEvent event) {
-        if (event.getEntity() instanceof Player) {
-            fr.efreicraft.ludos.core.players.Player player = Core.get().getPlayerManager().getPlayer((Player) event.getEntity());
-            if (!player.getTeam().isPlayingTeam()) {
-                return;
-            }
-            if (logic.yDeath() >= event.getTo().getY()) {
-                player.entity().setHealth(0);
-            }
-        } else if (event.getEntity().getType() == EntityType.VILLAGER) {
-            event.setTo(event.getFrom());
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (!event.hasChangedBlock()) return;
+
+        fr.efreicraft.ludos.core.players.Player player = Utils.getLudosPlayer(event.getPlayer());
+        if (!player.getTeam().isPlayingTeam()) {
+            return;
+        }
+        if (logic.yDeath() >= event.getTo().getY()) {
+            player.entity().setHealth(0);
         }
     }
 
