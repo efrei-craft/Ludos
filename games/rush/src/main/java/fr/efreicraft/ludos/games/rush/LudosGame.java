@@ -118,6 +118,8 @@ public class LudosGame extends Game {
 
         for (int i = 0, teamListSize = teamList.size(); i < teamListSize; i++) {
             Team team = teamList.get(i);
+            if (team == null || team.getPlayers().isEmpty()) continue;
+
             player.getBoard().setField(i, new ScoreboardField(
                     LegacyComponentSerializer.legacyAmpersand().serialize(team.name()),
                     true,
