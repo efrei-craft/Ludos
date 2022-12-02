@@ -59,6 +59,7 @@ public class GameLogic {
 
     public void preparePlayerToSpawn(fr.efreicraft.ludos.core.players.Player player) {
         player.entity().setGameMode(GameMode.SURVIVAL);
+        player.entity().getActivePotionEffects().forEach(effect -> player.entity().removePotionEffect(effect.getType()));
 
         player.entity().getInventory().clear();
         ItemStack sword = new ItemStack(Material.STONE_SWORD);

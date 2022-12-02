@@ -49,6 +49,7 @@ public record EventListener(GameLogic logic) implements Listener {
     @EventHandler
     public void onBreakBlock(BlockBreakEvent event) {
         if (MAP_BLOCKS.contains(event.getBlock().getType()) || MaterialTags.BEDS.isTagged(event.getBlock().getType())) {
+            event.setDropItems(false);
             event.setCancelled(true);
         }
     }
@@ -112,7 +113,6 @@ public record EventListener(GameLogic logic) implements Listener {
 
             for (Team team : Core.get().getTeamManager().getTeams().values()) {
                 if (((Bed) block.getState()).getColor() == team.getColor().dyeColor()) {
-                    event.blockList().remove(block);
                     logic.bedDestroyed(team, true);
                 }
             }
