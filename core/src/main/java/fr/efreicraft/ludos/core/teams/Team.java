@@ -5,7 +5,7 @@ import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.maps.points.SpawnPoint;
 import fr.efreicraft.ludos.core.players.LobbyPlayerHelper;
 import fr.efreicraft.ludos.core.players.Player;
-import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlawerSpawnCondition;
+import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnCondition;
 import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnBehavior;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
@@ -69,7 +69,7 @@ public class Team {
     /**
      * Verifie si les joueurs peuvent respawn
      */
-    private final ITeamPlawerSpawnCondition spawnCondition;
+    private final ITeamPlayerSpawnCondition spawnCondition;
 
     /**
      * Indice du spawn point à utiliser pour le prochain spawn de joueur.

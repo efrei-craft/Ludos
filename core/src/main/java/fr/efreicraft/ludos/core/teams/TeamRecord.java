@@ -1,6 +1,6 @@
 package fr.efreicraft.ludos.core.teams;
 
-import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlawerSpawnCondition;
+import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnCondition;
 import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnBehavior;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import org.bukkit.GameMode;
@@ -27,7 +27,7 @@ public record TeamRecord(
         boolean showTeamName,
         boolean playingTeam,
         ColorUtils.TeamColorSet colorSet,
-        ITeamPlawerSpawnCondition spawnCondition,
+        ITeamPlayerSpawnCondition spawnCondition,
         ITeamPlayerSpawnBehavior spawnBehavior
 ) {
 
