@@ -77,7 +77,7 @@ public class ForcewinCommand implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         List<String> options = getPotentialWinners().stream().map(gameWinner -> {
             if(gameWinner instanceof PlayerWin playerWin) {
-                return playerWin.getPlayer().getName();
+                return playerWin.getPlayer().entity().getName();
             } else if(gameWinner instanceof TeamWin teamWin) {
                 return teamWin.getTeam().getName();
             } else {
