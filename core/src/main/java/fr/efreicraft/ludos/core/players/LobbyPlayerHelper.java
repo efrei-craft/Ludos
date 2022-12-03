@@ -34,7 +34,7 @@ public class LobbyPlayerHelper {
      * @param player Joueur à préparer.
      */
     public static void preparePlayerForLobby(Player player) {
-        player.entity().teleport(Core.get().getMapManager().getLobbyWorld().getSpawnLocation().add(-0.5, 0, -0.5));
+        player.entity().teleport(Core.get().getMapManager().getLobbyWorld().getSpawnLocation().add(-0.5, 1, -0.5));
         player.resetPlayer();
 
         preparePlayerItems(player);
