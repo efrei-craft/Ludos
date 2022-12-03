@@ -94,7 +94,7 @@ public class EventListener implements Listener {
                 hasMovedInBlockXAndBlockZ(event)
         ) {
             Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
-            if(player.getTeam().isPlayingTeam()) {
+            if(player.getTeam() != null && player.getTeam().isPlayingTeam()) {
                 if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.STARTING) {
                     event.setCancelled(true);
                 } else if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.INGAME
