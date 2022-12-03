@@ -98,7 +98,11 @@ public class Player {
         this.scoreboard.clearFields();
         if (Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
             this.scoreboard.setVisibility(true);
-            this.scoreboard.setTitle("&f&lEn attente...");
+            if(Core.get().getGameManager().isAutoGameStart()) {
+                this.scoreboard.setTitle("&f&lEn attente...");
+            } else {
+                this.scoreboard.setTitle("&c&lEn attente... &f&l(Admin)");
+            }
 
             final String EMPTY = "Aucun";
 
