@@ -3,9 +3,10 @@ package fr.efreicraft.ludos.core;
 import com.comphenix.protocol.ProtocolManager;
 import fr.efreicraft.ludos.core.clients.RedisClient;
 import fr.efreicraft.ludos.core.commands.CommandManager;
+import fr.efreicraft.ludos.core.games.GameServerRedisDispatcher;
+import fr.efreicraft.ludos.core.players.PlayerManager;
 import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.maps.MapManager;
-import fr.efreicraft.ludos.core.players.PlayerManager;
 import fr.efreicraft.ludos.core.teams.TeamManager;
 import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -79,6 +80,8 @@ public class Core {
         this.redisClient = new RedisClient();
         this.loadManagers();
         this.registerEvents();
+
+        GameServerRedisDispatcher.playerCountTimer();
     }
 
     /**

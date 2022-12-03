@@ -76,7 +76,7 @@ public class GameManager implements IManager {
     @Override
     public void runManager() {
         setStatus(GameStatus.WAITING);
-        GameServerRedisDispatcher.serverReady();
+        GameServerRedisDispatcher.serverReady(true);
         loadAllGameJars();
     }
 

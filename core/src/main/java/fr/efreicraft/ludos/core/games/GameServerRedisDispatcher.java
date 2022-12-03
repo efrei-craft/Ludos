@@ -22,14 +22,14 @@ public class GameServerRedisDispatcher {
     /**
      * Envoie un message au proxy pour lui signifier que ce serveur est prêt.
      */
-    public static void serverReady() {
+    public static void serverReady(Boolean ready) {
         if(Core.get().getRedisClient().isReady()) {
             Bukkit.getScheduler().runTaskAsynchronously(Core.get().getPlugin(), () -> {
                 try {
                     Core.get().getLogger().info("Sending server ready message to proxy...");
                     Core.get().getRedisClient().connectPubSub().sync().publish(
                             System.getenv(SERVO_PROXY_CHANNEL_ENV),
-                            InetAddress.getLocalHost().getHostName() + "##READY##TRUE"
+                            InetAddress.getLocalHost().getHostName() + "##READY##" + ready
                     );
                 } catch (UnknownHostException e) {
                     throw new RuntimeException(e);
@@ -73,6 +73,24 @@ public class GameServerRedisDispatcher {
                     throw new RuntimeException(e);
                 }
             });
+        }
+    }
+
+    /**
+     * Envoie le nombre de joueurs dans une team jouant au jeu actuel (non-spec).
+     */
+    public static void playerCountTimer() {
+        if(Core.get().getRedisClient().isReady()) {
+            Bukkit.getScheduler().runTaskTimerAsynchronously(Core.get().getPlugin(), () -> {
+                try {
+                    Core.get().getRedisClient().connectPubSub().sync().publish(
+                            System.getenv(SERVO_PROXY_CHANNEL_ENV),
+                            InetAddress.getLocalHost().getHostName() + "##SET_PLAYER_COUNT##" + Core.get().getPlayerManager().getNumberOfPlayingPlayers()
+                    );
+                } catch (UnknownHostException e) {
+                    throw new RuntimeException(e);
+                }
+            }, 0, 20L * 3L);
         }
     }
 

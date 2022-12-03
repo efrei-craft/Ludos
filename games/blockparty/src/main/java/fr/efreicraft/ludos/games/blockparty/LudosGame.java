@@ -29,7 +29,7 @@ import java.util.Map;
         description = "Tenez-vous sur la bonne couleur au bon moment, sinon vous mourrez !",
         authors = {"Antoine", "Logan"},
         rules = @GameRules(
-                minPlayers = 2
+                maxPlayers = 10
         )
 )
 public class LudosGame extends Game {

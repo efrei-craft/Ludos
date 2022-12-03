@@ -34,6 +34,9 @@ public class LobbyCountdown extends BukkitRunnable {
             this.cancel();
             return;
         }
+        if(!Core.get().getMapManager().getCurrentMap().isParsed()) {
+            return;
+        }
 
         int players = Core.get().getPlayerManager().getPlayingPlayers().size();
         GameRules rules = Core.get().getGameManager().getCurrentGame().getMetadata().rules();

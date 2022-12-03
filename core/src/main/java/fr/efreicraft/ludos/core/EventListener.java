@@ -4,6 +4,7 @@ import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
 import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.utils.NBTUtils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,6 +25,20 @@ import java.util.UUID;
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
  */
 public class EventListener implements Listener {
+
+    /**
+     * Evenement de login d'un joueur.
+     */
+    @EventHandler
+    public void onPlayerLogin(PlayerLoginEvent event) {
+        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING
+                && Core.get().getPlayerManager().getNumberOfPlayingPlayers() >= Core.get().getGameManager().getCurrentGame().getMetadata().rules().maxPlayers()) {
+            event.disallow(
+                    PlayerLoginEvent.Result.KICK_OTHER,
+                    Component.text("La partie est déjà pleine !")
+            );
+        }
+    }
 
     /**
      * Evenement de connexion d'un joueur.
