@@ -19,23 +19,22 @@ public class PlayerUtils {
         String deathTitle = intermediaire[Core.get()
                 .getGameManager().getCurrentGame().getRandom().nextInt(intermediaire.length)];
 
-        // j'ai pas compris pourquoi 1 tick de stay, je te fais confiance Aurélien
         String[] toBeDisplayed = deathTitle.split(SPLITTER);
         if (toBeDisplayed.length <= 1 || toBeDisplayed[1].isBlank()) {
             player.sendTitle(
                     "&c" + deathTitle,
                     "",
-                    0,
-                    1,
-                    0
+                    0.2f,
+                    3,
+                    0.2f
             );
         } else {
             player.sendTitle(
                     "&c" + toBeDisplayed[0],
                     "&7" + toBeDisplayed[1],
-                    0,
-                    1,
-                    0
+                    0.2f,
+                    2,
+                    0.2f
             );
         }
     }

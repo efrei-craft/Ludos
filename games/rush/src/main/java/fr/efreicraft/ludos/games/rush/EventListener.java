@@ -7,6 +7,7 @@ import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import net.kyori.adventure.text.TextComponent;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Bed;
@@ -164,7 +165,7 @@ public record EventListener(GameLogic logic) implements Listener {
         if (!player.getTeam().isPlayingTeam()) {
             return;
         }
-        if (logic.yDeath() >= event.getTo().getY()) {
+        if (logic.yDeath() >= event.getTo().getY() && !player.entity().getGameMode().equals(GameMode.SPECTATOR)) {
             player.entity().setHealth(0);
         }
     }
