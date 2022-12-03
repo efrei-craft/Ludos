@@ -64,6 +64,8 @@ public class GameManager implements IManager {
 
     private String defaultGamePluginName;
 
+    private boolean autoGameStart = true;
+
     /**
      * Constructeur du gestionnaire de jeux. Il vérifie que la classe n'est pas déjà initialisée.
      */
@@ -222,6 +224,22 @@ public class GameManager implements IManager {
     }
 
     /**
+     * Auto Start des jeux
+     * @return Auto Start
+     */
+    public boolean isAutoGameStart() {
+        return autoGameStart;
+    }
+
+    /**
+     * Auto Start des jeux
+     * @param autoGameStart Auto Start
+     */
+    public void setAutoGameStart(boolean autoGameStart) {
+        this.autoGameStart = autoGameStart;
+    }
+
+    /**
      * Démarre le jeu actuellement chargé
      * @throws GameStatusException Exception levée si le jeu ne peut pas être démarré
      */
@@ -282,7 +300,7 @@ public class GameManager implements IManager {
             currentGame.endGame();
         } else if(status == GameStatus.WAITING) {
             this.unregisterCurrentGame();
-            if(defaultGamePluginName != null) {
+            if(defaultGamePluginName != null && autoGameStart) {
                 try {
                     this.loadGame(defaultGamePluginName);
                 } catch (GameStatusException e) {
