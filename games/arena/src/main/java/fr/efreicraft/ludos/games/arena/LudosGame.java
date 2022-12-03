@@ -37,7 +37,8 @@ import java.util.Map;
                 maxPlayers = 8
         ),
         customData = @CustomGameData(
-                respawnTitles = {"Zut Alors !", "C'est pas fini !", "Relève-toi !", "Mieux que ça ..."}
+                respawnTitles = {"Zut Alors !", "C'est pas fini !", "Relève-toi !", "Mieux que ça ..."},
+                deathTitles = {"RIP !", "FIN !"}
         )
 )
 public class LudosGame extends Game {
