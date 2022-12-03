@@ -28,7 +28,7 @@ import java.util.Map;
         name = "Arena",
         color = "&c",
         description = "L'équipe avec le plus de kills à la fin du timer gagne !",
-        authors = {"Antoine"},
+        authors = {"JiveOff"},
         rules = @GameRules(
                 allowRespawn = true,
                 respawnTimer = 5,

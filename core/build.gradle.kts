@@ -72,5 +72,10 @@ bukkit {
             description = "Puts players in spectator mode"
             aliases = listOf("spec")
         }
+        register("forcewin") {
+            description = "Makes a team or player win"
+            aliases = listOf("forcewin")
+            permission = "ludos.admin"
+        }
     }
 }

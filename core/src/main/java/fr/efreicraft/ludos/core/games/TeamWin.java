@@ -40,4 +40,8 @@ public class TeamWin implements GameWinner {
                 Component.text(team.getName()).color(team.getColor().textColor())
         );
     }
+
+    public Team getTeam() {
+        return team;
+    }
 }
