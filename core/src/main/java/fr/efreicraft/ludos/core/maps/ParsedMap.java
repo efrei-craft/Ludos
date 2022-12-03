@@ -20,6 +20,8 @@ import java.util.Map;
  */
 public class ParsedMap {
 
+    private static final int OUT_OF_BOUNDS = 10;
+
     /**
      * {@link World} de la carte
      */
@@ -217,6 +219,19 @@ public class ParsedMap {
         } else {
             return second;
         }
+    }
+
+    /**
+     * Méthode pour check si une {@link Location} est dans la carte.
+     * @param location {@link Location} à check.
+     * @return Booléen de check.
+     */
+    public boolean isLocationWithinTheMapXandZ(Location location) {
+        Location first = globalPoints.get("BOUNDARY").get(0).getLocation();
+        Location second = globalPoints.get("BOUNDARY").get(1).getLocation();
+
+        return location.getX() >= Math.min(first.getX(), second.getX()) - OUT_OF_BOUNDS && location.getX() <= Math.max(first.getX(), second.getX()) + OUT_OF_BOUNDS
+                && location.getZ() >= Math.min(first.getZ(), second.getZ()) - OUT_OF_BOUNDS && location.getZ() <= Math.max(first.getZ(), second.getZ()) + OUT_OF_BOUNDS;
     }
 
 }

@@ -27,7 +27,7 @@ import java.util.Map;
         name = "BlockParty",
         color = "&b",
         description = "Tenez-vous sur la bonne couleur au bon moment, sinon vous mourrez !",
-        authors = {"Antoine", "Logan"},
+        authors = {"ShinProg"},
         rules = @GameRules(
                 maxPlayers = 10
         )

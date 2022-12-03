@@ -94,7 +94,7 @@ public abstract class Game implements IGame {
     private void broadcastGameInfo() {
         MessageUtils.broadcastMessage("");
         MessageUtils.broadcastMessage("&7&m--------------------------------------");
-        MessageUtils.broadcastMessage("  " + this.getMetadata().color() + ChatColor.BOLD + this.getMetadata().name());
+        MessageUtils.broadcastMessage("  " + this.getMetadata().color() + ChatColor.BOLD + this.getMetadata().name() + "&r&7 par " + this.getMetadata().color() + String.join(", ", this.getMetadata().authors()));
         MessageUtils.broadcastMessage("");
         MessageUtils.broadcastMessage("  &f" + this.getMetadata().description());
         MessageUtils.broadcastMessage("");
@@ -133,7 +133,7 @@ public abstract class Game implements IGame {
             Set<Team> lastTeamsAlive = new HashSet<>();
 
             for (Team team : Core.get().getTeamManager().getPlayingTeams().values()) {
-                if (team.getPlayers().size() > 0) lastTeamsAlive.add(team);
+                if (!team.getPlayers().isEmpty()) lastTeamsAlive.add(team);
             }
 
             if (lastTeamsAlive.size() == 1) {
