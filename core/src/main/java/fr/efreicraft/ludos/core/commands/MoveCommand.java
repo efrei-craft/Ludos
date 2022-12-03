@@ -13,7 +13,9 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MoveCommand implements CommandExecutor, TabExecutor {
 
@@ -26,7 +28,7 @@ public class MoveCommand implements CommandExecutor, TabExecutor {
         } else if (args.length == 1) {
             playerList = Bukkit.selectEntities(sender, args[0]);
             if (playerList.isEmpty()) {
-                MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.TEAM, "&cPrécisez un joueur connecté !  ");
+                MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.TEAM, "&cPrécisez un joueur connecté !");
                 return false;
             }
             for (Entity entity : playerList) {
@@ -56,8 +58,7 @@ public class MoveCommand implements CommandExecutor, TabExecutor {
             if (!(entity instanceof Player player)) continue;
 
             fr.efreicraft.ludos.core.players.Player lPlayer = Core.get().getPlayerManager().getPlayer(player);
-            if (lPlayer != null)
-                lPlayer.setTeam(targetTeam);
+            targetTeam.addPlayer(lPlayer);
         }
 
         return true;
@@ -65,6 +66,16 @@ public class MoveCommand implements CommandExecutor, TabExecutor {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return null;
+        List<String> options = new ArrayList<>();
+        if (args.length == 1) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                options.add(player.getName());
+            }
+        } else if (args.length == 2) {
+            for (Map.Entry<String, Team> entry : Core.get().getTeamManager().getTeams().entrySet()) {
+                options.add(entry.getKey());
+            }
+        }
+        return options;
     }
 }
