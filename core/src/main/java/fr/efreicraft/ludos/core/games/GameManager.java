@@ -177,10 +177,12 @@ public class GameManager implements IManager {
      * Réinitialise le serveur de jeu. Décharge la carte, les équipes, change le status
      */
     public void resetServer() {
-        Core.get().getMapManager().unloadMap();
-        Core.get().getTeamManager().unloadTeams();
-        this.defaultGamePluginName = null;
-        Core.get().getGameManager().setStatus(GameManager.GameStatus.WAITING);
+        Bukkit.getScheduler().runTask(Core.get().getPlugin(), () -> {
+            Core.get().getMapManager().unloadMap();
+            Core.get().getTeamManager().unloadTeams();
+            this.defaultGamePluginName = null;
+            Core.get().getGameManager().setStatus(GameManager.GameStatus.WAITING);
+        });
     }
 
     /**
