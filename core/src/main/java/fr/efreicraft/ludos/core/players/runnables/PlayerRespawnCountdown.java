@@ -2,6 +2,7 @@ package fr.efreicraft.ludos.core.players.runnables;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.utils.PlayerUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -27,7 +28,8 @@ public class PlayerRespawnCountdown extends BukkitRunnable {
         this.player = player;
         this.countdown = Core.get().getGameManager().getCurrentGame().getMetadata().rules().respawnTimer();
         String[] intermediaire = Core.get().getGameManager().getCurrentGame().getMetadata().customData().respawnTitles();
-        this.respawnTitle = intermediaire[Core.get().getGameManager().getCurrentGame().getRandom().nextInt(intermediaire.length)];
+        this.respawnTitle = intermediaire[Core.get()
+                .getGameManager().getCurrentGame().getRandom().nextInt(intermediaire.length)];
     }
 
     @Override
@@ -38,16 +40,27 @@ public class PlayerRespawnCountdown extends BukkitRunnable {
         }
         if (countdown == 0) {
             this.player.getTeam().spawnPlayer(this.player);
-            this.player.sendTitle("", "", 0, 40, 0);
+            this.player.entity().clearTitle();
             this.cancel();
         } else {
-            this.player.sendTitle(
-                    "&c" + this.respawnTitle,
-                    "&7Vous réapparaîtrez dans &f" + countdown + " &7secondes.",
-                    0,
-                    40,
-                    0
-            );
+            String[] toBeDisplayed = this.respawnTitle.split(PlayerUtils.SPLITTER);
+            if (toBeDisplayed.length <= 1 || toBeDisplayed[1].isBlank()) {
+                this.player.sendTitle(
+                        "&c" + this.respawnTitle,
+                        "&7Vous réapparaîtrez dans &f" + countdown + " &7secondes.",
+                        0,
+                        40,
+                        0
+                );
+            } else {
+                this.player.sendTitle(
+                        "&c" + toBeDisplayed[0],
+                        "&7" + toBeDisplayed[1],
+                        0,
+                        40,
+                        0
+                );
+            }
         }
         countdown--;
     }

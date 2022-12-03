@@ -6,7 +6,8 @@ import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.world.World;
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.maps.interfaces.*;
+import fr.efreicraft.ludos.core.maps.interfaces.IMapParsedCallback;
+import fr.efreicraft.ludos.core.maps.interfaces.MapPoint;
 import fr.efreicraft.ludos.core.maps.points.GamePoint;
 import fr.efreicraft.ludos.core.maps.points.GlobalPoint;
 import fr.efreicraft.ludos.core.maps.points.SpawnPoint;
@@ -63,7 +64,7 @@ public class MapParser {
      * - {@link GamePoint} : Le point est un point de jeu.<br />
      *
      * @param block Bloc actuel
-     * @param blockAbove Bloc au dessus du bloc actuel
+     * @param blockAbove Bloc au-dessus du bloc actuel
      * @param location Location du bloc actuel
      * @return Un {@link MapPoint} ou null si le bloc n'est pas un point.
      */

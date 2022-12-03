@@ -2,8 +2,8 @@ package fr.efreicraft.ludos.core.players.menus;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.players.Player;
-import fr.efreicraft.ludos.core.players.menus.interfaces.MenuItem;
 import fr.efreicraft.ludos.core.players.menus.interfaces.Menu;
+import fr.efreicraft.ludos.core.players.menus.interfaces.MenuItem;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;

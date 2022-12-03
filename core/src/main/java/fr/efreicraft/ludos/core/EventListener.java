@@ -1,9 +1,11 @@
 package fr.efreicraft.ludos.core;
 
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
-import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.games.GameManager;
+import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.utils.ActionBarUtils;
 import fr.efreicraft.ludos.core.utils.NBTUtils;
+import net.kyori.adventure.text.Component;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,6 +26,21 @@ import java.util.UUID;
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
  */
 public class EventListener implements Listener {
+
+    /**
+     * Evenement de login d'un joueur.
+     */
+    @EventHandler
+    public void onPlayerLogin(PlayerLoginEvent event) {
+        if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING
+                && Core.get().getGameManager().getCurrentGame() != null
+                && Core.get().getPlayerManager().getNumberOfPlayingPlayers() >= Core.get().getGameManager().getCurrentGame().getMetadata().rules().maxPlayers()) {
+            event.disallow(
+                    PlayerLoginEvent.Result.KICK_OTHER,
+                    Component.text("La partie est déjà pleine !")
+            );
+        }
+    }
 
     /**
      * Evenement de connexion d'un joueur.
@@ -75,11 +92,16 @@ public class EventListener implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         if(
                 hasMovedInBlockXAndBlockZ(event)
-                && Core.get().getGameManager().getStatus() == GameManager.GameStatus.STARTING
         ) {
             Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
-            if(player.getTeam().isPlayingTeam()) {
-                event.setCancelled(true);
+            if(player.getTeam() != null && player.getTeam().isPlayingTeam()) {
+                if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.STARTING) {
+                    event.setCancelled(true);
+                } else if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.INGAME
+                        && !Core.get().getMapManager().getCurrentMap().isLocationWithinTheMapXandZ(event.getTo())) {
+                    event.setCancelled(true);
+                    ActionBarUtils.sendActionBar(player, "&cVous ne pouvez pas sortir de la map !");
+                }
             }
         }
     }

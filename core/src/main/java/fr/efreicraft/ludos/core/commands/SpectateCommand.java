@@ -1,8 +1,8 @@
 package fr.efreicraft.ludos.core.commands;
 
-import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.GameManager;
+import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import org.bukkit.command.Command;
@@ -18,6 +18,10 @@ public class SpectateCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if (!(sender instanceof org.bukkit.entity.Player)) {
+            MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.TEAM, "&cVous devez être un joueur pour utiliser cette commande.");
+            return false;
+        }
         Player player = Core.get().getPlayerManager().getPlayer((org.bukkit.entity.Player) sender);
         if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
             player.sendMessage(MessageUtils.ChatPrefix.TEAM, "&cVous ne pouvez pas activer le mode spectateur en cours de partie.");

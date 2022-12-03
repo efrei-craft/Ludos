@@ -34,4 +34,8 @@ public class PlayerWin implements GameWinner {
     public String getWinnerColoredName() {
         return player.getName();
     }
+
+    public Player getPlayer() {
+        return player;
+    }
 }

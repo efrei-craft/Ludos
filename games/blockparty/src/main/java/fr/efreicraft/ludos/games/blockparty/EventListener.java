@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 /**
  * Event Listener record for BlockParty minigame.
  * @author Logan T. {@literal <logane.tann@efrei.net>}
- * @project Minigames/BlockParty
+ * @project Ludos/BlockParty
  */
 public record EventListener(GameLogic blockParty) implements Listener {
 

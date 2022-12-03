@@ -2,9 +2,9 @@ package fr.efreicraft.ludos.games.arena;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.annotations.CustomGameData;
+import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
-import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
@@ -28,7 +28,7 @@ import java.util.Map;
         name = "Arena",
         color = "&c",
         description = "L'équipe avec le plus de kills à la fin du timer gagne !",
-        authors = {"Antoine"},
+        authors = {"JiveOff"},
         rules = @GameRules(
                 allowRespawn = true,
                 respawnTimer = 5,
@@ -37,7 +37,8 @@ import java.util.Map;
                 maxPlayers = 8
         ),
         customData = @CustomGameData(
-                respawnTitles = {"Zut Alors !", "C'est pas fini !", "Relève-toi !", "Mieux que ça ..."}
+                respawnTitles = {"Zut Alors !", "C'est pas fini !", "Relève-toi !", "Mieux que ça ..."},
+                deathTitles = {"RIP !", "FIN !"}
         )
 )
 public class LudosGame extends Game {

@@ -5,7 +5,7 @@ import fr.efreicraft.ludos.core.games.interfaces.GamePlugin;
 
 public class Main extends GamePlugin {
 
-    Main() {
+    public Main() {
         super();
     }
 

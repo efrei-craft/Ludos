@@ -1,14 +1,15 @@
 package fr.efreicraft.ludos.core.players;
 
+import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.games.GameManager;
+import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.players.menus.PlayerMenus;
 import fr.efreicraft.ludos.core.players.runnables.PlayerRespawnCountdown;
 import fr.efreicraft.ludos.core.players.scoreboards.PlayerScoreboard;
 import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
-import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.games.GameManager;
-import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
+import fr.efreicraft.ludos.core.utils.PlayerUtils;
 import fr.efreicraft.ludos.core.utils.SoundUtils;
 import fr.efreicraft.ludos.core.utils.TitleUtils;
 import net.kyori.adventure.text.Component;
@@ -395,6 +396,7 @@ public class Player {
                     PlayerRespawnCountdown countdown = new PlayerRespawnCountdown(this);
                     countdown.runTaskTimer(Core.get().getPlugin(), 0, 20);
                 } else {
+                    PlayerUtils.deathTitles(this);
                     Team specTeam = Core.get().getTeamManager().getTeam("SPECTATORS");
                     if(specTeam != null) {
                         specTeam.addPlayer(this);

@@ -1,8 +1,8 @@
 package fr.efreicraft.ludos.games.spleef;
 
+import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.players.Player;
-import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import org.bukkit.GameRule;

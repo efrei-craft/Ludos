@@ -1,11 +1,11 @@
 package fr.efreicraft.ludos.games.blockparty;
 
+import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.players.Player;
 import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
-import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import org.bukkit.GameRule;
@@ -20,16 +20,16 @@ import java.util.Map;
  * BlockParty game entrypoint
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
  * @author Logan T. {@literal <logane.tann@efrei.net>}
- * @project Minigames/BlockParty
+ * @project Ludos/BlockParty
  */
 
 @GameMetadata(
         name = "BlockParty",
         color = "&b",
         description = "Tenez-vous sur la bonne couleur au bon moment, sinon vous mourrez !",
-        authors = {"Antoine", "Logan"},
+        authors = {"ShinProg"},
         rules = @GameRules(
-                minPlayers = 2
+                maxPlayers = 10
         )
 )
 public class LudosGame extends Game {
@@ -63,8 +63,8 @@ public class LudosGame extends Game {
                 killZoneLocation,
                 Material.PINK_WOOL.createBlockData()
         );
-
-        this.gameLogic.generateDanceFloor(Core.get().getMapManager().getCurrentMap().getGamePoints().get("DANCE_FLOOR"));
+        this.gameLogic.setGamePointList();
+        this.gameLogic.generateDanceFloor();
     }
 
     @Override
@@ -73,12 +73,24 @@ public class LudosGame extends Game {
 
         player.getBoard().setField(
                 0,
-                new ScoreboardField("&b&lJoueurs en vie", true, player1 -> String.valueOf(Core.get().getTeamManager().getTeam("PLAYERS").getPlayers().size()))
+                new ScoreboardField("&b&lJoueurs en vie", true, player1 -> this.gameLogic.getRemainingPlayers())
         );
         player.getBoard().setField(
                 1,
                 new ScoreboardField("&b&lIntervalle", "TODO")
         );
+    }
+
+    @Override
+    public void beginGame() {
+        super.beginGame();
+        gameLogic.onGameStart();
+    }
+
+    @Override
+    public void endGame() {
+        this.gameLogic.destructor();
+        super.endGame();
     }
 
     @Override

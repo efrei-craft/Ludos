@@ -3,13 +3,14 @@ package fr.efreicraft.ludos.games.blockparty.patterns;
 import fr.efreicraft.ludos.core.maps.points.GamePoint;
 import org.bukkit.Location;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
 /**
  * Classes implementing this interface are used to load or generate a floor pattern for the block party game.
  * @author Logan T. {@literal <logane.tann@efrei.net>}
- * @project Minigames/BlockParty
+ * @project Ludos/BlockParty
  */
 public interface IPatternProvider {
     /**
@@ -26,4 +27,12 @@ public interface IPatternProvider {
      * @return A Minecraft Block Data
      */
     BlockData getBlock(Location initialBlockLocation);
+
+    /**
+     * The blockparty concists of a floor of colored blocks, and at a given interval, remove all colors except one.
+     * As the pattern haves the control on which colors can be displayed, it's this class' duty to provide a way to get
+     * a random block.
+     * @return An item that represents a block that can be placed by the pattern.
+     */
+    ItemStack getRandomBlockAsItem();
 }

@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.core;
 
 import com.comphenix.protocol.ProtocolLibrary;
+import fr.efreicraft.ludos.core.games.GameServerRedisDispatcher;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -21,6 +22,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        GameServerRedisDispatcher.bye();
     }
 
 }

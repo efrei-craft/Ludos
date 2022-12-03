@@ -61,7 +61,7 @@ public interface GameWinner {
 
         MessageUtils.broadcastMessage("");
         MessageUtils.broadcastMessage("&7&m--------------------------------------");
-        MessageUtils.broadcastMessage("  " + game.getMetadata().color() + ChatColor.BOLD + game.getMetadata().name());
+        MessageUtils.broadcastMessage("  " + game.getMetadata().color() + ChatColor.BOLD + game.getMetadata().name() + "&r&7 par " + game.getMetadata().color() + String.join(", ", game.getMetadata().authors()));
         MessageUtils.broadcastMessage("");
         MessageUtils.broadcastMessage("  " + getWinnerColoredName() + " &fa gagné la partie!");
         MessageUtils.broadcastMessage("");

@@ -3,8 +3,8 @@ package fr.efreicraft.ludos.core.teams;
 import com.google.common.collect.ImmutableMap;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.players.Player;
-import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlawerSpawnCondition;
 import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnBehavior;
+import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnCondition;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Color;
@@ -92,7 +92,7 @@ public class DefaultTeamRecordBuilder {
      */
     public static TeamRecord copyTeamRecordWithCustomBehavior(
             TeamRecord teamRecord,
-            ITeamPlawerSpawnCondition spawnCondition,
+            ITeamPlayerSpawnCondition spawnCondition,
             ITeamPlayerSpawnBehavior behavior
     ) {
         return new TeamRecord(
