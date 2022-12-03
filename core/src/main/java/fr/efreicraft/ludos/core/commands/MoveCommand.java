@@ -25,21 +25,6 @@ public class MoveCommand implements CommandExecutor, TabExecutor {
         if (args.length < 1) {
             MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.TEAM, "&cSyntaxe: /move <player> <team>");
             return false;
-        } else if (args.length == 1) {
-            playerList = Bukkit.selectEntities(sender, args[0]);
-            if (playerList.isEmpty()) {
-                MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.TEAM, "&cPrécisez un joueur connecté !");
-                return false;
-            }
-            for (Entity entity : playerList) {
-                if (!(entity instanceof Player player)) continue;
-
-                fr.efreicraft.ludos.core.players.Player lPlayer = Core.get().getPlayerManager().getPlayer(player);
-                if (lPlayer != null)
-                    lPlayer.clearTeam();
-            }
-
-            return false;
         }
 
         playerList = Bukkit.selectEntities(sender, args[0]);
@@ -59,6 +44,8 @@ public class MoveCommand implements CommandExecutor, TabExecutor {
 
             fr.efreicraft.ludos.core.players.Player lPlayer = Core.get().getPlayerManager().getPlayer(player);
             targetTeam.addPlayer(lPlayer);
+
+            MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.TEAM, "&7Vous avez déplacé " + player.getName() + " &7dans l'équipe " + targetTeam.getName() + "&7.");
         }
 
         return true;
