@@ -78,9 +78,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                 }
             }
             case "reset" -> {
-                Core.get().getMapManager().unloadMap();
-                Core.get().getTeamManager().unloadTeams();
-                Core.get().getGameManager().setStatus(GameManager.GameStatus.WAITING);
+                Core.get().getGameManager().resetServer();
                 MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&7La carte et le jeu ont bien été &anettoyés&7.");
             }
             case "reload" -> {
