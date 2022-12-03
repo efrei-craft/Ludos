@@ -77,5 +77,10 @@ bukkit {
             aliases = listOf("forcewin")
             permission = "ludos.admin"
         }
+        register("move") {
+            description = "Moves a player to a team"
+            aliases = listOf("move")
+            permission = "ludos.admin"
+        }
     }
 }
