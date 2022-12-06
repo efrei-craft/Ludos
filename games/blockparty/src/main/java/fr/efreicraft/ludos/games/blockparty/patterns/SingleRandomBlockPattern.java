@@ -20,11 +20,16 @@ public class SingleRandomBlockPattern implements IPatternProvider {
     private final List<String> colors = new ArrayList<>();
     private final Random randomGenerator = new Random();
 
+    private boolean isFirstGeneration = true;
+
     @Override
     public void preparePattern(List<GamePoint> points) {
-        colors.add("white");
-        colors.add("yellow");
-        colors.add("light_blue");
+        if (isFirstGeneration) {
+            isFirstGeneration = false;
+            colors.add(ColorBlocks.pickBlockName());
+            colors.add(ColorBlocks.pickBlockName());
+            colors.add(ColorBlocks.pickBlockName());
+        }
     }
 
     @Override
@@ -37,5 +42,20 @@ public class SingleRandomBlockPattern implements IPatternProvider {
         int randIndex = randomGenerator.nextInt(colors.size());
         BlockData randBlock = ColorBlocks.get(colors.get(randIndex));
         return new ItemStack(randBlock.getMaterial());
+    }
+
+    /**
+     * 2/3 chance to add block color after 3rd round
+     * @param difficulty the round number
+     */
+    @Override
+    public void onDifficultyChange(int difficulty) {
+        int rand = randomGenerator.nextInt(3);
+        if (difficulty > 3 && rand >= 1) {
+            String blockToAdd = ColorBlocks.pickBlockName();
+            if (blockToAdd != null) {
+                colors.add(blockToAdd);
+            }
+        }
     }
 }

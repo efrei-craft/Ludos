@@ -5,7 +5,6 @@ import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.players.Player;
-import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import org.bukkit.GameRule;
@@ -69,16 +68,7 @@ public class LudosGame extends Game {
 
     @Override
     public void setupScoreboard(Player player) {
-        player.getBoard().clearFields();
-
-        player.getBoard().setField(
-                0,
-                new ScoreboardField("&b&lJoueurs en vie", true, player1 -> this.gameLogic.getRemainingPlayers())
-        );
-        player.getBoard().setField(
-                1,
-                new ScoreboardField("&b&lIntervalle", "TODO")
-        );
+        this.gameLogic.setupScoreboard(player);
     }
 
     @Override

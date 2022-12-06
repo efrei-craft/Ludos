@@ -3,6 +3,7 @@ package fr.efreicraft.ludos.games.blockparty;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.maps.points.GamePoint;
 import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.games.blockparty.patterns.IPatternProvider;
 import fr.efreicraft.ludos.games.blockparty.patterns.SingleRandomBlockPattern;
 import org.bukkit.Location;
@@ -49,6 +50,27 @@ public class GameLogic {
         return String.valueOf(Core.get().getTeamManager().getTeam("PLAYERS").getPlayers().size());
     }
 
+    public void setupScoreboard(Player player) {
+        player.getBoard().clearFields();
+        player.getBoard().setField(
+                0,
+                new ScoreboardField("&b&lJoueurs en vie", true, player1 -> this.getRemainingPlayers())
+        );
+        player.getBoard().setField(
+                1,
+                new ScoreboardField("&b&lRound", true,  player1 -> String.valueOf(this.getDifficulty()))
+        );
+        player.getBoard().setField(
+                2,
+                new ScoreboardField("&b&lCouleur", this.getSelectedBlockAsString())
+        );
+    }
+    public void refreshScoreboard() {
+        for (Player player : Core.get().getPlayerManager().getPlayers()) {
+            this.setupScoreboard(player);
+        }
+    }
+
     /**
      * Replaces all blocks in the dance-floor by the current pattern.
      */
@@ -81,6 +103,10 @@ public class GameLogic {
 
     public void increaseDifficulty() {
         difficulty++;
+        this.patternProvider.onDifficultyChange(difficulty);
+    }
+    public int getDifficulty() {
+        return difficulty;
     }
 
     /**
@@ -115,5 +141,12 @@ public class GameLogic {
      */
     public ItemStack getRandomBlockAsItem() {
         return this.patternProvider.getRandomBlockAsItem();
+    }
+    public String getSelectedBlockAsString() {
+        Material selectedBlock = this.gamePhases.getSelectedBlock();
+        if (selectedBlock == null) {
+            return "...";
+        }
+        return selectedBlock.getKey().asString();
     }
 }

@@ -35,4 +35,10 @@ public interface IPatternProvider {
      * @return An item that represents a block that can be placed by the pattern.
      */
     ItemStack getRandomBlockAsItem();
+
+    /**
+     * Method called when the round is finished and a new one is about to start.
+     * @param difficulty the round number
+     */
+    void onDifficultyChange(int difficulty);
 }

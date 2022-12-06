@@ -3,8 +3,7 @@ package fr.efreicraft.ludos.games.blockparty.utils;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Stores color as key and material as value
@@ -13,6 +12,7 @@ import java.util.Map;
  */
 public class ColorBlocks {
     private static final Map<String, BlockData> colorToBlockData = new HashMap<>();
+    private static final Stack<String> availableBlocks = new Stack<>();
     static {
         colorToBlockData.put("black", Material.BLACK_CONCRETE.createBlockData());
         colorToBlockData.put("white", Material.WHITE_CONCRETE.createBlockData());
@@ -30,6 +30,8 @@ public class ColorBlocks {
         colorToBlockData.put("brown", Material.BROWN_CONCRETE.createBlockData());
         colorToBlockData.put("green", Material.GREEN_CONCRETE.createBlockData());
         colorToBlockData.put("red", Material.RED_CONCRETE.createBlockData());
+        availableBlocks.addAll(colorToBlockData.keySet());
+        Collections.shuffle(availableBlocks);
     }
     public static BlockData get(String color) {
         BlockData result = colorToBlockData.get(color);
@@ -37,5 +39,12 @@ public class ColorBlocks {
             return Material.DIRT.createBlockData();
         }
         return result;
+    }
+
+    public static String pickBlockName() {
+        if (availableBlocks.isEmpty()) {
+            return null;
+        }
+        return availableBlocks.pop();
     }
 }
