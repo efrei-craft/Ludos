@@ -15,7 +15,6 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Implémentation de la classe {@link Game}.
