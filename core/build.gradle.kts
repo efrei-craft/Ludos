@@ -26,7 +26,8 @@ dependencies {
     compileOnly("com.comphenix.protocol:ProtocolLib:4.7.0")
     implementation("commons-io:commons-io:2.11.0")
 
-    implementation("io.lettuce:lettuce-core:6.2.1.RELEASE")
+    compileOnly("fr.efreicraft:AnimusClient")
+    compileOnly(files("../AnimusClient/swagger/code"))
 }
 
 tasks {

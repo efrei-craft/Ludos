@@ -78,7 +78,7 @@ public class GameManager implements IManager {
     @Override
     public void runManager() {
         setStatus(GameStatus.WAITING);
-        GameServerRedisDispatcher.serverReady(true);
+        GameServerDispatcher.serverReady(true);
         loadAllGameJars();
     }
 
@@ -154,7 +154,7 @@ public class GameManager implements IManager {
             }
             lobbyCountdown = new LobbyCountdown(currentGame.getMetadata().rules().startTimer());
             Core.get().getLogger().log(Level.INFO, "Game {0} registered !", gameClass.getPackageName());
-            GameServerRedisDispatcher.game();
+            GameServerDispatcher.game();
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             throw new GameRegisteringException(e.getMessage());
         }
@@ -284,7 +284,7 @@ public class GameManager implements IManager {
      */
     public void setStatus(GameStatus status) {
         this.status = status;
-        GameServerRedisDispatcher.serverStatus();
+        GameServerDispatcher.serverStatus();
 
         for(Player player : Core.get().getPlayerManager().getPlayers()) {
             player.setupScoreboard();

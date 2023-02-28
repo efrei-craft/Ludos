@@ -15,3 +15,7 @@ include (
         "games:rush",
         "games:sumo"
 )
+
+includeBuild("../AnimusClient-Paper") {
+    name = "AnimusClient-Paper"
+}
