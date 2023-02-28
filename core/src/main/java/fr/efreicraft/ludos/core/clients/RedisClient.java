@@ -44,7 +44,7 @@ public class RedisClient {
     }
 
     /**
-     * Etablie une connexion avec le serveur Redis.
+     * Établit une connexion avec le serveur Redis.
      * @return La connexion.
      */
     public StatefulRedisConnection<String, String> connect() {
@@ -52,7 +52,7 @@ public class RedisClient {
     }
 
     /**
-     * Etablie une connexion PubSub avec le serveur Redis.
+     * Établit une connexion PubSub avec le serveur Redis.
      * @return La connexion.
      */
     public StatefulRedisPubSubConnection<String, String> connectPubSub() {

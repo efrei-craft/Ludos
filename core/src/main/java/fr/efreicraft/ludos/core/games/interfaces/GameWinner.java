@@ -72,6 +72,8 @@ public interface GameWinner {
         MessageUtils.broadcastMessage("&7&m--------------------------------------");
         MessageUtils.broadcastMessage("");
 
+        Core.get().getLogger().info("[WINNER] Game " + game.getMetadata().name() + " won by " + getWinnerColoredName());
+
         TitleUtils.broadcastTitle(
                 getWinnerColoredName(),
                 "&7a gagné la partie!",

@@ -34,6 +34,10 @@ public class LobbyCountdown extends BukkitRunnable {
             this.cancel();
             return;
         }
+        if(!Core.get().getGameManager().isAutoGameStart()) {
+            this.cancel();
+            return;
+        }
         if(Core.get().getMapManager().getCurrentMap() == null) {
             return;
         }

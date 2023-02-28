@@ -162,6 +162,7 @@ public record EventListener(GameLogic logic) implements Listener {
         if (!event.hasChangedBlock()) return;
 
         fr.efreicraft.ludos.core.players.Player player = Utils.getLudosPlayer(event.getPlayer());
+        if (player == null) return;
         if (!player.getTeam().isPlayingTeam()) {
             return;
         }

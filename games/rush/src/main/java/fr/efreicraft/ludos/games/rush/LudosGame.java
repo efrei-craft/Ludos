@@ -15,7 +15,6 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Implémentation de la classe {@link Game}.
@@ -53,6 +52,7 @@ public class LudosGame extends Game {
         world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
         world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
+        world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
 
         this.gameLogic.world(world);
     }

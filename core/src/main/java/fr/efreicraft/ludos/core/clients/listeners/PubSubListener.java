@@ -24,6 +24,8 @@ public class PubSubListener implements RedisPubSubListener<String, String> {
                     } else {
                         Core.get().getGameManager().changeDefaultGame(data);
                     }
+                } else if(action.equals("AUTO_GAME_START")) {
+                    Core.get().getGameManager().setAutoGameStart(Boolean.parseBoolean(data));
                 }
             }
         } catch (UnknownHostException e) {
