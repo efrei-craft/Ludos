@@ -18,5 +18,4 @@ bukkit {
     apiVersion = "1.19"
     authors = listOf("Idir")
     prefix = "IDIR"
-    depend = listOf("LudosCore")
 }

@@ -51,7 +51,7 @@ tasks {
 bukkit {
     load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
     name = "LudosCore"
-    main = "fr.efreicraft.ludos.core.Main"
+    main = "fr.efreicraft.ludos.core.LudosCore"
     apiVersion = "1.19"
     authors = listOf("Antoine BANHA", "Logan TANN", "Aurelien DASSE")
     prefix = "MINI"

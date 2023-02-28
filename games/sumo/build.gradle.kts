@@ -18,5 +18,4 @@ bukkit {
     apiVersion = "1.19"
     authors = listOf("DocSystem")
     prefix = "SUMO"
-    depend = listOf("LudosCore")
 }

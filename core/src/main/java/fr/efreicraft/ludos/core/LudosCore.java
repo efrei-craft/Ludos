@@ -7,7 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * Classe principale du plugin.
  */
-public final class Main extends JavaPlugin {
+public final class LudosCore extends JavaPlugin {
 
     @Override
     public void onEnable() {

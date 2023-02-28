@@ -18,5 +18,4 @@ bukkit {
     apiVersion = "1.19"
     authors = listOf("Antoine BANHA", "Logan TANN")
     prefix = "BLOCKPARTY"
-    depend = listOf("LudosCore")
 }
