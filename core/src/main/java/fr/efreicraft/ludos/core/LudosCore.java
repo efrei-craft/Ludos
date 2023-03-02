@@ -19,10 +19,4 @@ public final class LudosCore extends JavaPlugin {
         new Core(this, ProtocolLibrary.getProtocolManager());
     }
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-        GameServerDispatcher.bye();
-    }
-
 }

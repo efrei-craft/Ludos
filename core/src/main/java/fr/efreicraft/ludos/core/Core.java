@@ -73,8 +73,6 @@ public class Core {
         this.plugin = plugin;
         this.loadManagers();
         this.registerEvents();
-
-        GameServerDispatcher.playerCountTimer();
     }
 
     /**
