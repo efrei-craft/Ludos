@@ -25,9 +25,12 @@ public class GameServerDispatcher {
     public static void updateStatus() {
         Bukkit.getScheduler().runTaskAsynchronously(Core.get().getPlugin(), () -> {
             try {
+                String gameName = Core.get().getGameManager().getCurrentGame() == null
+                        ? null
+                        : Core.get().getGameManager().getCurrentGame().getMetadata().name();
                 ServerService.setGameServerStatus(
                         InetAddress.getLocalHost().getHostName(),
-                        Core.get().getGameManager().getCurrentGame().getMetadata().name(),
+                        gameName,
                         Core.get().getGameManager().getStatus().name()
                 );
             } catch (UnknownHostException e) {

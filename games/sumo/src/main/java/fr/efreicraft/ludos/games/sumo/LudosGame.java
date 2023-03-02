@@ -20,7 +20,7 @@ import static fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder.DefaultTea
 
 @GameMetadata(
         name = "Sumo",
-        description = "Poussez votre adversaire en dehors du ring !",
+        description = "Poussez votre adversaire en dehors du ring pour gagner !",
         authors = {"DocSystem"},
         color = "&4",
         rules = @GameRules(

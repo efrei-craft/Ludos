@@ -1,16 +1,9 @@
 plugins {
     `java-library`
-    id("org.sonarqube") version "3.4.0.2513"
 }
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-}
-
-sonarqube {
-    properties {
-        property("sonar.projectKey", "efrei-craft_Ludos_AYSZTr62QVykjK5bXj5l")
-    }
 }
 
 subprojects {
@@ -43,4 +36,11 @@ subprojects {
         maven("https://repo.dmulloy2.net/repository/public/")
     }
 
+}
+
+tasks.register<Exec>("devBuildDockerImage") {
+    dependsOn("build")
+
+    workingDir = File("../")
+    commandLine("docker", "build", "-t", "dev.efrei-craft/acp/templates/mini", "-f", "Ludos/dev/Dockerfile", ".")
 }
