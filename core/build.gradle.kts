@@ -57,7 +57,7 @@ bukkit {
     apiVersion = "1.19"
     authors = listOf("Antoine BANHA", "Logan TANN", "Aurelien DASSE")
     prefix = "MINI"
-    depend = listOf("WorldEdit", "ProtocolLib")
+    depend = listOf("WorldEdit", "ProtocolLib", "ECATUP")
     commands {
         register("game") {
             description = "Manages the games"
