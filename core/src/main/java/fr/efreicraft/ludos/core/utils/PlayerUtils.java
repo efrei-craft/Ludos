@@ -1,7 +1,7 @@
 package fr.efreicraft.ludos.core.utils;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 
 public class PlayerUtils {
 
@@ -14,7 +14,7 @@ public class PlayerUtils {
         throw new IllegalStateException("Utility class");
     }
 
-    public static void deathTitles(Player player){
+    public static void deathTitles(LudosPlayer player){
         String[] intermediaire = Core.get().getGameManager().getCurrentGame().getMetadata().customData().deathTitles();
         String deathTitle = intermediaire[Core.get()
                 .getGameManager().getCurrentGame().getRandom().nextInt(intermediaire.length)];

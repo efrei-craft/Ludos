@@ -1,7 +1,7 @@
 package fr.efreicraft.ludos.core.players.runnables;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.utils.PlayerUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -21,10 +21,10 @@ public class PlayerRespawnCountdown extends BukkitRunnable {
     /**
      * Joueur concerné par le décompte.
      */
-    private final Player player;
+    private final LudosPlayer player;
 
     private final String respawnTitle;
-    public PlayerRespawnCountdown(Player player) {
+    public PlayerRespawnCountdown(LudosPlayer player) {
         this.player = player;
         this.countdown = Core.get().getGameManager().getCurrentGame().getMetadata().rules().respawnTimer();
         String[] intermediaire = Core.get().getGameManager().getCurrentGame().getMetadata().customData().respawnTitles();

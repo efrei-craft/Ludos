@@ -1,7 +1,7 @@
 package fr.efreicraft.ludos.core.games;
 
 import fr.efreicraft.ludos.core.games.interfaces.GameWinner;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import org.bukkit.Color;
 
 import java.util.Collections;
@@ -14,9 +14,9 @@ import java.util.List;
  * @project Ludos
  */
 public class PlayerWin implements GameWinner {
-    private Player player;
+    private LudosPlayer player;
 
-    public PlayerWin(Player winner) {
+    public PlayerWin(LudosPlayer winner) {
         this.player = winner;
     }
 
@@ -26,7 +26,7 @@ public class PlayerWin implements GameWinner {
     }
 
     @Override
-    public List<Player> getPlayers() {
+    public List<LudosPlayer> getPlayers() {
         return Collections.singletonList(player);
     }
 
@@ -35,7 +35,7 @@ public class PlayerWin implements GameWinner {
         return player.getName();
     }
 
-    public Player getPlayer() {
+    public LudosPlayer getPlayer() {
         return player;
     }
 }

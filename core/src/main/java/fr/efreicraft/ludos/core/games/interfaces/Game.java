@@ -8,7 +8,7 @@ import fr.efreicraft.ludos.core.games.TeamWin;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.games.runnables.GameCountdown;
 import fr.efreicraft.ludos.core.maps.exceptions.MapLoadingException;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import org.bukkit.Bukkit;
@@ -74,12 +74,12 @@ public abstract class Game implements IGame {
 
     private void dispatchAndSpawnTeamPlayers(Team team) {
         if(team.isPlayingTeam()) {
-            for (Player player : team.getPlayers()) {
+            for (LudosPlayer player : team.getPlayers()) {
                 team.spawnPlayer(player);
             }
         } else {
             Location mapMiddle = Core.get().getMapManager().getCurrentMap().getMiddleOfMap();
-            for (Player player : team.getPlayers()) {
+            for (LudosPlayer player : team.getPlayers()) {
                 player.entity().teleport(mapMiddle);
                 team.spawnPlayer(player);
             }
@@ -145,7 +145,7 @@ public abstract class Game implements IGame {
 
         } else if (this.getMetadata().rules().minPlayers() > Core.get().getPlayerManager().getNumberOfPlayingPlayers()) {
             if (Core.get().getPlayerManager().getNumberOfPlayingPlayers() > 0) {
-                Player lastPlayer = Core.get().getPlayerManager().getPlayingPlayers().iterator().next();
+                LudosPlayer lastPlayer = Core.get().getPlayerManager().getPlayingPlayers().iterator().next();
                 if (lastPlayer != null) {
                     this.winner = new PlayerWin(lastPlayer);
                 }

@@ -5,7 +5,7 @@ import fr.efreicraft.ludos.core.IManager;
 import fr.efreicraft.ludos.core.games.exceptions.GameRegisteringException;
 import fr.efreicraft.ludos.core.games.exceptions.GameStatusException;
 import fr.efreicraft.ludos.core.games.runnables.LobbyCountdown;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.InvalidDescriptionException;
@@ -285,7 +285,7 @@ public class GameManager implements IManager {
         this.status = status;
         GameServerDispatcher.updateStatus();
 
-        for(Player player : Core.get().getPlayerManager().getPlayers()) {
+        for(LudosPlayer player : Core.get().getPlayerManager().getPlayers()) {
             player.setupScoreboard();
         }
 

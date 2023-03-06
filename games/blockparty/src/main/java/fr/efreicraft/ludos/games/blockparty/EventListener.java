@@ -1,7 +1,7 @@
 package fr.efreicraft.ludos.games.blockparty;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -22,7 +22,7 @@ public record EventListener(GameLogic blockParty) implements Listener {
         if (!event.hasChangedBlock()) {
             return;
         }
-        Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+        LudosPlayer player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         if (!player.getTeam().isPlayingTeam()) {
             return;
         }

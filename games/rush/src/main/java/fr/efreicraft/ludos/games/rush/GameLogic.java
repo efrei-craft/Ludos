@@ -2,6 +2,7 @@ package fr.efreicraft.ludos.games.rush;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.maps.points.GamePoint;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.teams.Team;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -57,7 +58,7 @@ public class GameLogic {
         this.world = world;
     }
 
-    public void preparePlayerToSpawn(fr.efreicraft.ludos.core.players.Player player) {
+    public void preparePlayerToSpawn(LudosPlayer player) {
         player.entity().setGameMode(GameMode.SURVIVAL);
         player.entity().getActivePotionEffects().forEach(effect -> player.entity().removePotionEffect(effect.getType()));
 

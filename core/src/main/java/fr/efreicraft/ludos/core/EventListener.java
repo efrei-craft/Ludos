@@ -1,8 +1,9 @@
 package fr.efreicraft.ludos.core;
 
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
+import fr.efreicraft.ecatup.players.events.ECPlayerJoined;
 import fr.efreicraft.ludos.core.games.GameManager;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.utils.ActionBarUtils;
 import fr.efreicraft.ludos.core.utils.NBTUtils;
 import net.kyori.adventure.text.Component;
@@ -62,7 +63,15 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.joinMessage(null);
-        Core.get().getPlayerManager().addPlayer(new Player(event.getPlayer()));
+    }
+
+    /**
+     * Evenement de spawn d'un joueur initialisé par ECATUP.
+     * @param event Evenement ECATUP
+     */
+    @EventHandler
+    public void onECPlayerJoin(ECPlayerJoined event) {
+        Core.get().getPlayerManager().addPlayer(new LudosPlayer(event.getPlayer()));
     }
 
     /**
@@ -93,7 +102,7 @@ public class EventListener implements Listener {
         if(
                 hasMovedInBlockXAndBlockZ(event)
         ) {
-            Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+            LudosPlayer player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
             if(player.getTeam() != null && player.getTeam().isPlayingTeam()) {
                 if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.STARTING) {
                     event.setCancelled(true);
@@ -119,7 +128,7 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+        LudosPlayer player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         if(player != null) {
             player.deathEvent(event);
         }
@@ -127,7 +136,7 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
-        Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+        LudosPlayer player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         if(player != null) {
             player.respawnEvent(event);
         }
@@ -135,7 +144,7 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerPostRespawn(PlayerPostRespawnEvent event) {
-        Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+        LudosPlayer player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         if(player != null) {
             player.postRespawnEvent();
         }
@@ -162,7 +171,7 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onInventoryClick(InventoryClickEvent event) {
-        Player player = Core.get().getPlayerManager().getPlayer((org.bukkit.entity.Player) event.getWhoClicked());
+        LudosPlayer player = Core.get().getPlayerManager().getPlayer((org.bukkit.entity.Player) event.getWhoClicked());
         if(player != null && event.getCurrentItem() != null) {
             String nbtValue = NBTUtils.getNBT(event.getCurrentItem(), "menu_item_uuid");
             if(nbtValue != null) {
@@ -174,7 +183,7 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+        LudosPlayer player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         if(player != null
                 && event.getItem() != null
                 && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {

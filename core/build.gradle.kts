@@ -28,6 +28,8 @@ dependencies {
 
     compileOnly("fr.efreicraft:AnimusClient")
     compileOnly(files("../AnimusClient/swagger/code"))
+
+    compileOnly("fr.efreicraft:ECATUP")
 }
 
 tasks {

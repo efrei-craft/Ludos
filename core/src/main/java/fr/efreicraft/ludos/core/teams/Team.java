@@ -4,7 +4,7 @@ import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.maps.points.SpawnPoint;
 import fr.efreicraft.ludos.core.players.LobbyPlayerHelper;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnBehavior;
 import fr.efreicraft.ludos.core.teams.interfaces.ITeamPlayerSpawnCondition;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
@@ -54,7 +54,7 @@ public class Team {
     /**
      * Liste des joueurs de l'équipe.
      */
-    private final Set<Player> players;
+    private final Set<LudosPlayer> players;
 
     /**
      * Equipe Bukkit de l'équipe.
@@ -159,7 +159,7 @@ public class Team {
      * Ajoute un joueur à l'équipe.
      * @param player Joueur à ajouter.
      */
-    public void addPlayer(Player player) {
+    public void addPlayer(LudosPlayer player) {
         if(this.players.contains(player)) {
             return;
         }
@@ -180,7 +180,7 @@ public class Team {
      * Supprime un joueur de l'équipe.
      * @param player Joueur à supprimer.
      */
-    public void removePlayer(Player player) {
+    public void removePlayer(LudosPlayer player) {
         if(!this.players.contains(player)) {
             return;
         }
@@ -201,8 +201,8 @@ public class Team {
      * Supprime des joueurs de l'équipe.
      * @param players Joueurs à supprimer.
      */
-    public void removePlayers(Set<Player> players) {
-        for (Player player : players) {
+    public void removePlayers(Set<LudosPlayer> players) {
+        for (LudosPlayer player : players) {
             player.clearTeam();
             if(player.entity() != null) {
                 this.bukkitTeam.removeEntry(player.entity().getName());
@@ -228,7 +228,7 @@ public class Team {
      * Téléporte le joueur au prochain point de spawn de l'équipe.
      * @param player Joueur à téléporter.
      */
-    public void teleportPlayerToNextSpawnPoint(Player player) {
+    public void teleportPlayerToNextSpawnPoint(LudosPlayer player) {
         List<SpawnPoint> spawnPoints = this.getSpawnPointsForCurrentMap();
         if(spawnPoints == null) {
             return;
@@ -257,7 +257,7 @@ public class Team {
      * Exécute le comportement de setup des joueurs de l'équipe.
      * @param player Joueur à setup.
      */
-    public void spawnPlayer(Player player) {
+    public void spawnPlayer(LudosPlayer player) {
         player.resetPlayer();
         if(this.playingTeam) {
             this.teleportPlayerToNextSpawnPoint(player);
@@ -269,7 +269,7 @@ public class Team {
      * Renvoie les joueurs de l'équipe.
      * @return Liste des joueurs de l'équipe.
      */
-    public Set<Player> getPlayers() {
+    public Set<LudosPlayer> getPlayers() {
         return players;
     }
 
@@ -293,7 +293,7 @@ public class Team {
      * Renvoie si l'équipe peut respawn ou non.
      * @return Si l'équipe peut respawn ou non.
      */
-    public boolean getSpawnCondition(Player player) {
+    public boolean getSpawnCondition(LudosPlayer player) {
         return this.spawnCondition.respawnable(player);
     }
 }

@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.games.rush;
 
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 
@@ -11,7 +12,7 @@ import static org.bukkit.block.BlockFace.*;
 public class Utils {
 
     @Nullable
-    public static fr.efreicraft.ludos.core.players.Player getLudosPlayer(org.bukkit.entity.Player player) {
+    public static LudosPlayer getLudosPlayer(org.bukkit.entity.Player player) {
         return Core.get().getPlayerManager().getPlayer(player);
     }
 

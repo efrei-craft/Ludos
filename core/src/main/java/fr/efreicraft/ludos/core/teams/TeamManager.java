@@ -3,7 +3,7 @@ package fr.efreicraft.ludos.core.teams;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.IManager;
 import fr.efreicraft.ludos.core.games.GameManager;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import org.bukkit.DyeColor;
 
 import java.util.Comparator;
@@ -87,7 +87,7 @@ public class TeamManager implements IManager {
      * @param player Joueur à dispatch.
      * @param forceRebalance Force le rebalance des équipes.
      */
-    public void dispatchPlayerInTeams(Player player, boolean forceRebalance) {
+    public void dispatchPlayerInTeams(LudosPlayer player, boolean forceRebalance) {
         if(this.teams.size() == 0) {
             return;
         }
@@ -112,7 +112,7 @@ public class TeamManager implements IManager {
         if(this.teams.size() == 0) {
             return;
         }
-        for (Player player : Core.get().getPlayerManager().getPlayers()) {
+        for (LudosPlayer player : Core.get().getPlayerManager().getPlayers()) {
             dispatchPlayerInTeams(player, false);
         }
     }

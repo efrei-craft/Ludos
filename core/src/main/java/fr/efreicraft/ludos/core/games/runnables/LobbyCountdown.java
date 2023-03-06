@@ -3,7 +3,7 @@ package fr.efreicraft.ludos.core.games.runnables;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import fr.efreicraft.ludos.core.utils.SoundUtils;
 import fr.efreicraft.ludos.core.utils.TitleUtils;
@@ -91,7 +91,7 @@ public class LobbyCountdown extends BukkitRunnable {
     }
 
     private void updateScoreboardOfPlayers() {
-        for(Player player : Core.get().getPlayerManager().getPlayers()) {
+        for(LudosPlayer player : Core.get().getPlayerManager().getPlayers()) {
             if(countingDown) {
                 player.getBoard().setTitle("&f&lDébut dans &e&l" + getTimeString());
             } else {

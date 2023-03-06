@@ -2,7 +2,7 @@ package fr.efreicraft.ludos.core.games.interfaces;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.maps.ParsedMap;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import fr.efreicraft.ludos.core.utils.TitleUtils;
 import fr.efreicraft.ludos.core.utils.WinEffectUtils;
@@ -31,7 +31,7 @@ public interface GameWinner {
      * Liste les joueurs gagnants.
      * @return Joueurs gagnants.
      */
-    List<Player> getPlayers();
+    List<LudosPlayer> getPlayers();
 
     /**
      * Nom du gagnant, peut-être accompagné par le préfixe "L'équipe" si une équipe a gagné.
@@ -45,7 +45,7 @@ public interface GameWinner {
     default void winEffect() {
         launchWinEffects(getFireworkColor());
 
-        for(Player p : getPlayers()) {
+        for(LudosPlayer p : getPlayers()) {
             p.entity().setVelocity(new Vector(0, 1, 0));
             new BukkitRunnable() {
                 @Override

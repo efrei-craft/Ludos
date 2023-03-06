@@ -2,7 +2,7 @@ package fr.efreicraft.ludos.games.blockparty;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.maps.points.GamePoint;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.games.blockparty.patterns.IPatternProvider;
 import fr.efreicraft.ludos.games.blockparty.patterns.SingleRandomBlockPattern;
 import org.bukkit.Location;
@@ -104,7 +104,7 @@ public class GameLogic {
      * Triggers once the player death
      * @param player Player related to that event
      */
-    public void onPlayerBelowKillzone(Player player) {
+    public void onPlayerBelowKillzone(LudosPlayer player) {
         player.entity().setHealth(0);
     }
 

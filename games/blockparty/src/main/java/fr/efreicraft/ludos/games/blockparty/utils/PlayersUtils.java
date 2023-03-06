@@ -1,7 +1,7 @@
 package fr.efreicraft.ludos.games.blockparty.utils;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Set;
@@ -12,16 +12,16 @@ import java.util.Set;
  * @project Ludos/BlockParty
  */
 public class PlayersUtils {
-    public static Set<Player> getAllPlayers() {
+    public static Set<LudosPlayer> getAllPlayers() {
         return Core.get().getTeamManager().getTeam("PLAYERS").getPlayers();
     }
     public static void clearAllPlayersInventory() {
-        for (Player player : getAllPlayers()) {
+        for (LudosPlayer player : getAllPlayers()) {
             player.entity().getInventory().clear();
         }
     }
     public static void setItemInMainHandToAll(ItemStack blockToDelete) {
-        for (Player player : getAllPlayers()) {
+        for (LudosPlayer player : getAllPlayers()) {
             player.entity().getInventory().setItemInMainHand(blockToDelete);
         }
     }

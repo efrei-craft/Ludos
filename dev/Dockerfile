@@ -14,4 +14,5 @@ FROM docker.nexus.jiveoff.fr/efrei-craft/templates/mini:latest
 COPY --chown=1000:1000 ./AnimusClient-Paper/build/libs /data/plugins
 COPY --chown=1000:1000 ./AnimusClient/build/libs/AnimusClient.jar /data/libraries/AnimusClient.jar
 
+COPY --chown=1000:1000 ./ECATUP/build/libs /data/plugins
 COPY --chown=1000:1000 ./Ludos/run/plugins /data/plugins

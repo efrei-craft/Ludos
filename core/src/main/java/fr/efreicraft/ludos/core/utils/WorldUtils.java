@@ -1,7 +1,7 @@
 package fr.efreicraft.ludos.core.utils;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -65,7 +65,7 @@ public class WorldUtils {
      */
     public static void deleteWorld(org.bukkit.World world) {
         for(org.bukkit.entity.Player player : world.getPlayers()) {
-            Player p = Core.get().getPlayerManager().getPlayer(player);
+            LudosPlayer p = Core.get().getPlayerManager().getPlayer(player);
             if(p == null) {
                 player.teleport(Core.get().getMapManager().getLobbyWorld().getSpawnLocation());
             } else {

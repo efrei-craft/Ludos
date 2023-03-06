@@ -1,6 +1,6 @@
 package fr.efreicraft.ludos.games.sumo;
 
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import org.bukkit.Location;
 
@@ -15,7 +15,7 @@ public class GameLogic {
         return killZonePositionY > positionY;
     }
 
-    public void onPlayerBelowKillzone(Player player) {
+    public void onPlayerBelowKillzone(LudosPlayer player) {
         player.entity().setHealth(0);
         player.sendMessage(MessageUtils.ChatPrefix.GAME, "Vous avez été éliminé !");
     }

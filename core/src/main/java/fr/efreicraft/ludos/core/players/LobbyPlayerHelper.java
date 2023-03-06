@@ -33,7 +33,7 @@ public class LobbyPlayerHelper {
      * Prépare le joueur à spawn dans le lobby d'attente.
      * @param player Joueur à préparer.
      */
-    public static void preparePlayerForLobby(Player player) {
+    public static void preparePlayerForLobby(LudosPlayer player) {
         player.entity().teleport(Core.get().getMapManager().getLobbyWorld().getSpawnLocation().add(-0.5, 1, -0.5));
         player.resetPlayer();
 
@@ -44,7 +44,7 @@ public class LobbyPlayerHelper {
      * Prépare les items de lobby du joueur.
      * @param player Joueur à préparer.
      */
-    public static void preparePlayerItems(Player player) {
+    public static void preparePlayerItems(LudosPlayer player) {
         List<MenuItem> items = new ArrayList<>();
 
         if(Core.get().getTeamManager().getTeams().size() > 2) {
@@ -94,7 +94,7 @@ public class LobbyPlayerHelper {
      * Ouvre le menu de sélection d'équipe.
      * @param player Joueur à préparer.
      */
-    public static void openTeamSelectionMenu(Player player) {
+    public static void openTeamSelectionMenu(LudosPlayer player) {
         if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
             player.sendMessage(MessageUtils.ChatPrefix.GAME, "&cVous ne pouvez pas changer d'équipe en cours de partie.");
             return;
@@ -111,7 +111,7 @@ public class LobbyPlayerHelper {
                             slot,
                             () -> {
                                 List<String> teamPlayers = new ArrayList<>();
-                                for(Player teamPlayer : team.getPlayers()) {
+                                for(LudosPlayer teamPlayer : team.getPlayers()) {
                                     teamPlayers.add("&7• " + teamPlayer.getName());
                                 }
                                 if(teamPlayers.isEmpty()) {

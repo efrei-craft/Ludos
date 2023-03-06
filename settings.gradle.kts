@@ -16,6 +16,6 @@ include (
         "games:sumo"
 )
 
-includeBuild("../AnimusClient-Paper") {
-    name = "AnimusClient-Paper"
+includeBuild("../ECATUP") {
+    name = "ECATUP"
 }

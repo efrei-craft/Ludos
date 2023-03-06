@@ -1,7 +1,7 @@
 package fr.efreicraft.ludos.core.utils;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 /**
@@ -22,7 +22,7 @@ public class ActionBarUtils {
      * @param player le joueur qui va recevoir action bar
      * @param message le message envoyé au joueur
      */
-    public static void sendActionBar(Player player, String message){
+    public static void sendActionBar(LudosPlayer player, String message){
         player.entity().sendActionBar(LegacyComponentSerializer.legacyAmpersand().deserialize(message));
     }
 
@@ -31,7 +31,7 @@ public class ActionBarUtils {
      * @param message le message qui va être envoyé
      */
     public static void broadcastActionBar(String message){
-        for(Player player : Core.get().getPlayerManager().getPlayers()) {
+        for(LudosPlayer player : Core.get().getPlayerManager().getPlayers()) {
             sendActionBar(player, message);
         }
     }

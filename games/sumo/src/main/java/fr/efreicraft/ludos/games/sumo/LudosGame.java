@@ -5,7 +5,7 @@ import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -57,7 +57,7 @@ public class LudosGame extends Game {
     }
 
     @Override
-    public void setupScoreboard(Player player) {
+    public void setupScoreboard(LudosPlayer player) {
         // No scoreboard for now
     }
 
