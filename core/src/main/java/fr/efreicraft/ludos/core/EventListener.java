@@ -169,32 +169,6 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onInventoryClick(InventoryClickEvent event) {
-        LudosPlayer player = Core.get().getPlayerManager().getPlayer((org.bukkit.entity.Player) event.getWhoClicked());
-        if(player != null && event.getCurrentItem() != null) {
-            String nbtValue = NBTUtils.getNBT(event.getCurrentItem(), "menu_item_uuid");
-            if(nbtValue != null) {
-                event.setCancelled(true);
-                player.getPlayerMenus().getMenuItemFromUUID(UUID.fromString(nbtValue)).getCallback().run(event);
-            }
-        }
-    }
-
-    @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        LudosPlayer player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
-        if(player != null
-                && event.getItem() != null
-                && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
-            String nbtValue = NBTUtils.getNBT(event.getItem(), "menu_item_uuid");
-            if(nbtValue != null) {
-                event.setCancelled(true);
-                player.getPlayerMenus().getMenuItemFromUUID(UUID.fromString(nbtValue)).getCallback().run(event);
-            }
-        }
-    }
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
         if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME){

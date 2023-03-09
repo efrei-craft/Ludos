@@ -1,6 +1,6 @@
 package fr.efreicraft.ludos.core.players;
 
-import fr.efreicraft.ecatup.players.Player;
+import fr.efreicraft.ecatup.players.ECPlayer;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.IManager;
 import fr.efreicraft.ludos.core.games.GameManager;
@@ -91,11 +91,11 @@ public class PlayerManager implements IManager {
     }
 
     /**
-     * Retourne un joueur à partir de son entité {@link fr.efreicraft.ecatup.players.Player}.
-     * @param player Entité du joueur
+     * Retourne un joueur à partir de son entité {@link fr.efreicraft.ecatup.players.ECPlayer}.
+     * @param ecPlayer Entité du joueur
      * @return Liste des joueurs
      */
-    public LudosPlayer getPlayer(Player ecPlayer) {
+    public LudosPlayer getPlayer(ECPlayer ecPlayer) {
         for (LudosPlayer p : this.players) {
             if(p.getEcPlayer().equals(ecPlayer)) {
                 return p;

@@ -29,6 +29,8 @@ dependencies {
     compileOnly("fr.efreicraft:AnimusClient")
     compileOnly(files("../AnimusClient/swagger/code"))
 
+    compileOnly("fr.efreicraft:AnimusClient-Paper")
+
     compileOnly("fr.efreicraft:ECATUP")
 }
 
@@ -57,7 +59,7 @@ bukkit {
     apiVersion = "1.19"
     authors = listOf("Antoine BANHA", "Logan TANN", "Aurelien DASSE")
     prefix = "MINI"
-    depend = listOf("WorldEdit", "ProtocolLib", "ECATUP")
+    depend = listOf("WorldEdit", "ProtocolLib", "ECATUP", "AnimusClient-Paper")
     commands {
         register("game") {
             description = "Manages the games"

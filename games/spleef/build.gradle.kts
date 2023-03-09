@@ -9,6 +9,8 @@ dependencies {
     implementation(project(":core"))
 
     compileOnly("io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT")
+
+    compileOnly("fr.efreicraft:ECATUP")
 }
 
 bukkit {

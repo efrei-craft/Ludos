@@ -35,7 +35,7 @@ public class LudosPlayer {
     /**
      * Instance du joueur ECATUP.
      */
-    private final fr.efreicraft.ecatup.players.Player ecPlayer;
+    private final fr.efreicraft.ecatup.players.ECPlayer ecPlayer;
 
     /**
      * Instance du joueur Bukkit.
@@ -68,7 +68,7 @@ public class LudosPlayer {
      * Constructeur du joueur.
      * @param ecPlayer Instance du joueur ECATUP.
      */
-    public LudosPlayer(fr.efreicraft.ecatup.players.Player ecPlayer) {
+    public LudosPlayer(fr.efreicraft.ecatup.players.ECPlayer ecPlayer) {
         this.ecPlayer = ecPlayer;
         this.playerEntity = ecPlayer.entity();
         this.playerMenus = ecPlayer.getPlayerMenus();
@@ -122,7 +122,7 @@ public class LudosPlayer {
                                 String maxString = "";
                                 if(Core.get().getGameManager().getCurrentGame() != null) {
                                     Game game = Core.get().getGameManager().getCurrentGame();
-                                    if(game.getMetadata().rules().minPlayers() <= Core.get().getPlayerManager().getNumberOfPlayingPlayers()) {
+                                    if(game.getMetadata().rules().minPlayersToStart() <= Core.get().getPlayerManager().getNumberOfPlayingPlayers()) {
                                         color = ChatColor.GREEN;
                                     } else {
                                         color = ChatColor.RED;
@@ -205,7 +205,7 @@ public class LudosPlayer {
      *
      * @return Instance du joueur ECATUP.
      */
-    public fr.efreicraft.ecatup.players.Player getEcPlayer() {
+    public fr.efreicraft.ecatup.players.ECPlayer getEcPlayer() {
         return ecPlayer;
     }
 
@@ -330,9 +330,9 @@ public class LudosPlayer {
      */
     public String getName() {
         return this.team == null
-                ? this.playerEntity.getName()
+                ? this.ecPlayer.getChatName()
                 : LegacyComponentSerializer.legacyAmpersand().serialize(
-                        Component.text(this.playerEntity.getName()).color(this.team.getColor().textColor())
+                        LegacyComponentSerializer.legacyAmpersand().deserialize(this.ecPlayer.getChatName()).color(this.team.getColor().textColor())
                   );
     }
 

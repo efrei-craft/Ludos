@@ -1,11 +1,11 @@
 package fr.efreicraft.ludos.core.players;
 
+import fr.efreicraft.ecatup.players.menus.ChestMenu;
+import fr.efreicraft.ecatup.players.menus.ItemStackMenuItem;
+import fr.efreicraft.ecatup.players.menus.PlayerInventoryMenu;
+import fr.efreicraft.ecatup.players.menus.interfaces.MenuItem;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.GameManager;
-import fr.efreicraft.ludos.core.players.menus.ChestMenu;
-import fr.efreicraft.ludos.core.players.menus.ItemStackMenuItem;
-import fr.efreicraft.ludos.core.players.menus.PlayerInventoryMenu;
-import fr.efreicraft.ludos.core.players.menus.interfaces.MenuItem;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
@@ -84,7 +84,7 @@ public class LobbyPlayerHelper {
         player.getPlayerMenus().setMenu(
                 "LOBBY_ITEMS",
                 new PlayerInventoryMenu(
-                        player,
+                        player.getEcPlayer(),
                         items
                 )
         ).show();
@@ -138,7 +138,7 @@ public class LobbyPlayerHelper {
         player.getPlayerMenus().setMenu(
                 "TEAM_SELECTION",
                 new ChestMenu(
-                        player,
+                        player.getEcPlayer(),
                         "&8» &6Choix d'équipe",
                         18,
                         items

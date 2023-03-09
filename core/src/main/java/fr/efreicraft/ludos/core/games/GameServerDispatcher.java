@@ -27,7 +27,7 @@ public class GameServerDispatcher {
             try {
                 String gameName = Core.get().getGameManager().getCurrentGame() == null
                         ? null
-                        : Core.get().getGameManager().getCurrentGame().getMetadata().name();
+                        : Core.get().getGameManager().getCurrentPlugin().getName();
                 ServerService.setGameServerStatus(
                         InetAddress.getLocalHost().getHostName(),
                         gameName,

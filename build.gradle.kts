@@ -39,7 +39,7 @@ subprojects {
 }
 
 tasks.register<Exec>("devBuildDockerImage") {
-    dependsOn("build")
+    dependsOn(":core:jar")
 
     workingDir = File("../")
     commandLine("docker", "build", "-t", "dev.efrei-craft/acp/templates/mini", "-f", "Ludos/dev/Dockerfile", ".")
