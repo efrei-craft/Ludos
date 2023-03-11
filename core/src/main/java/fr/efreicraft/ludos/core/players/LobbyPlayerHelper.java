@@ -13,6 +13,7 @@ import fr.efreicraft.ludos.core.utils.ColorUtils;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -36,7 +37,8 @@ public class LobbyPlayerHelper {
      * @param player Joueur à préparer.
      */
     public static void preparePlayerForLobby(LudosPlayer player) {
-        player.entity().teleport(Core.get().getMapManager().getLobbyWorld().getSpawnLocation().add(-0.5, 1, -0.5));
+        Location spawnLocation = Core.get().getMapManager().getLobbyWorld().getSpawnLocation().clone();
+        player.entity().teleport(spawnLocation.add(-0.5, 1, -0.5).add((Math.random() * 2) - 1, 0, (Math.random() * 2) - 1));
         player.resetPlayer();
 
         preparePlayerItems(player);
