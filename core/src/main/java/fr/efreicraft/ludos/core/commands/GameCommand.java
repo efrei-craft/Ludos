@@ -2,6 +2,7 @@ package fr.efreicraft.ludos.core.commands;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.exceptions.GameStatusException;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -64,6 +65,15 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                     MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
                 }
             }
+            case "auto" -> {
+                if(Core.get().getGameManager().isAutoGameStart()) {
+                    Core.get().getGameManager().setAutoGameStart(false);
+                    MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&7Le démarrage automatique de la partie a été &cdésactivé&7.");
+                } else {
+                    Core.get().getGameManager().setAutoGameStart(true);
+                    MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&7Le démarrage automatique de la partie a été &aactivé&7.");
+                }
+            }
             case "stop" -> {
                 try {
                     Core.get().getGameManager().endCurrentGame();
@@ -92,7 +102,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if(args.length == 1) {
-            return Arrays.asList("list", "load", "start", "stop", "reset", "reload");
+            return Arrays.asList("list", "load", "start", "stop", "reset", "reload", "auto");
         }
         if(args.length == 2 && args[0].equalsIgnoreCase("load")) {
             return Core.get().getGameManager().getAvailableGames();

@@ -4,6 +4,7 @@ import fr.efreicraft.ecatup.players.menus.PlayerMenus;
 import fr.efreicraft.ecatup.players.scoreboards.PlayerScoreboard;
 import fr.efreicraft.ecatup.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.LudosCore;
 import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.players.runnables.PlayerRespawnCountdown;
@@ -13,6 +14,7 @@ import fr.efreicraft.ludos.core.utils.PlayerUtils;
 import fr.efreicraft.ludos.core.utils.SoundUtils;
 import fr.efreicraft.ludos.core.utils.TitleUtils;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -329,11 +331,17 @@ public class LudosPlayer {
      * @return Nom du joueur
      */
     public String getName() {
-        return this.team == null
-                ? this.ecPlayer.getChatName()
-                : LegacyComponentSerializer.legacyAmpersand().serialize(
-                        LegacyComponentSerializer.legacyAmpersand().deserialize(this.ecPlayer.getChatName()).color(this.team.getColor().textColor())
-                  );
+        if(this.team == null) {
+            return this.ecPlayer.getPrefixColor() + this.playerEntity.getName();
+        } else {
+            if(Core.get().getTeamManager().getPlayingTeams().size() == 1) {
+                return this.ecPlayer.getPrefixColor() + this.playerEntity.getName();
+            } else {
+                return LegacyComponentSerializer.legacyAmpersand().serialize(
+                        Component.text(this.playerEntity.getName()).color(this.team.getColor().textColor())
+                );
+            }
+        }
     }
 
     /**

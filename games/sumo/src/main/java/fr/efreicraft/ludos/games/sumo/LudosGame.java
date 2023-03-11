@@ -87,9 +87,9 @@ public class LudosGame extends Game {
                             p.entity().getInventory().clear();
                             p.entity().getInventory().setArmorContents(null);
                             p.entity().setGameMode(GameMode.ADVENTURE);
-                            ItemStack kbstick = new ItemStack(Material.STICK);
-                            kbstick.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
-                            p.entity().getInventory().setItem(0, kbstick);
+//                            ItemStack kbstick = new ItemStack(Material.STICK);
+//                            kbstick.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
+//                            p.entity().getInventory().setItem(0, kbstick);
                         }
                 ))
                 .putAll(ONLY_SPECTATOR.getTeamRecords())
