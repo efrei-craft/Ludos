@@ -31,6 +31,7 @@ public class GameServerDispatcher {
                 ServerService.setGameServerStatus(
                         InetAddress.getLocalHost().getHostName(),
                         gameName,
+                        Core.get().getGameManager().getDefaultGamePluginName(),
                         Core.get().getGameManager().getStatus().name()
                 );
             } catch (UnknownHostException e) {

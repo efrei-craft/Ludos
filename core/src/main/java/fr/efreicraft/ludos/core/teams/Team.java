@@ -125,7 +125,9 @@ public class Team {
      */
     public void unloadTeam() {
         this.removePlayers(players);
-        this.bukkitTeam.unregister();
+        if(this.bukkitTeam != null) {
+            this.bukkitTeam.unregister();
+        }
     }
 
     /**
@@ -168,7 +170,9 @@ public class Team {
         }
         this.players.add(player);
         player.setTeam(this);
-        this.bukkitTeam.addEntry(player.entity().getName());
+        if(this.bukkitTeam != null) {
+            this.bukkitTeam.addEntry(player.entity().getName());
+        }
         if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
             LobbyPlayerHelper.preparePlayerItems(player);
         } else {
@@ -186,7 +190,7 @@ public class Team {
         }
         this.players.remove(player);
         player.clearTeam();
-        if(player.entity() != null) {
+        if(player.entity() != null && this.bukkitTeam != null) {
             this.bukkitTeam.removeEntry(player.entity().getName());
         }
         if(Core.get().getGameManager().getCurrentGame() != null) {
@@ -204,7 +208,7 @@ public class Team {
     public void removePlayers(Set<LudosPlayer> players) {
         for (LudosPlayer player : players) {
             player.clearTeam();
-            if(player.entity() != null) {
+            if(player.entity() != null && this.bukkitTeam != null) {
                 this.bukkitTeam.removeEntry(player.entity().getName());
             }
             if(player.isEphemeral() && !player.entity().hasPermission("ludos.admin")) {
@@ -286,7 +290,9 @@ public class Team {
      * @param friendlyFire Nouvel état de friendly fire.
      */
     public void setFriendlyFire(boolean friendlyFire) {
-        this.bukkitTeam.setAllowFriendlyFire(friendlyFire);
+        if(this.bukkitTeam != null) {
+            this.bukkitTeam.setAllowFriendlyFire(friendlyFire);
+        }
     }
 
     /**

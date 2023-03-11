@@ -19,3 +19,7 @@ include (
 includeBuild("../ECATUP") {
     name = "ECATUP"
 }
+
+includeBuild("../AnimusClient-Paper") {
+    name = "AnimusClient-Paper"
+}

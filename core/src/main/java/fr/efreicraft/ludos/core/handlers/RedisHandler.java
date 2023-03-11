@@ -11,6 +11,9 @@ public class RedisHandler implements IRedisMessageHandler {
             case "changeRequestedGame":
                 Core.get().getGameManager().changeDefaultGame(args[1]);
                 break;
+            case "resetServer":
+                Core.get().getGameManager().resetServer();
+                break;
         }
     }
 }

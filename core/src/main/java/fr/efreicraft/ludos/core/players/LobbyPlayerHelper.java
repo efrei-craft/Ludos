@@ -1,5 +1,7 @@
 package fr.efreicraft.ludos.core.players;
 
+import fr.efreicraft.animus.endpoints.ServerService;
+import fr.efreicraft.animus.invoker.ApiException;
 import fr.efreicraft.ecatup.players.menus.ChestMenu;
 import fr.efreicraft.ecatup.players.menus.ItemStackMenuItem;
 import fr.efreicraft.ecatup.players.menus.PlayerInventoryMenu;
@@ -75,9 +77,15 @@ public class LobbyPlayerHelper {
                 new ItemStackMenuItem(
                         new ItemStack(Material.RED_BED),
                         8,
-                        "&cRevenir au hub&r &7• Clic droit",
-                        "&7Clic droit pour retourner au hub.",
-                        event -> player.sendMessage(MessageUtils.ChatPrefix.SERVER, "&cRetour au hub...")
+                        "&cRevenir au lobby&r &7• Clic droit",
+                        "&7Clic droit pour retourner au lobby.",
+                        event -> {
+                            try {
+                                ServerService.transferPlayer("lobby", String.valueOf(player.entity().getUniqueId()));
+                            } catch (ApiException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                 )
         );
 

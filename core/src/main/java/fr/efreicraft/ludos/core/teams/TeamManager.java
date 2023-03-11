@@ -1,5 +1,6 @@
 package fr.efreicraft.ludos.core.teams;
 
+import fr.efreicraft.ecatup.ECATUP;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.IManager;
 import fr.efreicraft.ludos.core.games.GameManager;
@@ -51,8 +52,13 @@ public class TeamManager implements IManager {
         for (Map.Entry<String, TeamRecord> entry : teams.entrySet()) {
             this.teams.put(entry.getKey(), new Team(entry.getValue()));
         }
-        for (Team team : this.teams.values()) {
-            team.loadTeam();
+
+        if(this.teams.size() == 2) {
+            ECATUP.getInstance().getGroupManager().registerTeams();
+        } else {
+            for (Team team : this.teams.values()) {
+                team.loadTeam();
+            }
         }
     }
 

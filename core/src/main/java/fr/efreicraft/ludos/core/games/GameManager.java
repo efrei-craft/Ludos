@@ -215,6 +215,14 @@ public class GameManager implements IManager {
     }
 
     /**
+     * Récupère le nom du plugin du jeu par défaut
+     * @return Nom du plugin du jeu par défaut
+     */
+    public String getDefaultGamePluginName() {
+        return defaultGamePluginName;
+    }
+
+    /**
      * Récupère le status actuel du jeu
      * @return Status actuel du jeu
      */
