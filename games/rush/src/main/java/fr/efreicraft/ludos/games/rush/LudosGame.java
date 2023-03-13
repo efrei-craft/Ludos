@@ -103,7 +103,6 @@ public class LudosGame extends Game {
      */
     @Override
     public void endGame() {
-        gameLogic.stopStopwatch();
         super.endGame();
     }
 

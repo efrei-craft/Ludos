@@ -13,7 +13,7 @@ public class Main extends GamePlugin {
     }
 
     @Override
-    protected Class<? extends Game> getGameClass() {
+    public Class<? extends Game> getGameClass() {
         return LudosGame.class;
     }
 

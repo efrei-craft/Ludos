@@ -16,10 +16,25 @@ public class GameTimer extends BukkitRunnable {
     GameTimerAction action;
     private int time;
 
-    public GameTimer(GameTimerAction action, int time) {
+    /**
+     * Constructeur du timer.
+     * @param action Action à effectuer.
+     * @param time Temps initial à décompter (si -1, le timer ne s'arrêtera qu'à la fin du jeu).
+     * @param period Période de décompte (en ticks).
+     */
+    public GameTimer(GameTimerAction action, int time, int period) {
         this.action = action;
         this.time = time;
-        this.runTaskTimer(Core.get().getGameManager().getCurrentPlugin(), 0, 20);
+        this.runTaskTimer(Core.get().getGameManager().getCurrentPlugin(), 0, period);
+    }
+
+    /**
+     * Constructeur du timer.
+     * @param action Action à effectuer.
+     * @param time Temps initial à décompter (si -1, le timer ne s'arrêtera qu'à la fin du jeu).
+     */
+    public GameTimer(GameTimerAction action, int time) {
+        this(action, time, 20);
     }
 
     @Override
@@ -28,7 +43,7 @@ public class GameTimer extends BukkitRunnable {
             this.cancel();
             return;
         }
-        action.run(time);
+        action.run(Math.abs(time));
         if(time == 0) {
             cancel();
         } else {

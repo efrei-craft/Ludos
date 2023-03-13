@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.core.commands;
 
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.games.exceptions.GameRegisteringException;
 import fr.efreicraft.ludos.core.games.exceptions.GameStatusException;
 import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
@@ -10,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,6 +54,9 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                 } catch (GameStatusException e) {
                     MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
                     return false;
+                } catch (GameRegisteringException e) {
+                    MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
+                    throw new RuntimeException(e);
                 }
             }
             case "start" -> {
