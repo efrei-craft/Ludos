@@ -1,5 +1,6 @@
 plugins {
     `java-library`
+    `maven-publish`
 }
 
 java {
@@ -7,6 +8,9 @@ java {
 }
 
 subprojects {
+
+    apply(plugin = "maven-publish")
+    apply(plugin = "java")
 
     group = "fr.efreicraft.ludos"
     version = "1.0-SNAPSHOT"
@@ -34,6 +38,39 @@ subprojects {
         maven("https://oss.sonatype.org/content/groups/public/")
         maven("https://maven.enginehub.org/repo/")
         maven("https://repo.dmulloy2.net/repository/public/")
+    }
+
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                groupId = "fr.efreicraft"
+                artifactId = "Ludos" + project.name.substring(0, 1).toUpperCase() + project.name.substring(1)
+                version = project.version.toString()
+
+                from(components["java"])
+
+                pom.packaging = "jar"
+
+                if(project.name == "core") {
+                    artifact ("${project.rootDir}/run/plugins/${artifactId}.jar") {
+                        classifier = "jar"
+                    }
+                } else {
+                    artifact ("${project.rootDir}/run/plugins/LudosCore/games/${artifactId}.jar") {
+                        classifier = "jar"
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+                url = uri(System.getenv("NEXUS_REPOSITORY"))
+                credentials {
+                    username = System.getenv("NEXUS_USERNAME")
+                    password = System.getenv("NEXUS_PASSWORD")
+                }
+            }
+        }
     }
 
 }
