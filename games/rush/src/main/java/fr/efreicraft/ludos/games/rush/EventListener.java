@@ -3,6 +3,7 @@ package fr.efreicraft.ludos.games.rush;
 import com.destroystokyo.paper.MaterialTags;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.maps.points.SpawnPoint;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import io.papermc.paper.event.entity.EntityMoveEvent;
@@ -95,7 +96,7 @@ public record EventListener(GameLogic logic) implements Listener {
         }
 
         if (event.getBlock().getType() != Material.TNT) return;
-        fr.efreicraft.ludos.core.players.Player placer = Utils.getLudosPlayer(event.getPlayer());
+        LudosPlayer placer = Utils.getLudosPlayer(event.getPlayer());
         if (placer == null) return;
 
         Location spawnPoint = placer.getTeam().getSpawnPointsForCurrentMap().get(0).getLocation();
@@ -161,7 +162,7 @@ public record EventListener(GameLogic logic) implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         if (!event.hasChangedBlock()) return;
 
-        fr.efreicraft.ludos.core.players.Player player = Utils.getLudosPlayer(event.getPlayer());
+        LudosPlayer player = Utils.getLudosPlayer(event.getPlayer());
         if (player == null) return;
         if (!player.getTeam().isPlayingTeam()) {
             return;

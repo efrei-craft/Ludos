@@ -1,7 +1,7 @@
 package fr.efreicraft.ludos.core.utils;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.util.Ticks;
@@ -50,7 +50,7 @@ public class TitleUtils {
      * @param stay      Temps d'affichage du title en secondes.
      * @param fadeOut   Temps de disparition du title en secondes.
      */
-    public static void sendTitle(Player player, String title, String subtitle, float fadeIn, float stay, float fadeOut) {
+    public static void sendTitle(LudosPlayer player, String title, String subtitle, float fadeIn, float stay, float fadeOut) {
         player.entity().showTitle(buildTitle(title, subtitle, fadeIn, stay, fadeOut));
     }
 
@@ -63,7 +63,7 @@ public class TitleUtils {
      * @param fadeOut   Temps de disparition du title en secondes.
      */
     public static void broadcastTitle(String title, String subtitle, float fadeIn, float stay, float fadeOut) {
-        for(Player player : Core.get().getPlayerManager().getPlayers()) {
+        for(LudosPlayer player : Core.get().getPlayerManager().getPlayers()) {
             sendTitle(player, title, subtitle, fadeIn, stay, fadeOut);
         }
     }

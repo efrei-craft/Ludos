@@ -5,7 +5,7 @@ import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.games.PlayerWin;
 import fr.efreicraft.ludos.core.games.TeamWin;
 import fr.efreicraft.ludos.core.games.interfaces.GameWinner;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import org.bukkit.command.Command;
@@ -27,7 +27,7 @@ public class ForcewinCommand implements CommandExecutor, TabCompleter {
     private List<GameWinner> getPotentialWinners() {
         List<GameWinner> winners = new ArrayList<>();
 
-        for(Player player : Core.get().getPlayerManager().getPlayingPlayers()) {
+        for(LudosPlayer player : Core.get().getPlayerManager().getPlayingPlayers()) {
             PlayerWin win = new PlayerWin(player);
             winners.add(win);
         }

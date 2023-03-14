@@ -3,7 +3,7 @@ package fr.efreicraft.ludos.games.arena;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.TeamWin;
 import fr.efreicraft.ludos.core.games.runnables.GameTimer;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.ActionBarUtils;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
@@ -28,15 +28,15 @@ public class GameLogic {
 
     private final HashMap<Team, Integer> teamKills = new HashMap<>();
 
-    private final HashMap<Player, Integer> playerKillstreak = new HashMap<>();
+    private final HashMap<LudosPlayer, Integer> playerKillstreak = new HashMap<>();
 
-    private final HashMap<Player, Integer> playerBestKillstreak = new HashMap<>();
+    private final HashMap<LudosPlayer, Integer> playerBestKillstreak = new HashMap<>();
 
     private int time = 0;
 
     private GameTimer timer;
 
-    public void preparePlayerToSpawn(Player player) {
+    public void preparePlayerToSpawn(LudosPlayer player) {
         player.entity().setGameMode(GameMode.ADVENTURE);
         ItemStack sword = new ItemStack(Material.IRON_SWORD);
         sword.addEnchantment(Enchantment.DURABILITY, 3);
@@ -61,11 +61,11 @@ public class GameLogic {
     public void addKill(Team team) {
         teamKills.put(team, teamKills.getOrDefault(team, 0) + 1);
     }
-    public void resetKillstreak(Player player) {
+    public void resetKillstreak(LudosPlayer player) {
         playerKillstreak.put(player, 0);
     }
 
-    public void addPlayerKill(Player player) {
+    public void addPlayerKill(LudosPlayer player) {
         playerKillstreak.put(player, getPlayerKillstreak(player) + 1);
         if(playerBestKillstreak.getOrDefault(player, 0) < playerKillstreak.getOrDefault(player, 0)) {
             playerBestKillstreak.put(player, playerKillstreak.getOrDefault(player, 0));
@@ -74,7 +74,7 @@ public class GameLogic {
         announceKillstreak(player);
     }
 
-    private void announceKillstreak(Player player) {
+    private void announceKillstreak(LudosPlayer player) {
         int killstreak = getPlayerKillstreak(player);
 
         if (killstreak == 3) {
@@ -95,11 +95,11 @@ public class GameLogic {
         }
     }
 
-    public int getPlayerKillstreak(Player player) {
+    public int getPlayerKillstreak(LudosPlayer player) {
         return playerKillstreak.getOrDefault(player, 0);
     }
 
-    public int getPlayerBestKillstreak(Player player) {
+    public int getPlayerBestKillstreak(LudosPlayer player) {
         return playerBestKillstreak.getOrDefault(player, 0);
     }
 

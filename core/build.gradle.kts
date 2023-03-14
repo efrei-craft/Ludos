@@ -26,7 +26,12 @@ dependencies {
     compileOnly("com.comphenix.protocol:ProtocolLib:4.7.0")
     implementation("commons-io:commons-io:2.11.0")
 
-    implementation("io.lettuce:lettuce-core:6.2.1.RELEASE")
+    compileOnly("fr.efreicraft:AnimusClient")
+    compileOnly(files("../AnimusClient/swagger/code"))
+
+    compileOnly("fr.efreicraft:AnimusClient-Paper")
+
+    compileOnly("fr.efreicraft:ECATUP")
 }
 
 tasks {
@@ -50,11 +55,11 @@ tasks {
 bukkit {
     load = BukkitPluginDescription.PluginLoadOrder.POSTWORLD
     name = "LudosCore"
-    main = "fr.efreicraft.ludos.core.Main"
+    main = "fr.efreicraft.ludos.core.LudosCore"
     apiVersion = "1.19"
     authors = listOf("Antoine BANHA", "Logan TANN", "Aurelien DASSE")
     prefix = "MINI"
-    depend = listOf("WorldEdit", "ProtocolLib")
+    depend = listOf("WorldEdit", "ProtocolLib", "ECATUP", "AnimusClient-Paper")
     commands {
         register("game") {
             description = "Manages the games"

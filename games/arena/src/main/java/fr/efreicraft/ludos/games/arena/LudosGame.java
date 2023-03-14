@@ -1,12 +1,12 @@
 package fr.efreicraft.ludos.games.arena;
 
+import fr.efreicraft.ecatup.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.annotations.CustomGameData;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
-import fr.efreicraft.ludos.core.players.Player;
-import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
@@ -81,7 +81,7 @@ public class LudosGame extends Game {
     }
 
     @Override
-    public void setupScoreboard(Player player) {
+    public void setupScoreboard(LudosPlayer player) {
         player.getBoard().clearFields();
 
         player.getBoard().setField(
@@ -108,7 +108,10 @@ public class LudosGame extends Game {
                 new ScoreboardField(
                         "&e&lKillstreak",
                         false,
-                        player1 -> gameLogic.getPlayerKillstreak(player1) + " (Meilleur: " + gameLogic.getPlayerBestKillstreak(player1) + ")"
+                        player1 -> {
+                            LudosPlayer ludosPlayer = Core.get().getPlayerManager().getPlayer(player1);
+                            return gameLogic.getPlayerKillstreak(ludosPlayer) + " (Meilleur: " + gameLogic.getPlayerBestKillstreak(ludosPlayer) + ")";
+                        }
                 )
         );
     }

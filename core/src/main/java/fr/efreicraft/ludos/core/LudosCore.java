@@ -1,13 +1,15 @@
 package fr.efreicraft.ludos.core;
 
 import com.comphenix.protocol.ProtocolLibrary;
-import fr.efreicraft.ludos.core.games.GameServerRedisDispatcher;
+import fr.efreicraft.ACP.ACP;
+import fr.efreicraft.ludos.core.games.GameServerDispatcher;
+import fr.efreicraft.ludos.core.handlers.RedisHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Classe principale du plugin.
  */
-public final class Main extends JavaPlugin {
+public final class LudosCore extends JavaPlugin {
 
     @Override
     public void onEnable() {
@@ -17,12 +19,8 @@ public final class Main extends JavaPlugin {
 
         getLogger().info("Starting Core.");
         new Core(this, ProtocolLibrary.getProtocolManager());
-    }
 
-    @Override
-    public void onDisable() {
-        // Plugin shutdown logic
-        GameServerRedisDispatcher.bye();
+        ACP.getClient().getRedis().addHandler(new RedisHandler());
     }
 
 }

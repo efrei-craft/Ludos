@@ -1,9 +1,9 @@
 package fr.efreicraft.ludos.core.commands;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.games.GameManager;
+import fr.efreicraft.ludos.core.games.exceptions.GameRegisteringException;
 import fr.efreicraft.ludos.core.games.exceptions.GameStatusException;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,6 +54,9 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                 } catch (GameStatusException e) {
                     MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
                     return false;
+                } catch (GameRegisteringException e) {
+                    MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
+                    throw new RuntimeException(e);
                 }
             }
             case "start" -> {
@@ -64,6 +68,15 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                     );
                 } catch (GameStatusException e) {
                     MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
+                }
+            }
+            case "auto" -> {
+                if(Core.get().getGameManager().isAutoGameStart()) {
+                    Core.get().getGameManager().setAutoGameStart(false);
+                    MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&7Le démarrage automatique de la partie a été &cdésactivé&7.");
+                } else {
+                    Core.get().getGameManager().setAutoGameStart(true);
+                    MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&7Le démarrage automatique de la partie a été &aactivé&7.");
                 }
             }
             case "stop" -> {
@@ -94,7 +107,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if(args.length == 1) {
-            return Arrays.asList("list", "load", "start", "stop", "reset", "reload");
+            return Arrays.asList("list", "load", "start", "stop", "reset", "reload", "auto");
         }
         if(args.length == 2 && args[0].equalsIgnoreCase("load")) {
             return Core.get().getGameManager().getAvailableGames();

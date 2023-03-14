@@ -1,7 +1,7 @@
 package fr.efreicraft.ludos.core.utils;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import org.bukkit.Sound;
 
 /**
@@ -21,7 +21,7 @@ public class SoundUtils {
      * @param player Joueur à qui envoyer le son.
      * @param sound Son à envoyer.
      */
-    public static void playSound(Player player, Sound sound, float volume, float pitch) {
+    public static void playSound(LudosPlayer player, Sound sound, float volume, float pitch) {
         player.entity().playSound(player.entity().getLocation(), sound, volume, pitch);
     }
 
@@ -30,7 +30,7 @@ public class SoundUtils {
      * @param sound Son à jouer.
      */
     public static void broadcastSound(Sound sound, float volume, float pitch) {
-        for(Player player : Core.get().getPlayerManager().getPlayers()) {
+        for(LudosPlayer player : Core.get().getPlayerManager().getPlayers()) {
             playSound(player, sound, volume, pitch);
         }
     }

@@ -1,7 +1,7 @@
 package fr.efreicraft.ludos.core.games.interfaces;
 
 import fr.efreicraft.ludos.core.maps.points.GamePoint;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -38,7 +38,7 @@ public interface IGame {
      * Méthode appelée pour initialiser le scoreboard du joueur pour le jeu actuel.
      * @param player Joueur.
      */
-    void setupScoreboard(Player player);
+    void setupScoreboard(LudosPlayer player);
 
     /**
      * Récupère les matériaux associés aux points pour la construction des

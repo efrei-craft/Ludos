@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.core.commands;
 
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import org.bukkit.Bukkit;
@@ -42,7 +43,7 @@ public class MoveCommand implements CommandExecutor, TabExecutor {
         for (Entity entity : playerList) {
             if (!(entity instanceof Player player)) continue;
 
-            fr.efreicraft.ludos.core.players.Player lPlayer = Core.get().getPlayerManager().getPlayer(player);
+            LudosPlayer lPlayer = Core.get().getPlayerManager().getPlayer(player);
             targetTeam.addPlayer(lPlayer);
 
             MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.TEAM, "&7Vous avez déplacé " + player.getName() + " &7dans l'équipe " + targetTeam.getName() + "&7.");

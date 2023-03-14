@@ -1,7 +1,7 @@
 package fr.efreicraft.ludos.games.sumo;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -14,7 +14,7 @@ public record EventListener(GameLogic sumo) implements Listener {
         if (!event.hasChangedBlock()) {
             return;
         }
-        Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+        LudosPlayer player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         if (!player.getTeam().isPlayingTeam()) {
             return;
         }
@@ -26,7 +26,7 @@ public record EventListener(GameLogic sumo) implements Listener {
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof org.bukkit.entity.Player bukkitPlayer) {
-            Player player = Core.get().getPlayerManager().getPlayer(bukkitPlayer);
+            LudosPlayer player = Core.get().getPlayerManager().getPlayer(bukkitPlayer);
             if (!player.getTeam().isPlayingTeam()) {
                 return;
             }

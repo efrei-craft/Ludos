@@ -2,6 +2,7 @@ package fr.efreicraft.ludos.core.games.interfaces;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.exceptions.GameRegisteringException;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -19,20 +20,20 @@ public abstract class GamePlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        try {
-            Core.get().getGameManager().registerGame(getGameClass());
-        } catch (GameRegisteringException e) {
-            e.printStackTrace();
-        }
-        Core.get().getLogger().info("Enabling GamePlugin " + getDescription().getName() + ".");
+        Core.get().getGameManager().registerGamePlugin(this);
+        Core.get().getLogger().info("Enabling GamePlugin " + getPluginDescription().getName() + ".");
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        Core.get().getLogger().info("Disabling GamePlugin " + getDescription().getName() + ".");
+        Core.get().getLogger().info("Disabling GamePlugin " + getPluginDescription().getName() + ".");
     }
 
-    protected abstract Class<? extends Game> getGameClass();
+    public PluginDescriptionFile getPluginDescription() {
+        return super.getDescription();
+    }
+
+    public abstract Class<? extends Game> getGameClass();
 
 }

@@ -5,7 +5,7 @@ import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -20,7 +20,7 @@ import static fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder.DefaultTea
 
 @GameMetadata(
         name = "Sumo",
-        description = "Poussez votre adversaire en dehors du ring !",
+        description = "Poussez votre adversaire en dehors du ring pour gagner !",
         authors = {"DocSystem"},
         color = "&4",
         rules = @GameRules(
@@ -57,7 +57,7 @@ public class LudosGame extends Game {
     }
 
     @Override
-    public void setupScoreboard(Player player) {
+    public void setupScoreboard(LudosPlayer player) {
         // No scoreboard for now
     }
 
@@ -87,9 +87,9 @@ public class LudosGame extends Game {
                             p.entity().getInventory().clear();
                             p.entity().getInventory().setArmorContents(null);
                             p.entity().setGameMode(GameMode.ADVENTURE);
-                            ItemStack kbstick = new ItemStack(Material.STICK);
-                            kbstick.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
-                            p.entity().getInventory().setItem(0, kbstick);
+//                            ItemStack kbstick = new ItemStack(Material.STICK);
+//                            kbstick.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
+//                            p.entity().getInventory().setItem(0, kbstick);
                         }
                 ))
                 .putAll(ONLY_SPECTATOR.getTeamRecords())

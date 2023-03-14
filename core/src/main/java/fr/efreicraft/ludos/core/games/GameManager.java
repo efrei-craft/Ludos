@@ -4,23 +4,27 @@ import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.IManager;
 import fr.efreicraft.ludos.core.games.exceptions.GameRegisteringException;
 import fr.efreicraft.ludos.core.games.exceptions.GameStatusException;
+import fr.efreicraft.ludos.core.games.interfaces.GamePlugin;
 import fr.efreicraft.ludos.core.games.runnables.LobbyCountdown;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
  * Gestionnaire des jeux.<br /><br/>
- *
+ * <p>
  * Cette classe est un singleton géré par le Core.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
@@ -53,7 +57,7 @@ public class GameManager implements IManager {
         ENDING
     }
 
-    private ArrayList<Plugin> gamePlugins;
+    private Map<String, GamePlugin> gamePlugins;
 
     private Game currentGame;
     private Plugin currentPlugin;
@@ -70,7 +74,7 @@ public class GameManager implements IManager {
      * Constructeur du gestionnaire de jeux. Il vérifie que la classe n'est pas déjà initialisée.
      */
     public GameManager() {
-        if(Core.get().getGameManager() != null) {
+        if (Core.get().getGameManager() != null) {
             throw new IllegalStateException("GameManager already initialized !");
         }
     }
@@ -78,7 +82,6 @@ public class GameManager implements IManager {
     @Override
     public void runManager() {
         setStatus(GameStatus.WAITING);
-        GameServerRedisDispatcher.serverReady(true);
         loadAllGameJars();
     }
 
@@ -86,21 +89,20 @@ public class GameManager implements IManager {
      * Charge les plugins de jeu disponibles dans le dossier "games" du datafolder.
      */
     public void loadAllGameJars() {
-        gamePlugins = new ArrayList<>();
+        gamePlugins = new HashMap<>();
         File gamesFolder = new File(Core.get().getPlugin().getDataFolder(), "games");
-        if(!gamesFolder.exists()) {
+        if (!gamesFolder.exists()) {
             gamesFolder.mkdirs();
         }
         File[] files = gamesFolder.listFiles();
-        if(files == null) {
+        if (files == null) {
             return;
         }
-        for(File file : files) {
-            if(file.getName().endsWith(".jar")) {
+        for (File file : files) {
+            if (file.getName().endsWith(".jar")) {
                 try {
                     Plugin pl = Core.get().getServer().getPluginManager().loadPlugin(file);
-                    Core.get().getServer().getPluginManager().disablePlugin(pl);
-                    gamePlugins.add(pl);
+                    Core.get().getServer().getPluginManager().enablePlugin(pl);
                 } catch (InvalidPluginException | InvalidDescriptionException e) {
                     e.printStackTrace();
                 }
@@ -110,24 +112,42 @@ public class GameManager implements IManager {
 
     /**
      * Charge le jeu demandé.
+     *
      * @param gameName Nom du plugin du jeu.
      * @throws GameStatusException Exception levée si le jeu ne peut pas être chargé
      */
-    public void loadGame(String gameName) throws GameStatusException {
-        if(status != GameStatus.WAITING) {
+    public void loadGame(String gameName) throws GameStatusException, GameRegisteringException {
+        if (status != GameStatus.WAITING) {
             throw new GameStatusException("Impossible de charger un jeu en cours de partie !");
         }
-        for (Plugin gamePlugin : gamePlugins) {
-            if (gamePlugin.getName().equalsIgnoreCase(gameName)) {
-                currentPlugin = gamePlugin;
-                Core.get().getServer().getPluginManager().enablePlugin(gamePlugin);
-            }
+        GamePlugin gamePlugin = gamePlugins.get(gameName);
+
+        if (gamePlugin == null) {
+            throw new GameRegisteringException("Le jeu " + gameName + " n'est pas enregistré !");
         }
+
+        currentPlugin = gamePlugin;
+
+        try {
+            currentGame = gamePlugin.getGameClass().getConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            throw new GameRegisteringException("Impossible d'instancier le jeu " + gameName + " !");
+        }
+
+        currentGame.prepareServer();
+        if (lobbyCountdown != null) {
+            lobbyCountdown.cancel();
+        }
+
+        lobbyCountdown = new LobbyCountdown(currentGame.getMetadata().rules().startTimer());
+        Core.get().getLogger().log(Level.INFO, "Game {0} loaded !", gamePlugin.getGameClass().getPackageName());
+        GameServerDispatcher.updateStatus();
     }
 
     /**
      * Permet de modifier le jeu par défaut. Dans ce cas, à la fin d'une partie, ce jeu sera chargé.<br />
      * Utilisé dans les communications Redis avec le proxy.
+     *
      * @param defaultGamePluginName Nom du plugin du jeu.
      */
     public void changeDefaultGame(String defaultGamePluginName) {
@@ -135,44 +155,31 @@ public class GameManager implements IManager {
         Bukkit.getScheduler().runTask(Core.get().getPlugin(), () -> {
             try {
                 loadGame(defaultGamePluginName);
-            } catch (GameStatusException e) {
+            } catch (GameStatusException | GameRegisteringException e) {
                 e.printStackTrace();
             }
         });
     }
 
-    /**
-     * Méthode appelée par le plugin du jeu pour s'enregistrer.
-     * @param gameClass Classe du jeu
-     */
-    public void registerGame(Class<? extends Game> gameClass) throws GameRegisteringException {
-        try {
-            currentGame = gameClass.getConstructor().newInstance();
-            currentGame.prepareServer();
-            if(lobbyCountdown != null) {
-                lobbyCountdown.cancel();
-            }
-            lobbyCountdown = new LobbyCountdown(currentGame.getMetadata().rules().startTimer());
-            Core.get().getLogger().log(Level.INFO, "Game {0} registered !", gameClass.getPackageName());
-            GameServerRedisDispatcher.game();
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            throw new GameRegisteringException(e.getMessage());
-        }
+    public void registerGamePlugin(GamePlugin gamePlugin) {
+        System.out.println("Registering game " + gamePlugin.getName());
+        gamePlugins.put(gamePlugin.getName(), gamePlugin);
     }
 
     /**
      * Désenregistre le jeu chargé.
      */
     public void unregisterCurrentGame() {
-        if(currentGame == null || currentPlugin == null) {
+        if (currentGame == null || currentPlugin == null) {
             return;
         }
-        if(lobbyCountdown != null) {
+        if (lobbyCountdown != null) {
             lobbyCountdown.cancel();
         }
-        Core.get().getServer().getPluginManager().disablePlugin(currentPlugin);
         currentGame = null;
         currentPlugin = null;
+
+        System.gc();
     }
 
     /**
@@ -189,18 +196,18 @@ public class GameManager implements IManager {
 
     /**
      * Génère une liste human-readable des jeux disponibles
+     *
      * @return Liste des jeux disponibles
      */
     public List<String> getAvailableGames() {
         ArrayList<String> gamesAvailable = new ArrayList<>();
-        for (Plugin gamePlugin : gamePlugins) {
-            gamesAvailable.add(gamePlugin.getName());
-        }
+        gamesAvailable.addAll(gamePlugins.keySet());
         return gamesAvailable;
     }
 
     /**
      * Récupère le jeu actuellement chargé
+     *
      * @return Jeu actuellement chargé
      */
     public Game getCurrentGame() {
@@ -209,6 +216,7 @@ public class GameManager implements IManager {
 
     /**
      * Récupère le plugin du jeu actuellement chargé
+     *
      * @return Plugin du jeu actuellement chargé
      */
     public Plugin getCurrentPlugin() {
@@ -216,7 +224,17 @@ public class GameManager implements IManager {
     }
 
     /**
+     * Récupère le nom du plugin du jeu par défaut
+     *
+     * @return Nom du plugin du jeu par défaut
+     */
+    public String getDefaultGamePluginName() {
+        return defaultGamePluginName;
+    }
+
+    /**
      * Récupère le status actuel du jeu
+     *
      * @return Status actuel du jeu
      */
     public GameStatus getStatus() {
@@ -225,6 +243,7 @@ public class GameManager implements IManager {
 
     /**
      * Auto Start des jeux
+     *
      * @return Auto Start
      */
     public boolean isAutoGameStart() {
@@ -233,6 +252,7 @@ public class GameManager implements IManager {
 
     /**
      * Auto Start des jeux
+     *
      * @param autoGameStart Auto Start
      */
     public void setAutoGameStart(boolean autoGameStart) {
@@ -241,6 +261,7 @@ public class GameManager implements IManager {
 
     /**
      * Démarre le jeu actuellement chargé
+     *
      * @throws GameStatusException Exception levée si le jeu ne peut pas être démarré
      */
     public void startCurrentGame() throws GameStatusException {
@@ -250,10 +271,10 @@ public class GameManager implements IManager {
         if (status != GameStatus.WAITING) {
             throw new GameStatusException("Impossible de démarrer un jeu en cours de partie !");
         }
-        if(Core.get().getMapManager().getCurrentMap() == null) {
+        if (Core.get().getMapManager().getCurrentMap() == null) {
             throw new GameStatusException("Impossible de démarrer un jeu sans map !");
         }
-        if(!Core.get().getMapManager().getCurrentMap().isParsed()) {
+        if (!Core.get().getMapManager().getCurrentMap().isParsed()) {
             throw new GameStatusException("Impossible de démarrer un jeu sans que la map soit parsée !");
         }
 
@@ -262,6 +283,7 @@ public class GameManager implements IManager {
 
     /**
      * Arrête le jeu actuellement chargé
+     *
      * @throws GameStatusException Exception levée si le jeu ne peut pas être arrêté
      */
     public void endCurrentGame() throws GameStatusException {
@@ -280,31 +302,34 @@ public class GameManager implements IManager {
 
     /**
      * Change le status actuel du jeu
+     *
      * @param status Nouveau status du jeu
      */
     public void setStatus(GameStatus status) {
         this.status = status;
-        GameServerRedisDispatcher.serverStatus();
+        GameServerDispatcher.updateStatus();
 
-        for(Player player : Core.get().getPlayerManager().getPlayers()) {
+        for (LudosPlayer player : Core.get().getPlayerManager().getPlayers()) {
             player.setupScoreboard();
         }
 
-        if(status == GameStatus.STARTING) {
+        if (status == GameStatus.STARTING) {
             currentGame.startGame();
-        } else if(status == GameStatus.INGAME) {
-            if(!currentGame.checkIfGameHasToBeEnded()) {
+        } else if (status == GameStatus.INGAME) {
+            if (!currentGame.checkIfGameHasToBeEnded()) {
                 currentGame.beginGame();
             }
-        } else if(status == GameStatus.ENDING) {
+        } else if (status == GameStatus.ENDING) {
             currentGame.endGame();
-        } else if(status == GameStatus.WAITING) {
+        } else if (status == GameStatus.WAITING) {
             this.unregisterCurrentGame();
-            if(defaultGamePluginName != null && autoGameStart) {
+            if (defaultGamePluginName != null && autoGameStart) {
                 try {
                     this.loadGame(defaultGamePluginName);
                 } catch (GameStatusException e) {
                     e.printStackTrace();
+                } catch (GameRegisteringException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }

@@ -1,19 +1,16 @@
 plugins {
     `java-library`
-    id("org.sonarqube") version "3.4.0.2513"
+    `maven-publish`
 }
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
-sonarqube {
-    properties {
-        property("sonar.projectKey", "efrei-craft_Ludos_AYSZTr62QVykjK5bXj5l")
-    }
-}
-
 subprojects {
+
+    apply(plugin = "maven-publish")
+    apply(plugin = "java")
 
     group = "fr.efreicraft.ludos"
     version = "1.0-SNAPSHOT"
@@ -43,4 +40,44 @@ subprojects {
         maven("https://repo.dmulloy2.net/repository/public/")
     }
 
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                groupId = "fr.efreicraft"
+                artifactId = "Ludos" + project.name.substring(0, 1).toUpperCase() + project.name.substring(1)
+                version = project.version.toString()
+
+                from(components["java"])
+
+                pom.packaging = "jar"
+
+                if(project.name == "core") {
+                    artifact ("${project.rootDir}/run/plugins/${artifactId}.jar") {
+                        classifier = "jar"
+                    }
+                } else {
+                    artifact ("${project.rootDir}/run/plugins/LudosCore/games/${artifactId}.jar") {
+                        classifier = "jar"
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+                url = uri(System.getenv("NEXUS_REPOSITORY"))
+                credentials {
+                    username = System.getenv("NEXUS_USERNAME")
+                    password = System.getenv("NEXUS_PASSWORD")
+                }
+            }
+        }
+    }
+
+}
+
+tasks.register<Exec>("devBuildDockerImage") {
+    dependsOn(":core:jar")
+
+    workingDir = File("../")
+    commandLine("docker", "build", "-t", "dev.efrei-craft/acp/templates/mini", "-f", "Ludos/dev/Dockerfile", ".")
 }

@@ -1,16 +1,19 @@
 package fr.efreicraft.ludos.core.players;
 
+import fr.efreicraft.animus.endpoints.ServerService;
+import fr.efreicraft.animus.invoker.ApiException;
+import fr.efreicraft.ecatup.players.menus.ChestMenu;
+import fr.efreicraft.ecatup.players.menus.ItemStackMenuItem;
+import fr.efreicraft.ecatup.players.menus.PlayerInventoryMenu;
+import fr.efreicraft.ecatup.players.menus.interfaces.MenuItem;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.GameManager;
-import fr.efreicraft.ludos.core.players.menus.ChestMenu;
-import fr.efreicraft.ludos.core.players.menus.ItemStackMenuItem;
-import fr.efreicraft.ludos.core.players.menus.PlayerInventoryMenu;
-import fr.efreicraft.ludos.core.players.menus.interfaces.MenuItem;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -33,8 +36,9 @@ public class LobbyPlayerHelper {
      * Prépare le joueur à spawn dans le lobby d'attente.
      * @param player Joueur à préparer.
      */
-    public static void preparePlayerForLobby(Player player) {
-        player.entity().teleport(Core.get().getMapManager().getLobbyWorld().getSpawnLocation().add(-0.5, 1, -0.5));
+    public static void preparePlayerForLobby(LudosPlayer player) {
+        Location spawnLocation = Core.get().getMapManager().getLobbyWorld().getSpawnLocation().clone();
+        player.entity().teleport(spawnLocation.add(-0.5, 1, -0.5).add((Math.random() * 2) - 1, 0, (Math.random() * 2) - 1));
         player.resetPlayer();
 
         preparePlayerItems(player);
@@ -44,7 +48,7 @@ public class LobbyPlayerHelper {
      * Prépare les items de lobby du joueur.
      * @param player Joueur à préparer.
      */
-    public static void preparePlayerItems(Player player) {
+    public static void preparePlayerItems(LudosPlayer player) {
         List<MenuItem> items = new ArrayList<>();
 
         if(Core.get().getTeamManager().getTeams().size() > 2) {
@@ -75,16 +79,22 @@ public class LobbyPlayerHelper {
                 new ItemStackMenuItem(
                         new ItemStack(Material.RED_BED),
                         8,
-                        "&cRevenir au hub&r &7• Clic droit",
-                        "&7Clic droit pour retourner au hub.",
-                        event -> player.sendMessage(MessageUtils.ChatPrefix.SERVER, "&cRetour au hub...")
+                        "&cRevenir au lobby&r &7• Clic droit",
+                        "&7Clic droit pour retourner au lobby.",
+                        event -> {
+                            try {
+                                ServerService.transferPlayer("lobby", String.valueOf(player.entity().getUniqueId()));
+                            } catch (ApiException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                 )
         );
 
         player.getPlayerMenus().setMenu(
                 "LOBBY_ITEMS",
                 new PlayerInventoryMenu(
-                        player,
+                        player.getEcPlayer(),
                         items
                 )
         ).show();
@@ -94,7 +104,7 @@ public class LobbyPlayerHelper {
      * Ouvre le menu de sélection d'équipe.
      * @param player Joueur à préparer.
      */
-    public static void openTeamSelectionMenu(Player player) {
+    public static void openTeamSelectionMenu(LudosPlayer player) {
         if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.WAITING) {
             player.sendMessage(MessageUtils.ChatPrefix.GAME, "&cVous ne pouvez pas changer d'équipe en cours de partie.");
             return;
@@ -111,7 +121,7 @@ public class LobbyPlayerHelper {
                             slot,
                             () -> {
                                 List<String> teamPlayers = new ArrayList<>();
-                                for(Player teamPlayer : team.getPlayers()) {
+                                for(LudosPlayer teamPlayer : team.getPlayers()) {
                                     teamPlayers.add("&7• " + teamPlayer.getName());
                                 }
                                 if(teamPlayers.isEmpty()) {
@@ -138,7 +148,7 @@ public class LobbyPlayerHelper {
         player.getPlayerMenus().setMenu(
                 "TEAM_SELECTION",
                 new ChestMenu(
-                        player,
+                        player.getEcPlayer(),
                         "&8» &6Choix d'équipe",
                         18,
                         items

@@ -15,3 +15,11 @@ include (
         "games:rush",
         "games:sumo"
 )
+
+includeBuild("../ECATUP") {
+    name = "ECATUP"
+}
+
+includeBuild("../AnimusClient-Paper") {
+    name = "AnimusClient-Paper"
+}

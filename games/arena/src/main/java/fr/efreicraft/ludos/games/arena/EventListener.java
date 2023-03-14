@@ -1,6 +1,6 @@
 package fr.efreicraft.ludos.games.arena;
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.players.Player;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.teams.Team;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
@@ -19,7 +19,7 @@ public record EventListener(GameLogic arenaLogic) implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
-        Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+        LudosPlayer player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         if(
                 player != null
                 && player.getTeam().isPlayingTeam()
@@ -28,7 +28,7 @@ public record EventListener(GameLogic arenaLogic) implements Listener {
             Team otherTeam = null;
             for(Map.Entry<String, Team> team : Core.get().getTeamManager().getTeams().entrySet()) {
                 if(team.getValue() != player.getTeam() && team.getValue().isPlayingTeam()) {
-                    Player killer = Core.get().getPlayerManager().getPlayer(event.getEntity().getKiller());
+                    LudosPlayer killer = Core.get().getPlayerManager().getPlayer(event.getEntity().getKiller());
                     if(killer != null && killer.getTeam() == team.getValue()) {
                         arenaLogic.addPlayerKill(killer);
                     }
@@ -47,7 +47,7 @@ public record EventListener(GameLogic arenaLogic) implements Listener {
         if (!event.hasChangedBlock()) {
             return;
         }
-        Player player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+        LudosPlayer player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         if (!player.getTeam().isPlayingTeam()) {
             return;
         }

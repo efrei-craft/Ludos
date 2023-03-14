@@ -1,7 +1,9 @@
 package fr.efreicraft.ludos.games.rush;
 
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.games.runnables.GameTimer;
 import fr.efreicraft.ludos.core.maps.points.GamePoint;
+import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.teams.Team;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -18,7 +20,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
@@ -42,22 +43,13 @@ public class GameLogic {
     private int yDeath;
     Merchant merchantBatisseur, merchantTerroriste, merchantTavernier, merchantArmurier;
 
-    private BukkitTask stopWatchTask;
-
-    /**
-     * Le temps écoulé depuis le début de la partie. Techniquement, rien
-     * n'arrête l'incrémentation de cette variable, sauf la fin de partie,
-     * mais bon, on n'aura pas d'overflow après.
-     */
-    int time = 0;
-
     private final Set<Team> bedDestroyed = new HashSet<>(4);
 
     public void world(World world) {
         this.world = world;
     }
 
-    public void preparePlayerToSpawn(fr.efreicraft.ludos.core.players.Player player) {
+    public void preparePlayerToSpawn(LudosPlayer player) {
         player.entity().setGameMode(GameMode.SURVIVAL);
         player.entity().getActivePotionEffects().forEach(effect -> player.entity().removePotionEffect(effect.getType()));
 
@@ -360,8 +352,7 @@ public class GameLogic {
     }
 
     public void startStopwatch() {
-        this.stopWatchTask = Bukkit.getScheduler().runTaskTimer(Core.get().getGameManager().getCurrentPlugin(), () -> {
-
+        new GameTimer((time) -> {
             for (Team team : Core.get().getTeamManager().getTeams().values()) {
                 if (time % 10 == 9){
                     rewardTeam(team, new ItemStack(Material.IRON_INGOT));
@@ -374,14 +365,7 @@ public class GameLogic {
                 }
                 rewardTeam(team, new ItemStack(Material.BRICK));
             }
-
-            time++;
-        }, 0, 20);
-    }
-
-    public void stopStopwatch() {
-        if (this.stopWatchTask != null)
-            this.stopWatchTask.cancel();
+        }, -1);
     }
 
     /**

@@ -1,5 +1,6 @@
 package fr.efreicraft.ludos.core.players;
 
+import fr.efreicraft.ecatup.players.ECPlayer;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.IManager;
 import fr.efreicraft.ludos.core.games.GameManager;
@@ -17,7 +18,7 @@ import java.util.Set;
  */
 public class PlayerManager implements IManager {
 
-    private final Set<Player> players;
+    private final Set<LudosPlayer> players;
 
     /**
      * Constructeur du gestionnaire de joueurs. Il initialise la liste des joueurs aux joueurs connectés actuellement.
@@ -31,16 +32,16 @@ public class PlayerManager implements IManager {
 
     @Override
     public void runManager() {
-        for (org.bukkit.entity.Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
+        /* for (org.bukkit.entity.Player player : org.bukkit.Bukkit.getOnlinePlayers()) {
             this.addPlayer(new Player(player));
-        }
+        }*/
     }
 
     /**
      * Ajoute un joueur à la liste des joueurs.
      * @param p Joueur à ajouter
      */
-    public void addPlayer(Player p) {
+    public void addPlayer(LudosPlayer p) {
         this.players.add(p);
         Core.get().getTeamManager().dispatchPlayerInTeams(p, false);
 
@@ -54,7 +55,7 @@ public class PlayerManager implements IManager {
      * Supprime un joueur de la liste des joueurs. Déclenche également la vérification pour voir si le jeu doit être arrêté.
      * @param player Joueur à supprimer
      */
-    public void removePlayer(Player player) {
+    public void removePlayer(LudosPlayer player) {
         if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.INGAME
                 && player.getTeam() != null
                 && player.getTeam().isPlayingTeam()) {
@@ -76,14 +77,27 @@ public class PlayerManager implements IManager {
     }
 
     /**
-
      * Retourne un joueur à partir de son entité {@link org.bukkit.entity.Player}.
      * @param player Entité du joueur
      * @return Liste des joueurs
      */
-    public Player getPlayer(org.bukkit.entity.Player player) {
-        for (Player p : this.players) {
+    public LudosPlayer getPlayer(org.bukkit.entity.Player player) {
+        for (LudosPlayer p : this.players) {
             if(p.entity().equals(player)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Retourne un joueur à partir de son entité {@link fr.efreicraft.ecatup.players.ECPlayer}.
+     * @param ecPlayer Entité du joueur
+     * @return Liste des joueurs
+     */
+    public LudosPlayer getPlayer(ECPlayer ecPlayer) {
+        for (LudosPlayer p : this.players) {
+            if(p.getEcPlayer().equals(ecPlayer)) {
                 return p;
             }
         }
@@ -94,7 +108,7 @@ public class PlayerManager implements IManager {
      * Retourne tous les joueurs.
      * @return Liste des joueurs
      */
-    public Set<Player> getPlayers() {
+    public Set<LudosPlayer> getPlayers() {
         return players;
     }
 
@@ -102,12 +116,12 @@ public class PlayerManager implements IManager {
      * Récupère le nombre de joueurs actuellement en train de jouer
      * @return Nombre de joueurs actuellement en train de jouer
      */
-    public Set<Player> getPlayingPlayers() {
-        Set<Player> playingPlayers = new HashSet<>();
+    public Set<LudosPlayer> getPlayingPlayers() {
+        Set<LudosPlayer> playingPlayers = new HashSet<>();
         if(Core.get().getGameManager().getCurrentGame() == null) {
             playingPlayers.addAll(this.players);
         } else {
-            for(Player player : getPlayers()) {
+            for(LudosPlayer player : getPlayers()) {
                 if(player.getTeam() != null && player.getTeam().isPlayingTeam()) {
                     playingPlayers.add(player);
                 }

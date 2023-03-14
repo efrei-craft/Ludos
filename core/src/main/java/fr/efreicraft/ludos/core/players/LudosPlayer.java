@@ -1,18 +1,20 @@
 package fr.efreicraft.ludos.core.players;
 
+import fr.efreicraft.ecatup.players.menus.PlayerMenus;
+import fr.efreicraft.ecatup.players.scoreboards.PlayerScoreboard;
+import fr.efreicraft.ecatup.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.LudosCore;
 import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
-import fr.efreicraft.ludos.core.players.menus.PlayerMenus;
 import fr.efreicraft.ludos.core.players.runnables.PlayerRespawnCountdown;
-import fr.efreicraft.ludos.core.players.scoreboards.PlayerScoreboard;
-import fr.efreicraft.ludos.core.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import fr.efreicraft.ludos.core.utils.PlayerUtils;
 import fr.efreicraft.ludos.core.utils.SoundUtils;
 import fr.efreicraft.ludos.core.utils.TitleUtils;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -30,7 +32,12 @@ import org.bukkit.event.player.PlayerRespawnEvent;
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
  */
-public class Player {
+public class LudosPlayer {
+
+    /**
+     * Instance du joueur ECATUP.
+     */
+    private final fr.efreicraft.ecatup.players.ECPlayer ecPlayer;
 
     /**
      * Instance du joueur Bukkit.
@@ -61,12 +68,13 @@ public class Player {
 
     /**
      * Constructeur du joueur.
-     * @param playerEntity Instance du joueur Bukkit.
+     * @param ecPlayer Instance du joueur ECATUP.
      */
-    public Player(org.bukkit.entity.Player playerEntity) {
-        this.playerEntity = playerEntity;
-        this.playerMenus = new PlayerMenus();
-        this.scoreboard = new PlayerScoreboard(this);
+    public LudosPlayer(fr.efreicraft.ecatup.players.ECPlayer ecPlayer) {
+        this.ecPlayer = ecPlayer;
+        this.playerEntity = ecPlayer.entity();
+        this.playerMenus = ecPlayer.getPlayerMenus();
+        this.scoreboard = ecPlayer.getBoard();
         this.setupScoreboard();
 
         if(Core.get().getGameManager().getStatus() != null
@@ -116,7 +124,7 @@ public class Player {
                                 String maxString = "";
                                 if(Core.get().getGameManager().getCurrentGame() != null) {
                                     Game game = Core.get().getGameManager().getCurrentGame();
-                                    if(game.getMetadata().rules().minPlayers() <= Core.get().getPlayerManager().getNumberOfPlayingPlayers()) {
+                                    if(game.getMetadata().rules().minPlayersToStart() <= Core.get().getPlayerManager().getNumberOfPlayingPlayers()) {
                                         color = ChatColor.GREEN;
                                     } else {
                                         color = ChatColor.RED;
@@ -166,7 +174,7 @@ public class Player {
                     new ScoreboardField(
                             "&6&lEquipe",
                             player1 -> {
-                                Team team1 = player1.getTeam();
+                                Team team1 = Core.get().getPlayerManager().getPlayer(player1).getTeam();
                                 if (team1 == null) {
                                     return EMPTY + "e";
                                 } else {
@@ -192,6 +200,15 @@ public class Player {
      */
     public org.bukkit.entity.Player entity() {
         return playerEntity;
+    }
+
+    /**
+     * Renvoie l'instance du joueur ECATUP.
+     *
+     * @return Instance du joueur ECATUP.
+     */
+    public fr.efreicraft.ecatup.players.ECPlayer getEcPlayer() {
+        return ecPlayer;
     }
 
     /**
@@ -243,7 +260,7 @@ public class Player {
         }
 
         if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.INGAME && !team.isPlayingTeam()) {
-            for (Player p : Core.get().getPlayerManager().getPlayers()) {
+            for (LudosPlayer p : Core.get().getPlayerManager().getPlayers()) {
                 if(p != this && p.getTeam().isPlayingTeam()) {
                     p.entity().hidePlayer(Core.get().getPlugin(), entity());
                 }
@@ -257,7 +274,7 @@ public class Player {
     public void clearTeam() {
         this.team = null;
         if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
-            for (Player p : Core.get().getPlayerManager().getPlayers()) {
+            for (LudosPlayer p : Core.get().getPlayerManager().getPlayers()) {
                 if(p != this) {
                     p.entity().showPlayer(Core.get().getPlugin(), entity());
                 }
@@ -314,11 +331,17 @@ public class Player {
      * @return Nom du joueur
      */
     public String getName() {
-        return this.team == null
-                ? this.playerEntity.getName()
-                : LegacyComponentSerializer.legacyAmpersand().serialize(
+        if(this.team == null) {
+            return this.ecPlayer.getPrefixColor() + this.playerEntity.getName();
+        } else {
+            if(Core.get().getTeamManager().getPlayingTeams().size() == 1) {
+                return this.ecPlayer.getPrefixColor() + this.playerEntity.getName();
+            } else {
+                return LegacyComponentSerializer.legacyAmpersand().serialize(
                         Component.text(this.playerEntity.getName()).color(this.team.getColor().textColor())
-                  );
+                );
+            }
+        }
     }
 
     /**
@@ -360,7 +383,7 @@ public class Player {
         } else if(!event.isCancelled()) {
             this.respawnLocation = event.getEntity().getLocation();
             if(event.getEntity().getKiller() != null) {
-                Player killer = Core.get().getPlayerManager().getPlayer(event.getEntity().getKiller());
+                LudosPlayer killer = Core.get().getPlayerManager().getPlayer(event.getEntity().getKiller());
                 MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.GAME, getName() + "&7 a été tué par " + killer.getName() + "&7.");
             } else if (event.getEntity().getLastDamageCause() != null &&
                     event.getEntity().getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.VOID) {
