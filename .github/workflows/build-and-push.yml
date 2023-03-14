@@ -29,9 +29,9 @@ jobs:
       - name: Set Repository Environment Variable
         run: |
           if [ "${{ steps.extract_branch.outputs.branch }}" == "stable" ]; then
-            echo ${{ secrets.NEXUS_STABLE_REPOSITORY }} >> $NEXUS_REPOSITORY
+            echo "NEXUS_REPOSITORY=${{ secrets.NEXUS_STABLE_REPOSITORY }}" >> $GITHUB_ENV
           else
-            echo ${{ secrets.NEXUS_DEV_REPOSITORY }} >> $NEXUS_REPOSITORY
+            echo "NEXUS_REPOSITORY=${{ secrets.NEXUS_DEV_REPOSITORY }}" >> $GITHUB_ENV
           fi
 
       - name: Publish package
