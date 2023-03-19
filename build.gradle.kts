@@ -63,11 +63,13 @@ subprojects {
             }
         }
         repositories {
-            maven {
-                url = uri(System.getenv("NEXUS_REPOSITORY"))
-                credentials {
-                    username = System.getenv("NEXUS_USERNAME")
-                    password = System.getenv("NEXUS_PASSWORD")
+            if (System.getenv("NEXUS_REPOSITORY") != null) {
+                maven {
+                    url = uri(System.getenv("NEXUS_REPOSITORY"))
+                    credentials {
+                        username = System.getenv("NEXUS_USERNAME")
+                        password = System.getenv("NEXUS_PASSWORD")
+                    }
                 }
             }
         }
