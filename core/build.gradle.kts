@@ -26,12 +26,9 @@ dependencies {
     compileOnly("com.comphenix.protocol:ProtocolLib:4.7.0")
     implementation("commons-io:commons-io:2.11.0")
 
-    compileOnly("fr.efreicraft:AnimusClient")
-    compileOnly(files("../AnimusClient/swagger/code"))
-
-    compileOnly("fr.efreicraft:AnimusClient-Paper")
-
-    compileOnly("fr.efreicraft:ECATUP")
+    compileOnly("fr.efreicraft:AnimusClient:latest.integration")
+    compileOnly("fr.efreicraft:AnimusClient-Paper:latest.integration")
+    compileOnly("fr.efreicraft:ECATUP:latest.integration")
 }
 
 tasks {
