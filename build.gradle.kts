@@ -71,6 +71,8 @@ subprojects {
                         password = System.getenv("NEXUS_PASSWORD")
                     }
                 }
+            } else {
+                mavenLocal()
             }
         }
     }
