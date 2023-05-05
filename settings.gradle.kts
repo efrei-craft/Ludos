@@ -16,10 +16,12 @@ include (
         "games:sumo"
 )
 
-includeBuild("../ECATUP") {
-    name = "ECATUP"
-}
+if (System.getenv("NEXUS_REPOSITORY") == null) {
+    includeBuild("../ECATUP") {
+        name = "ECATUP"
+    }
 
-includeBuild("../AnimusClient-Paper") {
-    name = "AnimusClient-Paper"
+    includeBuild("../AnimusClient-Paper") {
+        name = "AnimusClient-Paper"
+    }
 }

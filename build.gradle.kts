@@ -38,6 +38,16 @@ subprojects {
         maven("https://oss.sonatype.org/content/groups/public/")
         maven("https://maven.enginehub.org/repo/")
         maven("https://repo.dmulloy2.net/repository/public/")
+
+        if (System.getenv("NEXUS_REPOSITORY") != null) {
+            maven {
+                url = uri(System.getenv("NEXUS_REPOSITORY"))
+                credentials {
+                    username = System.getenv("NEXUS_USERNAME")
+                    password = System.getenv("NEXUS_PASSWORD")
+                }
+            }
+        }
     }
 
     publishing {
@@ -63,12 +73,16 @@ subprojects {
             }
         }
         repositories {
-            maven {
-                url = uri(System.getenv("NEXUS_REPOSITORY"))
-                credentials {
-                    username = System.getenv("NEXUS_USERNAME")
-                    password = System.getenv("NEXUS_PASSWORD")
+            if (System.getenv("NEXUS_REPOSITORY") != null) {
+                maven {
+                    url = uri(System.getenv("NEXUS_REPOSITORY"))
+                    credentials {
+                        username = System.getenv("NEXUS_USERNAME")
+                        password = System.getenv("NEXUS_PASSWORD")
+                    }
                 }
+            } else {
+                mavenLocal()
             }
         }
     }
