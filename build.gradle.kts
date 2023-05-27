@@ -13,7 +13,7 @@ subprojects {
     apply(plugin = "java")
 
     group = "fr.efreicraft.ludos"
-    version = "1.0-SNAPSHOT"
+    version = "1.0"
 
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
