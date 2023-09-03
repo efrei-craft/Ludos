@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.core.utils;
 
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.maps.interfaces.MapPoint;
 import fr.efreicraft.ludos.core.players.LudosPlayer;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
@@ -142,7 +143,7 @@ public class WorldUtils {
                 for(double z = start.getLocation().getZ() - FIND_FIRST_BOUNDARY_RADIUS; z <= start.getLocation().getZ() + FIND_FIRST_BOUNDARY_RADIUS; z++){
                     Block block = start.getWorld().getBlockAt(new Location(start.getWorld(), x, y, z));
                     Block blockUp = start.getWorld().getBlockAt(new Location(start.getWorld(), x, y + 1, z));
-                    if(block.getType() == Material.GOLD_BLOCK && blockUp.getType() == Material.HEAVY_WEIGHTED_PRESSURE_PLATE){
+                    if(block.getType() == Material.GOLD_BLOCK && blockUp.getType() == MapPoint.SPAWN_N_GLOBALPOINT_MARKER){
                         return block.getLocation();
                     }
                 }

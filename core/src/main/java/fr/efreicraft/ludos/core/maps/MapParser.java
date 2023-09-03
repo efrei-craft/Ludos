@@ -28,10 +28,10 @@ import java.util.logging.Level;
  * <b>Parseur de cartes</b><br />
  * Permet de récupérer les informations d'une carte grâce à une convention de création de points.<br /><br />
  *
- * Un bloc avec une plaque de pression {@link Material#HEAVY_WEIGHTED_PRESSURE_PLATE} est considérée comme un {@link GlobalPoint} sauf
+ * Un bloc {@link MapPoint#SPAWN_N_GLOBALPOINT_MARKER} est considéré comme un {@link GlobalPoint} sauf
  * dans le cas que le bloc sous la plaque fait partie de la map {@link ColorUtils#getWoolDyeColorMap()}, ou celui-ci est un {@link SpawnPoint}.<br /><br />
  *
- * Un bloc avec une plaque de pression {@link Material#LIGHT_WEIGHTED_PRESSURE_PLATE} est considérée comme un {@link GamePoint}.<br /><br />
+ * Un bloc {@link MapPoint#GAMEPOINT_MARKER} est considéré comme un {@link GamePoint}.<br /><br />
  *
  * Une {@link Material#SPONGE} avec un {@link Material#OAK_SIGN} sont considéré comme les informations de la map. Les
  * deux premières lignes du {@link Material#OAK_SIGN} correspondent au nom de la map, les deux dernières aux auteurs.
@@ -69,7 +69,7 @@ public class MapParser {
      * @return Un {@link MapPoint} ou null si le bloc n'est pas un point.
      */
     private static MapPoint parseMapPoint(Material block, Material blockAbove, Location location) {
-        if (blockAbove == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
+        if (blockAbove == MapPoint.SPAWN_N_GLOBALPOINT_MARKER) {
             if(ColorUtils.getWoolDyeColorMap().containsKey(block)) {
                 Team team = Core.get().getTeamManager().getTeamByDyeColor(ColorUtils.getWoolDyeColorMap().get(block));
                 if(team != null) {
@@ -79,7 +79,7 @@ public class MapParser {
             if(MAP_POINTS.containsKey(block)) {
                 return new GlobalPoint(MAP_POINTS.get(block), location);
             }
-        } else if (blockAbove == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
+        } else if (blockAbove == MapPoint.GAMEPOINT_MARKER) {
             Map<Material, String> materialStringMap =
                     Core.get().getGameManager().getCurrentGame().getGamePointsMaterials();
             if (materialStringMap.containsKey(block)) {
