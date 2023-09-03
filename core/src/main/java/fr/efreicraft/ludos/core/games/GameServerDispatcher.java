@@ -34,9 +34,7 @@ public class GameServerDispatcher {
                         Core.get().getGameManager().getDefaultGamePluginName(),
                         Core.get().getGameManager().getStatus().name()
                 );
-            } catch (UnknownHostException e) {
-                throw new RuntimeException(e);
-            } catch (ApiException e) {
+            } catch (UnknownHostException | ApiException e) {
                 throw new RuntimeException(e);
             }
         });
