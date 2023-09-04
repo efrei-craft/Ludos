@@ -266,19 +266,26 @@ public class MapManager implements IManager {
     }
 
     private void loadFolderMap(String mapName) throws MapLoadingException {
-//        Core.get().getLogger().log(Level.INFO, "Copying world folder {0}...", mapName);
-//
-//        File sourceFolder = new File(Core.get().getPlugin().getDataFolder(), "game_maps/" + mapName);
-//        if (!sourceFolder.isDirectory()) throw new MapLoadingException(mapName + " n'est pas un dossier ou n'existe pas.");
-//
-//        File destination = new File(Bukkit.getPluginsFolder().getParent());
-//
-//         try {
-//             FileUtils.copyDirectory(sourceFolder, destination);
-//         } catch (IOException e) {
-//             throw new MapLoadingException("Impossible de copier le dossier dans la racine du serveur : " + e.getMessage());
-//         }
+        Core.get().getLogger().log(Level.INFO, "Copying world folder {0}...", mapName);
 
+        File sourceFolder = new File(Core.get().getPlugin().getDataFolder(), "game_maps/" + mapName);
+        if (!sourceFolder.isDirectory()) throw new MapLoadingException(mapName + " n'est pas un dossier ou n'existe pas.");
+
+        File destination = new File(Bukkit.getPluginsFolder().getParent());
+        File newFolder;
+
+         try {
+             FileUtils.copyDirectory(sourceFolder, destination);
+             newFolder = new File(destination, mapName);
+             if (!newFolder.renameTo(new File(destination, WorldUtils.getNormalizedWorldName(mapName)))) throw new IOException("Couldn't rename the folder to " + WorldUtils.getNormalizedWorldName(mapName));
+         } catch (IOException e) {
+             throw new MapLoadingException("Impossible de copier le dossier dans la racine du serveur : " + e.getMessage());
+         }
+
+         org.bukkit.World world = WorldUtils.createWorld(mapName);
+         if (Core.get().getGameManager().getCurrentGame() != null) {
+            //Todo firstBoundary sera trouvé car il sera le WorldSpawn.
+         }
     }
 
     /**

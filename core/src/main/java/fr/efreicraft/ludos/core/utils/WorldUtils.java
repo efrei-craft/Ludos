@@ -105,7 +105,7 @@ public class WorldUtils {
      * @param name Nom du monde.
      * @return Nom normalisé du monde.
      */
-    private static String getNormalizedWorldName(String name) {
+    public static String getNormalizedWorldName(String name) {
         return worldPrefix + name;
     }
 
