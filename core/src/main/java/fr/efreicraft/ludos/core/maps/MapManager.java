@@ -15,6 +15,7 @@ import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 
 import java.io.File;
 import java.io.IOException;
@@ -284,7 +285,8 @@ public class MapManager implements IManager {
 
          org.bukkit.World world = WorldUtils.createWorld(mapName);
          if (Core.get().getGameManager().getCurrentGame() != null) {
-            //Todo firstBoundary sera trouvé car il sera le WorldSpawn.
+            Block spongeBlock = world.getSpawnLocation().getBlock();
+            if (spongeBlock.getType() != Material.SPONGE) throw new MapLoadingException("World spawn is not The Sponge Block");
          }
     }
 
