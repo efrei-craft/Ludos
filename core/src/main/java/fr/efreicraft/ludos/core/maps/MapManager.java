@@ -245,9 +245,6 @@ public class MapManager implements IManager {
 
             // On charge les chunks de la carte
             Set<Chunk> chunks = WorldUtils.getChunksBetween(firstBoundary, lastBoundary);
-            for(Chunk chunk : chunks) {
-                chunk.load();
-            }
 
             // On applique un point de hook lifecycle pour permettre au jeu de faire des modifications sur la carte ou autre.
             Core.get().getGameManager().getCurrentGame().preMapParse(world);
