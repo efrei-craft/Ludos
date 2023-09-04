@@ -8,21 +8,17 @@ import com.sk89q.worldedit.world.World;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.IManager;
 import fr.efreicraft.ludos.core.maps.exceptions.MapLoadingException;
+import fr.efreicraft.ludos.core.maps.interfaces.MapTypes;
 import fr.efreicraft.ludos.core.utils.SchematicUtils;
 import fr.efreicraft.ludos.core.utils.WorldUtils;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.WorldCreator;
-import org.bukkit.WorldType;
+import org.apache.commons.io.FileUtils;
+import org.bukkit.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -31,6 +27,7 @@ import java.util.logging.Level;
  * Cette classe est un singleton géré par le Core.
  *
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
+ * @author Idir NM. {@literal <idir.nait-meddour@efrei.net>}
  */
 public class MapManager implements IManager {
 
@@ -45,6 +42,11 @@ public class MapManager implements IManager {
     private ParsedMap currentMap;
 
     private org.bukkit.World lobbyWorld;
+
+    /**
+     * Une liste des cartes du jeu actuellement chargé accompagnées de leur type.
+     */
+    private final Map<String, MapTypes> currentGameMaps = new HashMap<>();
 
     /**
      * Constructeur du gestionnaire de cartes. Il vérifie que la classe n'est pas déjà initialisée.
@@ -64,21 +66,41 @@ public class MapManager implements IManager {
     }
 
     /**
-     * Récupère les cartes disponibles pour un jeu donné
+     * Répertorie les cartes disponibles d'un jeu, accompagnées de leur type.
+     * Cette fonction est appelée à chaque changement de jeu.
      * @param game Jeu pour lequel on veut récupérer les cartes
-     * @return Liste des cartes disponibles
      */
-    public List<String> getMapsForGame(Game game) {
-        ArrayList<String> maps = new ArrayList<>();
-        File dataFolder = new File(Core.get().getPlugin().getDataFolder(), "schematics/" + game.getMetadata().name());
+    public void setupCurrentGameMaps(Game game) {
+        if (!this.currentGameMaps.isEmpty()) clearGameMaps();
+
+        File dataFolder = new File(Core.get().getPlugin().getDataFolder(), "game_maps/" + game.getMetadata().name());
         if(dataFolder.exists()) {
             for (File file : Objects.requireNonNull(dataFolder.listFiles())) {
                 if (file.isFile() && file.getName().endsWith(".schem")) {
-                    maps.add(file.getName().replace(".schem", ""));
+                    currentGameMaps.put(file.getName().replace(".schem", ""), MapTypes.SCHEMATIC);
+                } else if (file.isDirectory()) {
+                    String[] fileList = file.list();
+                    if (fileList != null && Arrays.asList(fileList).contains("level.dat")) {
+                        currentGameMaps.put(file.getName(), MapTypes.FOLDER);
+                    }
                 }
             }
         }
-        return maps;
+    }
+
+    /**
+     * Nettoie la Map des cartes du jeu actuel.
+     */
+    public void clearGameMaps() {
+        this.currentGameMaps.clear();
+    }
+
+    /**
+     * Récupère les cartes disponibles pour un jeu donné
+     * @return Liste des cartes disponibles
+     */
+    public Map<String, MapTypes> getMapsForGame() {
+        return currentGameMaps;
     }
 
     /**
@@ -139,10 +161,23 @@ public class MapManager implements IManager {
             WorldUtils.deleteWorld(currentMap.getWorld());
         }
 
+        switch (this.currentGameMaps.get(mapName)) {
+            case SCHEMATIC -> loadSchematicMap(mapName);
+            case FOLDER -> loadFolderMap(mapName);
+        }
+    }
+
+    /**
+     * Charge et lance le parsing d'une carte venant d'un schematic
+     * @param mapName Nom de la carte
+     * @throws MapLoadingException Si le chargement du fichier ou du schematic est impossible
+     */
+    private void loadSchematicMap(String mapName) throws MapLoadingException {
         // On créé le nouveau monde vide
         Core.get().getLogger().log(Level.INFO, "Creating world {0}...", mapName);
         org.bukkit.World world = WorldUtils.createWorld(mapName);
         WorldUtils.setupClassicWorldGamerules(world);
+
         World currentWorld = BukkitAdapter.adapt(world);
 
         Core.get().getLogger().log(Level.INFO, "Pasting schematic {0} in the new world...", mapName);
@@ -217,6 +252,7 @@ public class MapManager implements IManager {
             Core.get().getGameManager().getCurrentGame().preMapParse(world);
 
             // On parse la carte afin de récupérer les différents éléments de la carte.
+            // Code factorisable ? Peut-être une classe ParseMapArgs qui peut être renvoyé par cette fonction ?
             currentMap = MapParser.parseMap(
                     currentWorld,
                     firstBoundary,
@@ -227,6 +263,22 @@ public class MapManager implements IManager {
                     }
             );
         }
+    }
+
+    private void loadFolderMap(String mapName) throws MapLoadingException {
+//        Core.get().getLogger().log(Level.INFO, "Copying world folder {0}...", mapName);
+//
+//        File sourceFolder = new File(Core.get().getPlugin().getDataFolder(), "game_maps/" + mapName);
+//        if (!sourceFolder.isDirectory()) throw new MapLoadingException(mapName + " n'est pas un dossier ou n'existe pas.");
+//
+//        File destination = new File(Bukkit.getPluginsFolder().getParent());
+//
+//         try {
+//             FileUtils.copyDirectory(sourceFolder, destination);
+//         } catch (IOException e) {
+//             throw new MapLoadingException("Impossible de copier le dossier dans la racine du serveur : " + e.getMessage());
+//         }
+
     }
 
     /**
