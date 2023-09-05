@@ -1,13 +1,10 @@
 package fr.efreicraft.ludos.core;
 
 import com.comphenix.protocol.ProtocolManager;
-import fr.efreicraft.ACP.ACP;
 import fr.efreicraft.ludos.core.commands.CommandManager;
-import fr.efreicraft.ludos.core.games.GameServerDispatcher;
-import fr.efreicraft.ludos.core.handlers.RedisHandler;
-import fr.efreicraft.ludos.core.players.PlayerManager;
 import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.maps.MapManager;
+import fr.efreicraft.ludos.core.players.PlayerManager;
 import fr.efreicraft.ludos.core.teams.TeamManager;
 import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
