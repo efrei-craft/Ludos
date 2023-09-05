@@ -279,8 +279,8 @@ public class MapManager implements IManager {
                 "game_maps/" + Core.get().getGameManager().getCurrentGame().getMetadata().name() + "/" + mapName);
         if (!sourceFolder.isDirectory()) throw new MapLoadingException(mapName + " n'est pas un dossier ou n'existe pas.");
 
-        Core.get().getLogger().log(Level.INFO, "Plugins folder absolute: {0}\nParent: {1}", new Object[]{Bukkit.getPluginsFolder().getAbsolutePath(), Bukkit.getPluginsFolder().getParent()});
-        File destination = Bukkit.getPluginsFolder().getParentFile();
+        Core.get().getLogger().log(Level.INFO, "Path is {0}", Bukkit.getPluginsFolder().getAbsolutePath().substring(0, Bukkit.getPluginsFolder().getAbsolutePath().lastIndexOf(File.separatorChar)));
+        File destination = new File(Bukkit.getPluginsFolder().getAbsolutePath().substring(0, Bukkit.getPluginsFolder().getAbsolutePath().lastIndexOf(File.separatorChar)));
         File newFolder;
 
         try {
