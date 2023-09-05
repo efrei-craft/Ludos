@@ -281,12 +281,9 @@ public class MapManager implements IManager {
 
         Core.get().getLogger().log(Level.INFO, "Path is {0}", Bukkit.getPluginsFolder().getAbsolutePath().substring(0, Bukkit.getPluginsFolder().getAbsolutePath().lastIndexOf(File.separatorChar)));
         File destination = new File(Bukkit.getPluginsFolder().getAbsolutePath().substring(0, Bukkit.getPluginsFolder().getAbsolutePath().lastIndexOf(File.separatorChar)));
-        File newFolder;
 
         try {
-            FileUtils.copyDirectory(sourceFolder, destination);
-            newFolder = new File(destination, mapName);
-            if (!newFolder.renameTo(new File(destination, WorldUtils.getNormalizedWorldName(mapName)))) throw new IOException("Couldn't rename the folder to " + WorldUtils.getNormalizedWorldName(mapName));
+            FileUtils.copyDirectory(sourceFolder, new File(destination, WorldUtils.getNormalizedWorldName(mapName)));
         } catch (IOException e) {
             throw new MapLoadingException("Impossible de copier le dossier dans la racine du serveur : " + e.getMessage());
         }
