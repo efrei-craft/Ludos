@@ -9,13 +9,16 @@ import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.IManager;
 import fr.efreicraft.ludos.core.maps.exceptions.MapLoadingException;
 import fr.efreicraft.ludos.core.maps.interfaces.MapTypes;
+import fr.efreicraft.ludos.core.maps.interfaces.ParseMapArgs;
 import fr.efreicraft.ludos.core.utils.SchematicUtils;
 import fr.efreicraft.ludos.core.utils.WorldUtils;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
+import net.kyori.adventure.text.TextComponent;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 
 import java.io.File;
 import java.io.IOException;
@@ -162,18 +165,37 @@ public class MapManager implements IManager {
             WorldUtils.deleteWorld(currentMap.getWorld());
         }
 
+        ParseMapArgs preParseMap = null;
+
         switch (this.currentGameMaps.get(mapName)) {
-            case SCHEMATIC -> loadSchematicMap(mapName);
-            case FOLDER -> loadFolderMap(mapName);
+            case SCHEMATIC -> preParseMap = loadSchematicMap(mapName);
+            case FOLDER -> preParseMap = loadFolderMap(mapName);
         }
+        if (preParseMap == null) return;
+
+        WorldUtils.getChunksBetween(preParseMap.firstBoundary, preParseMap.lastBoundary);
+
+        Core.get().getGameManager().getCurrentGame().preMapParse(preParseMap.world);
+
+        currentMap = MapParser.parseMap(
+                BukkitAdapter.adapt(preParseMap.world),
+                preParseMap.firstBoundary,
+                preParseMap.lastBoundary,
+                parsedMap -> {
+                    Core.get().getGameManager().getCurrentGame().postMapParse();
+                    MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.MAP, "&7La prochaine carte est &b" + currentMap.getName() + "&7!");
+                }
+        );
     }
 
     /**
      * Charge et lance le parsing d'une carte venant d'un schematic
+     *
      * @param mapName Nom de la carte
+     * @return Les arguments nécessaires au parsing de la carte
      * @throws MapLoadingException Si le chargement du fichier ou du schematic est impossible
      */
-    private void loadSchematicMap(String mapName) throws MapLoadingException {
+    private ParseMapArgs loadSchematicMap(String mapName) throws MapLoadingException {
         // On créé le nouveau monde vide
         Core.get().getLogger().log(Level.INFO, "Creating world {0}...", mapName);
         org.bukkit.World world = WorldUtils.createWorld(mapName);
@@ -242,28 +264,12 @@ public class MapManager implements IManager {
             );
 
             Location lastBoundary = new Location(world, max.getX(), max.getY(), max.getZ());
-
-            // On charge les chunks de la carte
-            WorldUtils.getChunksBetween(firstBoundary, lastBoundary);
-
-            // On applique un point de hook lifecycle pour permettre au jeu de faire des modifications sur la carte ou autre.
-            Core.get().getGameManager().getCurrentGame().preMapParse(world);
-
-            // On parse la carte afin de récupérer les différents éléments de la carte.
-            // Code factorisable ? Peut-être une classe ParseMapArgs qui peut être renvoyé par cette fonction ?
-            currentMap = MapParser.parseMap(
-                    currentWorld,
-                    firstBoundary,
-                    lastBoundary,
-                    parsedMap -> {
-                        Core.get().getGameManager().getCurrentGame().postMapParse();
-                        MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.MAP, "&7La prochaine carte est &b" + currentMap.getName() + "&7!");
-                    }
-            );
+            return new ParseMapArgs(firstBoundary, lastBoundary, world);
         }
+        return null;
     }
 
-    private void loadFolderMap(String mapName) throws MapLoadingException {
+    private ParseMapArgs loadFolderMap(String mapName) throws MapLoadingException {
         Core.get().getLogger().log(Level.INFO, "Copying world folder {0}...", mapName);
 
         File sourceFolder = new File(Core.get().getPlugin().getDataFolder(), "game_maps/" + mapName);
@@ -272,19 +278,36 @@ public class MapManager implements IManager {
         File destination = new File(Bukkit.getPluginsFolder().getParent());
         File newFolder;
 
-         try {
-             FileUtils.copyDirectory(sourceFolder, destination);
-             newFolder = new File(destination, mapName);
-             if (!newFolder.renameTo(new File(destination, WorldUtils.getNormalizedWorldName(mapName)))) throw new IOException("Couldn't rename the folder to " + WorldUtils.getNormalizedWorldName(mapName));
-         } catch (IOException e) {
-             throw new MapLoadingException("Impossible de copier le dossier dans la racine du serveur : " + e.getMessage());
-         }
+        try {
+            FileUtils.copyDirectory(sourceFolder, destination);
+            newFolder = new File(destination, mapName);
+            if (!newFolder.renameTo(new File(destination, WorldUtils.getNormalizedWorldName(mapName)))) throw new IOException("Couldn't rename the folder to " + WorldUtils.getNormalizedWorldName(mapName));
+        } catch (IOException e) {
+            throw new MapLoadingException("Impossible de copier le dossier dans la racine du serveur : " + e.getMessage());
+        }
 
-         org.bukkit.World world = WorldUtils.createWorld(mapName);
-         if (Core.get().getGameManager().getCurrentGame() != null) {
+        org.bukkit.World world = WorldUtils.createWorld(mapName);
+        if (Core.get().getGameManager().getCurrentGame() != null) {
             Block spongeBlock = world.getSpawnLocation().getBlock();
             if (spongeBlock.getType() != Material.SPONGE) throw new MapLoadingException("World spawn is not The Sponge Block");
-         }
+            Sign sign = (Sign) world.getBlockAt(spongeBlock.getLocation().add(0, 1, 0)).getState();
+
+            int[] coord1;
+            int[] coord2;
+            try {
+                coord1 = Arrays.stream(((TextComponent) sign.line(2)).content().split(" ")).mapToInt(Integer::parseInt).toArray();
+                coord2 = Arrays.stream(((TextComponent) sign.line(3)).content().split(" ")).mapToInt(Integer::parseInt).toArray();
+            } catch (NumberFormatException e) {
+                throw new MapLoadingException("Bad coords given on the map description Map");
+            }
+
+            return new ParseMapArgs(
+                    new Location(world, coord1[0], coord1[1], coord1[2]), // first boundary
+                    new Location(world, coord2[0], coord2[1], coord2[2]), // last boundary
+                    world
+            );
+        }
+        return null;
     }
 
     /**

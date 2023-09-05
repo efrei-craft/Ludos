@@ -135,10 +135,10 @@ public class MapParser {
                         for (Component line : sign.lines()) {
                             lines.add((TextComponent) line);
                         }
-                        builder.append(lines.get(0).content()).append(lines.get(1).content());
+                        builder.append(lines.get(0).content());
                         parsedMap.setName(builder.toString().trim());
                         builder.delete(0, builder.length());
-                        builder.append(lines.get(2).content()).append(lines.get(3).content());
+                        builder.append(lines.get(1).content());
                         parsedMap.setAuthor(builder.toString().trim());
                     });
 
