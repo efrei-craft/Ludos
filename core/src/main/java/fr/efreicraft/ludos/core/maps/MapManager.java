@@ -7,13 +7,13 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.world.World;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.IManager;
+import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.maps.exceptions.MapLoadingException;
 import fr.efreicraft.ludos.core.maps.interfaces.MapTypes;
 import fr.efreicraft.ludos.core.maps.interfaces.ParseMapArgs;
+import fr.efreicraft.ludos.core.utils.MessageUtils;
 import fr.efreicraft.ludos.core.utils.SchematicUtils;
 import fr.efreicraft.ludos.core.utils.WorldUtils;
-import fr.efreicraft.ludos.core.games.interfaces.Game;
-import fr.efreicraft.ludos.core.utils.MessageUtils;
 import net.kyori.adventure.text.TextComponent;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
@@ -22,7 +22,10 @@ import org.bukkit.block.Sign;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 
 /**
@@ -167,7 +170,7 @@ public class MapManager implements IManager {
 
         ParseMapArgs preParseMap = null;
 
-        switch (this.currentGameMaps.get(mapName)) {
+        switch (getMapType(mapName)) {
             case SCHEMATIC -> preParseMap = loadSchematicMap(mapName);
             case FOLDER -> preParseMap = loadFolderMap(mapName);
         }
@@ -316,6 +319,15 @@ public class MapManager implements IManager {
      */
     public ParsedMap getCurrentMap() {
         return currentMap;
+    }
+
+    /**
+     * Renvoie le type {@link MapTypes} de la carte donnée
+     * @param mapName Nom de la carte
+     * @return Type de la carte
+     */
+    public MapTypes getMapType(String mapName) {
+        return currentGameMaps.get(mapName);
     }
 
     /**

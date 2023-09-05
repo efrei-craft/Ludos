@@ -159,7 +159,7 @@ public class MapParser {
                     block.setType(Material.AIR);
                 }
                 parsedMap.setParsed(true);
-                parsedMap.setMiddleOfMap(null);
+                parsedMap.setMiddleOfMap(null); // Rappel : passer en paramètre null fait que le point est calculé automatiquement.
                 callback.onMapParsed(parsedMap);
             });
         });
