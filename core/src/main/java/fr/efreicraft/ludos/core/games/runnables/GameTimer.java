@@ -40,7 +40,7 @@ public class GameTimer extends BukkitRunnable {
     @Override
     public void run() {
         if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
-            this.cancel();
+            this.cancel(); // TODO : peut-être digne d'une exception ça.
             return;
         }
         action.run(Math.abs(time));

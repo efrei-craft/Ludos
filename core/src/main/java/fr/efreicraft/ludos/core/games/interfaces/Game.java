@@ -16,10 +16,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.event.Listener;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -51,6 +48,8 @@ public abstract class Game implements IGame {
 
         GameMetadata metadata = getMetadata();
         MessageUtils.broadcastMessage(MessageUtils.ChatPrefix.GAME, "&7Le prochain jeu sera " + metadata.color() + metadata.name() + "&7!");
+
+        Core.get().getMapManager().setupCurrentGameMaps(this);
 
         List<String> maps = getMaps();
         if (maps.isEmpty()) {
@@ -193,7 +192,7 @@ public abstract class Game implements IGame {
      * @return Liste des cartes disponibles en String
      */
     public List<String> getMaps() {
-        return Core.get().getMapManager().getMapsForGame(this);
+        return new ArrayList<>(Core.get().getMapManager().getMapsForGame().keySet());
     }
 
     /**
