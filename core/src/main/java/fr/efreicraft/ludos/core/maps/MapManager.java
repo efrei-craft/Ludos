@@ -275,7 +275,8 @@ public class MapManager implements IManager {
     private ParseMapArgs loadFolderMap(String mapName) throws MapLoadingException {
         Core.get().getLogger().log(Level.INFO, "Copying world folder {0}...", mapName);
 
-        File sourceFolder = new File(Core.get().getPlugin().getDataFolder(), "game_maps/" + mapName);
+        File sourceFolder = new File(Core.get().getPlugin().getDataFolder(),
+                "game_maps/" + Core.get().getGameManager().getCurrentGame().getMetadata().name() + "/" + mapName);
         if (!sourceFolder.isDirectory()) throw new MapLoadingException(mapName + " n'est pas un dossier ou n'existe pas.");
 
         File destination = new File(Bukkit.getPluginsFolder().getParent());
