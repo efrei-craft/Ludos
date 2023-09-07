@@ -140,8 +140,8 @@ public class MapParser {
                     Material blockAbove = chunkSnapshot.getBlockType(x, y + 1, z);
 
                     if (currentBlock == Material.SPONGE && blockAbove == Material.OAK_SIGN) {
-                        blocksToBreak.add(world.getBlockAt(blockX, y, blockZ));
                         blocksToBreak.add(world.getBlockAt(blockX, y + 1, blockZ));
+                        blocksToBreak.add(world.getBlockAt(blockX, y, blockZ));
 
                         Bukkit.getScheduler().runTask(Core.get().getPlugin(), () -> {
                             Block block = world.getBlockAt(blockX, y + 1, blockZ);
@@ -161,8 +161,8 @@ public class MapParser {
                         MapPoint mp = parseMapPoint(currentBlock, blockAbove, new Location(world, blockX, y, blockZ));
                         if (mp != null) {
                             parsedMap.addPoint(mp);
-                            blocksToBreak.add(world.getBlockAt(blockX, y, blockZ));
                             blocksToBreak.add(world.getBlockAt(blockX, y + 1, blockZ));
+                            blocksToBreak.add(world.getBlockAt(blockX, y, blockZ));
                         }
                     }
                 }
