@@ -27,7 +27,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(args.length == 0) {
-            MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /game <list | load | start | stop | reset> <name>");
+            MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /game <list | load | start | stop | reset | reload> <name>");
             return false;
         }
 
@@ -95,10 +95,11 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                 MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&7La carte et le jeu ont bien été &anettoyés&7.");
             }
             case "reload" -> {
+                Core.get().getGameManager().unloadAllGameJars();
                 Core.get().getGameManager().loadAllGameJars();
                 MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&7Jeux &arechargés&7.");
             }
-            default -> MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /game <list | load | start | stop | reset> <name>");
+            default -> MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&cSyntaxe: /game <list | load | start | stop | reset | reload> <name>");
         }
 
         return true;

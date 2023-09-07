@@ -16,3 +16,5 @@ COPY --chown=1000:1000 ./AnimusClient/build/libs/AnimusClient.jar /data/librarie
 
 COPY --chown=1000:1000 ./ECATUP/build/libs /data/plugins
 COPY --chown=1000:1000 ./Ludos/run/plugins /data/plugins
+
+COPY --chown=1000:1000 ./Ludos/dev/paper-global.yml /data/config/paper-global.yml

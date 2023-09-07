@@ -15,12 +15,16 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPluginLoader;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Gestionnaire des jeux.<br /><br/>
@@ -83,6 +87,45 @@ public class GameManager implements IManager {
     public void runManager() {
         setStatus(GameStatus.WAITING);
         loadAllGameJars();
+    }
+
+    public void unloadAllGameJars() {
+        for (GamePlugin gamePlugin : gamePlugins.values()) {
+            unloadGameJar(gamePlugin);
+        }
+        gamePlugins.clear();
+        System.gc();
+    }
+
+    private void unloadGameJar(GamePlugin plugin) {
+        Core.get().getServer().getPluginManager().disablePlugin(plugin);
+
+        ClassLoader cl = plugin.getClass().getClassLoader();
+
+        if (cl instanceof URLClassLoader) {
+
+            try {
+
+                Field pluginField = cl.getClass().getDeclaredField("plugin");
+                pluginField.setAccessible(true);
+                pluginField.set(cl, null);
+
+                Field pluginInitField = cl.getClass().getDeclaredField("pluginInit");
+                pluginInitField.setAccessible(true);
+                pluginInitField.set(cl, null);
+
+            } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+                Core.get().getLogger().log(Level.SEVERE, null, ex);
+            }
+
+            try {
+
+                ((URLClassLoader) cl).close();
+            } catch (IOException ex) {
+                Core.get().getLogger().log(Level.SEVERE, null, ex);
+            }
+
+        }
     }
 
     /**
