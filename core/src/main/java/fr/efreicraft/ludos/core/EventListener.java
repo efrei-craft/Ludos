@@ -5,21 +5,16 @@ import fr.efreicraft.ecatup.players.events.ECPlayerJoined;
 import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.utils.ActionBarUtils;
-import fr.efreicraft.ludos.core.utils.NBTUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.jetbrains.annotations.NotNull;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
-
-import java.util.UUID;
 
 /**
  * Evenements de Core.
@@ -31,7 +26,7 @@ public class EventListener implements Listener {
     /**
      * Evenement de login d'un joueur.
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin(PlayerLoginEvent event) {
         if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING
                 && Core.get().getGameManager().getCurrentGame() != null
@@ -47,7 +42,7 @@ public class EventListener implements Listener {
      * Evenement de connexion d'un joueur.
      * @param event Evenement Bukkit
      */
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerSpawn(PlayerSpawnLocationEvent event) {
         if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING) {
             event.setSpawnLocation(Core.get().getMapManager().getLobbyWorld().getSpawnLocation().add(-0.5, 0, -0.5));
@@ -60,7 +55,7 @@ public class EventListener implements Listener {
      * Evenement de spawn d'un joueur sur le serveur.
      * @param event Evenement Bukkit
      */
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.joinMessage(null);
     }
@@ -69,7 +64,7 @@ public class EventListener implements Listener {
      * Evenement de spawn d'un joueur initialisé par ECATUP.
      * @param event Evenement ECATUP
      */
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onECPlayerJoin(ECPlayerJoined event) {
         Core.get().getPlayerManager().addPlayer(new LudosPlayer(event.getPlayer()));
     }
@@ -78,7 +73,7 @@ public class EventListener implements Listener {
      * Evenement de deconnexion d'un joueur du serveur.
      * @param event Evenement Bukkit
      */
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
         event.quitMessage(null);
         Core.get().getPlayerManager().removePlayer(event.getPlayer());
@@ -97,7 +92,7 @@ public class EventListener implements Listener {
      * Evenement de deplacement d'un joueur.
      * @param event Evenement Bukkit
      */
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerMove(PlayerMoveEvent event) {
         if(
                 hasMovedInBlockXAndBlockZ(event)
@@ -115,7 +110,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onEntityDamage(EntityDamageEvent event) {
         if(event.getEntity() instanceof org.bukkit.entity.Player
                 && Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
@@ -126,7 +121,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(PlayerDeathEvent event) {
         LudosPlayer player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         if(player != null) {
@@ -134,7 +129,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         LudosPlayer player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         if(player != null) {
@@ -142,7 +137,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerPostRespawn(PlayerPostRespawnEvent event) {
         LudosPlayer player = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         if(player != null) {
@@ -150,26 +145,26 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
         if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME) {
             event.setCancelled(true);
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerPortalEvent(PlayerPortalEvent event) {
         event.setCancelled(true);
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
         if(Core.get().getGameManager().getStatus() == GameManager.GameStatus.WAITING){
             event.setCancelled(true);
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDropItemEvent(PlayerDropItemEvent event) {
         if(Core.get().getGameManager().getStatus() != GameManager.GameStatus.INGAME){
             event.setCancelled(true);

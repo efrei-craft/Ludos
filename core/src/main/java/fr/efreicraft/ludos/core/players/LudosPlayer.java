@@ -4,7 +4,6 @@ import fr.efreicraft.ecatup.players.menus.PlayerMenus;
 import fr.efreicraft.ecatup.players.scoreboards.PlayerScoreboard;
 import fr.efreicraft.ecatup.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.LudosCore;
 import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.players.runnables.PlayerRespawnCountdown;
@@ -14,7 +13,6 @@ import fr.efreicraft.ludos.core.utils.PlayerUtils;
 import fr.efreicraft.ludos.core.utils.SoundUtils;
 import fr.efreicraft.ludos.core.utils.TitleUtils;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -131,7 +129,7 @@ public class LudosPlayer {
                                     }
                                     maxString = "&7/" + game.getMetadata().rules().maxPlayers();
                                 }
-                                return color + "" + Core.get().getPlayerManager().getNumberOfPlayingPlayers() + maxString;
+                                return color + String.valueOf(Core.get().getPlayerManager().getNumberOfPlayingPlayers()) + maxString;
                             }
                     )
             );

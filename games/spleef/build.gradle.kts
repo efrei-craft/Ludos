@@ -19,5 +19,5 @@ bukkit {
     main = "fr.efreicraft.ludos.games.spleef.Main"
     apiVersion = "1.19"
     authors = listOf("Idir")
-    prefix = "IDIR"
+    prefix = "Spleef"
 }
