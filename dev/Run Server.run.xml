@@ -1,0 +1,44 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Server" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
+    <deployment type="dockerfile">
+      <settings>
+        <option name="imageTag" value="dev.efrei-craft/acp/templates/mini" />
+        <option name="attachToContainerNeeded" value="true" />
+        <option name="containerName" value="ludos_dev" />
+        <option name="contextFolderPath" value="../../EfreiCraft" />
+        <option name="envVars">
+          <list>
+            <DockerEnvVarImpl>
+              <option name="name" value="ANIMUS_STANDALONE" />
+              <option name="value" value="true" />
+            </DockerEnvVarImpl>
+          </list>
+        </option>
+        <option name="portBindings">
+          <list>
+            <DockerPortBindingImpl>
+              <option name="containerPort" value="25565" />
+              <option name="hostPort" value="25565" />
+            </DockerPortBindingImpl>
+          </list>
+        </option>
+        <option name="sourceFilePath" value="dev/Dockerfile" />
+        <option name="volumeBindings">
+          <list>
+            <DockerVolumeBindingImpl>
+              <option name="containerPath" value="/data/plugins/LudosCore.jar" />
+              <option name="hostPath" value="D:\Developpement\EfreiCraft\Ludos\run\plugins\LudosCore.jar" />
+            </DockerVolumeBindingImpl>
+            <DockerVolumeBindingImpl>
+              <option name="containerPath" value="/data/plugins/LudosCore/games" />
+              <option name="hostPath" value="D:\Developpement\EfreiCraft\Ludos\run\plugins\LudosCore\games\" />
+            </DockerVolumeBindingImpl>
+          </list>
+        </option>
+      </settings>
+    </deployment>
+    <method v="2">
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
+    </method>
+  </configuration>
+</component>
