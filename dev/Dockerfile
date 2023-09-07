@@ -6,7 +6,7 @@
 # L'image de base ci-dessous est locale, vous pouvez donc la modifier à votre guise.
 # Toutefois, il est préférable de l'utiliser telle quelle.
 
-FROM docker.nexus.jiveoff.fr/efrei-craft/templates/mini:latest
+FROM registry.efreicraft.fr/templates/mini.dev:latest
 
 # A noter que le dossier /data est applicable pour les serveurs de type Paper.
 # Pour les serveurs de type Velocity, le dossier est /server.

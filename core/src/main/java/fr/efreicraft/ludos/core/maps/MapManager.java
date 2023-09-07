@@ -181,7 +181,7 @@ public class MapManager implements IManager {
         Core.get().getGameManager().getCurrentGame().preMapParse(preParseMap.world);
 
         currentMap = MapParser.parseMap(
-                BukkitAdapter.adapt(preParseMap.world),
+                preParseMap.world,
                 preParseMap.firstBoundary,
                 preParseMap.lastBoundary,
                 parsedMap -> {
