@@ -1,5 +1,5 @@
-import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 
 buildscript {
     repositories {

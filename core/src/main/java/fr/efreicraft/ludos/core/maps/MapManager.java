@@ -16,7 +16,9 @@ import fr.efreicraft.ludos.core.utils.SchematicUtils;
 import fr.efreicraft.ludos.core.utils.WorldUtils;
 import net.kyori.adventure.text.TextComponent;
 import org.apache.commons.io.FileUtils;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
