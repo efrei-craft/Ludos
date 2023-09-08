@@ -90,13 +90,14 @@ public class GameLogic {
             if (timeLambda > WACKINESS_TIMER) {
                 for (LudosPlayer player : Core.get().getPlayerManager().getPlayingPlayers()) {
                     Random random = new Random();
-                    if (random.nextFloat() < 0.08f) continue;
-                    player.entity().getWorld().createExplosion(
-                            player.entity().getLocation().add(random.nextFloat(-.9f, .9f), random.nextFloat(1.5f), random.nextFloat(-.9f, .9f)),
-                            1.7f,
-                            false,
-                            false
-                    );
+                    if (random.nextFloat() < 0.08f) {
+                        player.entity().getWorld().createExplosion(
+                                player.entity().getLocation().add(random.nextFloat(-.9f, .9f), random.nextFloat(1.5f), random.nextFloat(-.9f, .9f)),
+                                1.7f,
+                                false,
+                                false
+                        );
+                    }
                 }
             }
         }, -1);
