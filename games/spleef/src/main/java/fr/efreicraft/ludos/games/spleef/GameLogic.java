@@ -100,17 +100,17 @@ public class GameLogic {
             if (timeLambda > WACKINESS_TIMER) {
                 for (LudosPlayer player : Core.get().getPlayerManager().getPlayingPlayers()) {
                     Random random = new Random();
-                    if (random.nextFloat() < 0.08f) {
+                    if (random.nextFloat() < 0.15f) {
                         player.entity().getWorld().createExplosion(
-                                player.entity().getLocation().add(random.nextFloat(-.9f, .9f), random.nextFloat(1.5f), random.nextFloat(-.9f, .9f)),
-                                1.7f,
+                                player.entity().getLocation().add(random.nextFloat(-.9f, .9f), random.nextFloat(1.8f), random.nextFloat(-.9f, .9f)),
+                                1.885f,
                                 false,
                                 false
                         );
                     }
                 }
             }
-        }, -1);
+        }, -1, 10);
     }
 
     private Block getHighestBlockBelow(Location location) {

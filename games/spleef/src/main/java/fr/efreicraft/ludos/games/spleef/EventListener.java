@@ -88,6 +88,9 @@ public record EventListener(GameLogic logic) implements Listener {
 
     @EventHandler
     public void onHit(EntityDamageByEntityEvent event) {
-        event.setCancelled(true);
+        if (event.getCause() != EntityDamageEvent.DamageCause.PROJECTILE)
+            event.setCancelled(true);
+        else
+            event.setDamage(0);
     }
 }
