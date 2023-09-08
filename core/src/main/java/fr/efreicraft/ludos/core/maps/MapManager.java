@@ -142,7 +142,6 @@ public class MapManager implements IManager {
 
         assert lobbyWorld != null;
         lobbyWorld.setSpawnLocation(0, 150, 0);
-        WorldUtils.setupClassicWorldGamerules(lobbyWorld);
 
         Clipboard lobbySchematic;
 
@@ -202,7 +201,6 @@ public class MapManager implements IManager {
         // On créé le nouveau monde vide
         Core.get().getLogger().log(Level.INFO, "Creating world {0}...", mapName);
         org.bukkit.World world = WorldUtils.createWorld(mapName);
-        WorldUtils.setupClassicWorldGamerules(world);
 
         World currentWorld = BukkitAdapter.adapt(world);
 

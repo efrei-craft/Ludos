@@ -54,6 +54,7 @@ public class LudosGame extends Game {
         world.setGameRule(GameRule.DO_TILE_DROPS, false);
         world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+        world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
     }
 
     @Override

@@ -35,13 +35,8 @@ public record EventListener(GameLogic logic) implements Listener {
             case FALL, SUFFOCATION -> event.setCancelled(true);
             case ENTITY_EXPLOSION, BLOCK_EXPLOSION -> event.setDamage(0);
             case LAVA, VOID -> {
-                Core.get().getPlayerManager().getPlayer(player).deathEvent(new PlayerDeathEvent(player, new ArrayList<>(), 0, ""));
-                player.setGameMode(org.bukkit.GameMode.SPECTATOR);
-
-                ArrayList<SpawnPoint> points = Core.get().getMapManager().getCurrentMap().getSpawnPoints().get(Core.get().getTeamManager().getTeam("PLAYERS"));
-                player.teleport(points.get(new Random().nextInt(points.size())).getLocation());
-                player.lookAt(Core.get().getMapManager().getCurrentMap().getMiddleOfMap().toBlockLocation(), LookAnchor.EYES);
-                player.setVelocity(new Vector(0, 50, 0));
+                event.setCancelled(true);
+                player.setHealth(0);
             }
         }
     }
