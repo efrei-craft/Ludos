@@ -4,11 +4,13 @@ import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.runnables.GameTimer;
 import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.utils.SoundUtils;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 import java.util.Random;
@@ -43,7 +45,15 @@ public class GameLogic {
                 Material.DEAD_BUSH
         );
 
+        List<String> possibleNames = List.of(
+                "&ees hora de XD",
+                "&ea&rh&eu&rh&eu&rh&eu &rm&ea&rs&et&re&er&rc&el&ra&es&rs"
+        );
+
         THE_SHOVEL = new ItemStack(possibleTypes.get(new Random().nextInt(possibleTypes.size())));
+        ItemMeta itemMeta = THE_SHOVEL.getItemMeta();
+        itemMeta.displayName(LegacyComponentSerializer.legacyAmpersand().deserialize(possibleNames.get(new Random().nextInt(possibleNames.size()))));
+        THE_SHOVEL.setItemMeta(itemMeta);
         THE_SHOVEL.addUnsafeEnchantment(org.bukkit.enchantments.Enchantment.DIG_SPEED, new Random().nextInt(50, 999));
     }
 
@@ -62,7 +72,7 @@ public class GameLogic {
         }, SD_TIMER);
     }
 
-    public void suddenDeathTask() {
+    private void suddenDeathTask() {
         suddenDeath = true;
         Core.get().getMapManager().getCurrentMap().getWorld().setTime(21);
 
@@ -103,7 +113,7 @@ public class GameLogic {
         }, -1);
     }
 
-    public Block getHighestBlockBelow(Location location) {
+    private Block getHighestBlockBelow(Location location) {
         for (int y = location.getBlockY(); y > -64; y--) {
             Block block = location.getWorld().getBlockAt(location.getBlockX(), y, location.getBlockZ());
             if (block.getType() != Material.AIR) {
