@@ -1,10 +1,5 @@
 package fr.efreicraft.ludos.core.maps;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.regions.Region;
-import com.sk89q.worldedit.world.World;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.maps.interfaces.IMapParsedCallback;
 import fr.efreicraft.ludos.core.maps.interfaces.MapPoint;
@@ -125,6 +120,7 @@ public class MapParser {
             }
         }
 
+        final ArrayList<String> lines = new ArrayList<>();
         List<Block> blocksToBreak = new ArrayList<>();
         for (ChunkSnapshot chunkSnapshot : chunkSnapshots) {
             Bukkit.getScheduler().runTaskAsynchronously(Core.get().getPlugin(), () -> {
@@ -138,8 +134,7 @@ public class MapParser {
 
                     Material currentBlock = chunkSnapshot.getBlockType(x, y, z);
                     Material blockAbove = chunkSnapshot.getBlockType(x, y + 1, z);
-
-                    if (currentBlock == Material.SPONGE && blockAbove == Material.OAK_SIGN) {
+                    if (currentBlock == Material.SPONGE && blockAbove.name().contains("SIGN")) {
                         blocksToBreak.addAll(Arrays.asList(
                                 world.getBlockAt(blockX, y + 1, blockZ),
                                 world.getBlockAt(blockX, y, blockZ)
@@ -149,14 +144,14 @@ public class MapParser {
                             Block block = world.getBlockAt(blockX, y + 1, blockZ);
                             Sign sign = (Sign) block.getState();
                             StringBuilder builder = new StringBuilder();
-                            ArrayList<TextComponent> lines = new ArrayList<>();
                             for (Component line : sign.lines()) {
-                                lines.add((TextComponent) line);
+                                lines.add(((TextComponent) line).content());
                             }
-                            builder.append(lines.get(0).content());
+                            builder.append(lines.get(0));
                             parsedMap.setName(builder.toString().trim());
                             builder.delete(0, builder.length());
-                            builder.append(lines.get(1).content());
+
+                            builder.append(lines.get(1));
                             parsedMap.setAuthor(builder.toString().trim());
                         });
                     } else if (currentBlock != Material.AIR) {
@@ -181,6 +176,36 @@ public class MapParser {
                 for (Block block : blocksToBreak) {
                     block.setType(Material.AIR);
                 }
+
+                if (parsedMap.getGlobalPoints().get("BOUNDARY") == null || parsedMap.getGlobalPoints().get("BOUNDARY").size() < 2) {
+                    parsedMap.getGlobalPoints().put("BOUNDARY", new ArrayList<>());
+
+                    // On a pas trouvé les boundaries. Essayons avec le panneau sur éponge.
+                    if (lines.get(2).equals("") || lines.get(3).equals("")) {
+                        throw new IllegalStateException("La carte doit avoir deux points de délimitation.");
+                    }
+
+                    Core.get().getLogger().log(Level.INFO, "Coords boundary 1: {0}", lines.get(2));
+                    Core.get().getLogger().log(Level.INFO, "Coords boundary 2: {0}", lines.get(3));
+
+                    String[] p1Str = lines.get(2).trim().split(" ");
+                    String[] p2Str = lines.get(3).trim().split(" ");
+                    if (p1Str.length != 3 || p2Str.length != 3) {
+                        throw new IllegalStateException("Les points de délimitation doivent être au format x y z.");
+                    }
+                    Location p1Loc;
+                    Location p2Loc;
+                    try {
+                        p1Loc = new Location(world, Integer.parseInt(p1Str[0]), Integer.parseInt(p1Str[1]), Integer.parseInt(p1Str[2]));
+                        p2Loc = new Location(world, Integer.parseInt(p2Str[0]), Integer.parseInt(p2Str[1]), Integer.parseInt(p2Str[2]));
+                    } catch (NumberFormatException e) {
+                        throw new IllegalStateException("Les points de délimitation doivent être des coordonnées au format x y z.");
+                    }
+
+                    parsedMap.addPoint(new GlobalPoint("BOUNDARY", p1Loc));
+                    parsedMap.addPoint(new GlobalPoint("BOUNDARY", p2Loc));
+                }
+
                 parsedMap.setParsed(true);
                 parsedMap.setMiddleOfMap(null); // Rappel : passer en paramètre null fait que le point est calculé automatiquement.
                 callback.onMapParsed(parsedMap);

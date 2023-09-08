@@ -11,8 +11,8 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * Commande /game
@@ -29,7 +29,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        switch (args[0]) {
+        switch (args[0].toLowerCase()) {
             case "list" -> MessageUtils.sendMessage(sender, 
                     MessageUtils.ChatPrefix.GAME,
                     "&7Jeux disponibles: &r" + Core.get().getGameManager().getAvailableGames()
@@ -48,6 +48,10 @@ public class GameCommand implements CommandExecutor, TabCompleter {
                         "&b" + sender.getName() + "&7 a changé le prochain jeu."
                 );
                 try {
+                    if (!args[1].matches("^[A-Z][A-Za-z0-9]*$"))
+                        args[1] = args[1].substring(0, 1).toUpperCase() + args[1].substring(1);
+                    if (!args[1].startsWith("Ludos"))
+                        args[1] = "Ludos" + args[1];
                     Core.get().getGameManager().loadGame(args[1]);
                 } catch (GameStatusException e) {
                     MessageUtils.sendMessage(sender, MessageUtils.ChatPrefix.ADMIN, "&c" + e.getMessage());
@@ -106,10 +110,10 @@ public class GameCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if(args.length == 1) {
-            return Arrays.asList("list", "load", "start", "stop", "reset", "reload", "auto");
+            return Stream.of("list", "load", "start", "stop", "reset", "reload", "auto").filter(com -> com.startsWith(args[0].toLowerCase())).toList();
         }
         if(args.length == 2 && args[0].equalsIgnoreCase("load")) {
-            return Core.get().getGameManager().getAvailableGames();
+            return Core.get().getGameManager().getAvailableGames().stream().filter(game -> game.toLowerCase().startsWith(args[1].toLowerCase()) || game.startsWith(args[1].substring(0, 1).toUpperCase() + args[1].substring(1), 5)).toList();
         }
         return new ArrayList<>();
     }

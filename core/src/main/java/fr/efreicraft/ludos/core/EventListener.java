@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.core;
 
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
+import fr.efreicraft.animus.StandaloneHelper;
 import fr.efreicraft.ecatup.players.events.ECPlayerJoined;
 import fr.efreicraft.ludos.core.games.GameManager;
 import fr.efreicraft.ludos.core.players.LudosPlayer;
@@ -58,6 +59,10 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent event) {
         event.joinMessage(null);
+
+        // Si on est en Standalone, donner toutes les perms au joueur
+        if(StandaloneHelper.isStandalone())
+            event.getPlayer().setOp(true);
     }
 
     /**

@@ -97,7 +97,10 @@ public class WorldUtils {
         creator.type(WorldType.FLAT);
         creator.generatorSettings("{\"layers\": []}");
         creator.generateStructures(false);
-        return creator.createWorld();
+
+        world = creator.createWorld();
+        WorldUtils.setupClassicWorldGamerules(world);
+        return world;
     }
 
     /**
@@ -152,7 +155,7 @@ public class WorldUtils {
         return null;
     }
 
-    public static void setupClassicWorldGamerules(World world) {
+    private static void setupClassicWorldGamerules(World world) {
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
         world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
         world.setGameRule(GameRule.DO_FIRE_TICK, false);

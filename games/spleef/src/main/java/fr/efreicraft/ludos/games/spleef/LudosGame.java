@@ -1,5 +1,7 @@
 package fr.efreicraft.ludos.games.spleef;
 
+import fr.efreicraft.ecatup.players.scoreboards.ScoreboardField;
+import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
@@ -15,6 +17,7 @@ import java.util.Map;
 
 /**
  * Spleef game entrypoint
+ * @author Idir NM. {@literal <idir.nait-meddour@efrei.net>}
  * @author Antoine B. {@literal <antoine@jiveoff.fr>}
  * @project Minigames/Spleef
  */
@@ -41,6 +44,8 @@ public class LudosGame extends Game {
         super();
         this.gameLogic = new GameLogic();
         this.setEventListener(new EventListener(this.gameLogic));
+
+        this.gameLogic.setupTheShovel();
     }
 
     @Override
@@ -49,16 +54,53 @@ public class LudosGame extends Game {
         world.setGameRule(GameRule.DO_TILE_DROPS, false);
         world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+        world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
     }
 
     @Override
     public void postMapParse() {
-        // No need to do anything here
+        Core.get().getMapManager().getCurrentMap().getWorld().setTime(6);
+    }
+
+    @Override
+    public void beginGame() {
+        super.beginGame();
+
+        this.gameLogic.giveTheInventory();
+        this.gameLogic.allPlayersToSurvival();
+        this.gameLogic.startTimer();
+    }
+
+    @Override
+    public boolean checkIfGameHasToBeEnded() {
+        return super.checkIfGameHasToBeEnded();
     }
 
     @Override
     public void setupScoreboard(LudosPlayer player) {
         player.getBoard().clearFields();
+
+        if (!gameLogic.suddenDeath) {
+            player.getBoard().setField(0,
+                    new ScoreboardField(
+                            "&4Mort subite dans",
+                            false,
+                            player1 -> {
+                                int minutes = this.gameLogic.time / 60;
+                                int seconds = this.gameLogic.time % 60;
+                                return String.format("   %2d:%02d", minutes, seconds);
+                            }
+                    )
+            );
+        } else {
+            player.getBoard().setField(0,
+                    new ScoreboardField(
+                            "&4Mort subite !",
+                            false,
+                            player1 -> (gameLogic.redTextFlasher ? "&c&l" : "&r") + "   00:00"
+                    )
+            );
+        }
     }
 
     @Override

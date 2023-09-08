@@ -19,9 +19,9 @@ import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Commande /map
@@ -156,16 +156,16 @@ public class MapCommand implements CommandExecutor, TabCompleter {
             @NotNull String[] args
     ) {
         if(args.length == 1) {
-            return Arrays.asList("load", "tp", "metadata");
+            return Stream.of("load", "tp", "metadata").filter(com -> com.startsWith(args[0].toLowerCase())).toList();
         } else if(args.length == 2) {
             if(Core.get().getGameManager().getCurrentGame() == null) {
                 return new ArrayList<>();
             }
             if(args[0].equalsIgnoreCase("load")) {
-                return Core.get().getGameManager().getCurrentGame().getMaps();
+                return Core.get().getGameManager().getCurrentGame().getMaps().stream().filter(map -> map.startsWith(args[1].toLowerCase())).toList();
             } else if(args[0].equalsIgnoreCase("tp")) {
                 Map<String, Team> teams = Core.get().getTeamManager().getTeams();
-                return new ArrayList<>(teams.keySet());
+                return new ArrayList<>(teams.keySet().stream().filter(team -> team.startsWith(args[1].toLowerCase())).toList());
             }
         }
         return new ArrayList<>();
