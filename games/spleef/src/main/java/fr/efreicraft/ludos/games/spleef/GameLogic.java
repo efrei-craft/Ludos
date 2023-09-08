@@ -89,7 +89,7 @@ public class GameLogic {
             redTextFlasher = !redTextFlasher;
 
             if (timeLambda > WACKINESS_TIMER) {
-                for (LudosPlayer player : Core.get().getPlayerManager().getPlayingPlayers().stream().filter(player -> player.entity().getGameMode() == GameMode.SURVIVAL).toList()) {
+                for (LudosPlayer player : Core.get().getPlayerManager().getPlayingPlayers()) {
                     Random random = new Random();
                     if (random.nextFloat() < 0.08f) continue;
                     player.entity().getWorld().createExplosion(
