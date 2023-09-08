@@ -113,7 +113,7 @@ public class GameCommand implements CommandExecutor, TabCompleter {
             return Stream.of("list", "load", "start", "stop", "reset", "reload", "auto").filter(com -> com.startsWith(args[0].toLowerCase())).toList();
         }
         if(args.length == 2 && args[0].equalsIgnoreCase("load")) {
-            return Core.get().getGameManager().getAvailableGames().stream().filter(game -> game.startsWith(args[1].toLowerCase()) || game.startsWith(args[1].substring(0, 1).toUpperCase() + args[1].substring(1), 5)).toList();
+            return Core.get().getGameManager().getAvailableGames().stream().filter(game -> game.toLowerCase().startsWith(args[1].toLowerCase()) || game.startsWith(args[1].substring(0, 1).toUpperCase() + args[1].substring(1), 5)).toList();
         }
         return new ArrayList<>();
     }
