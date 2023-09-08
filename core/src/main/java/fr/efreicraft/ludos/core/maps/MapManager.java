@@ -135,10 +135,7 @@ public class MapManager implements IManager {
             return;
         }
 
-        WorldCreator creator = new WorldCreator("WaitingLobby");
-        creator.type(WorldType.FLAT);
-        creator.generatorSettings("{\"layers\": []}");
-        lobbyWorld = creator.createWorld();
+        lobbyWorld = WorldUtils.createWorld("WaitingLobby");
 
         assert lobbyWorld != null;
         lobbyWorld.setSpawnLocation(0, 150, 0);
