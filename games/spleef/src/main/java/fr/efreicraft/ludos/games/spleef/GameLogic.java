@@ -4,7 +4,6 @@ import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.runnables.GameTimer;
 import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.utils.SoundUtils;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;

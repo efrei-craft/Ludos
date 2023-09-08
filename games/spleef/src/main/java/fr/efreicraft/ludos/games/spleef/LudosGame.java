@@ -28,7 +28,7 @@ import java.util.Map;
         description = "Détruisez le sol et éliminez vos adversaires !",
         authors = {"Niilyx"},
         rules = @GameRules(
-                minPlayers = 1,
+                minPlayers = 2,
                 minPlayersToStart = 2, // vraiment ?
                 maxPlayers = 24
         )
