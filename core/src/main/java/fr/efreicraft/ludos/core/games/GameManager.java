@@ -158,6 +158,8 @@ public class GameManager implements IManager {
      * @throws GameStatusException Exception levée si le jeu ne peut pas être chargé
      */
     public void loadGame(String gameName) throws GameStatusException, GameRegisteringException {
+        Core.get().getLogger().log(Level.INFO, "Loading game {0}...", gameName);
+
         if (status != GameStatus.WAITING) {
             throw new GameStatusException("Impossible de charger un jeu en cours de partie !");
         }
@@ -192,6 +194,7 @@ public class GameManager implements IManager {
      * @param defaultGamePluginName Nom du plugin du jeu.
      */
     public void changeDefaultGame(String defaultGamePluginName) {
+        Core.get().getLogger().log(Level.INFO, "Changing default game to {0}...", defaultGamePluginName);
         this.defaultGamePluginName = defaultGamePluginName;
         Bukkit.getScheduler().runTask(Core.get().getPlugin(), () -> {
             try {
@@ -203,7 +206,7 @@ public class GameManager implements IManager {
     }
 
     public void registerGamePlugin(GamePlugin gamePlugin) {
-        System.out.println("Registering game " + gamePlugin.getName());
+        Core.get().getLogger().log(Level.INFO, "Registering game {0}...", gamePlugin.getName());
         gamePlugins.put(gamePlugin.getName(), gamePlugin);
     }
 
