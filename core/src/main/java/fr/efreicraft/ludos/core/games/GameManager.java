@@ -4,18 +4,20 @@ import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.IManager;
 import fr.efreicraft.ludos.core.games.exceptions.GameRegisteringException;
 import fr.efreicraft.ludos.core.games.exceptions.GameStatusException;
+import fr.efreicraft.ludos.core.games.interfaces.Game;
 import fr.efreicraft.ludos.core.games.interfaces.GamePlugin;
 import fr.efreicraft.ludos.core.games.runnables.LobbyCountdown;
 import fr.efreicraft.ludos.core.players.LudosPlayer;
-import fr.efreicraft.ludos.core.games.interfaces.Game;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,6 +85,45 @@ public class GameManager implements IManager {
     public void runManager() {
         setStatus(GameStatus.WAITING);
         loadAllGameJars();
+    }
+
+    public void unloadAllGameJars() {
+        for (GamePlugin gamePlugin : gamePlugins.values()) {
+            unloadGameJar(gamePlugin);
+        }
+        gamePlugins.clear();
+        System.gc();
+    }
+
+    private void unloadGameJar(GamePlugin plugin) {
+        Core.get().getServer().getPluginManager().disablePlugin(plugin);
+
+        ClassLoader cl = plugin.getClass().getClassLoader();
+
+        if (cl instanceof URLClassLoader) {
+
+            try {
+
+                Field pluginField = cl.getClass().getDeclaredField("plugin");
+                pluginField.setAccessible(true);
+                pluginField.set(cl, null);
+
+                Field pluginInitField = cl.getClass().getDeclaredField("pluginInit");
+                pluginInitField.setAccessible(true);
+                pluginInitField.set(cl, null);
+
+            } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
+                Core.get().getLogger().log(Level.SEVERE, null, ex);
+            }
+
+            try {
+
+                ((URLClassLoader) cl).close();
+            } catch (IOException ex) {
+                Core.get().getLogger().log(Level.SEVERE, null, ex);
+            }
+
+        }
     }
 
     /**
@@ -200,9 +241,7 @@ public class GameManager implements IManager {
      * @return Liste des jeux disponibles
      */
     public List<String> getAvailableGames() {
-        ArrayList<String> gamesAvailable = new ArrayList<>();
-        gamesAvailable.addAll(gamePlugins.keySet());
-        return gamesAvailable;
+        return new ArrayList<>(gamePlugins.keySet());
     }
 
     /**
@@ -313,23 +352,24 @@ public class GameManager implements IManager {
             player.setupScoreboard();
         }
 
-        if (status == GameStatus.STARTING) {
-            currentGame.startGame();
-        } else if (status == GameStatus.INGAME) {
-            if (!currentGame.checkIfGameHasToBeEnded()) {
-                currentGame.beginGame();
+        switch (status) {
+            case STARTING -> currentGame.startGame();
+            case INGAME -> {
+                if (!currentGame.checkIfGameHasToBeEnded()) {
+                    currentGame.beginGame();
+                }
             }
-        } else if (status == GameStatus.ENDING) {
-            currentGame.endGame();
-        } else if (status == GameStatus.WAITING) {
-            this.unregisterCurrentGame();
-            if (defaultGamePluginName != null && autoGameStart) {
-                try {
-                    this.loadGame(defaultGamePluginName);
-                } catch (GameStatusException e) {
-                    e.printStackTrace();
-                } catch (GameRegisteringException e) {
-                    throw new RuntimeException(e);
+            case ENDING -> currentGame.endGame();
+            case WAITING -> {
+                this.unregisterCurrentGame();
+                if (defaultGamePluginName != null && autoGameStart) {
+                    try {
+                        this.loadGame(defaultGamePluginName);
+                    } catch (GameStatusException e) {
+                        e.printStackTrace();
+                    } catch (GameRegisteringException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         }

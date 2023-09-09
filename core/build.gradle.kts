@@ -1,5 +1,5 @@
-import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 
 buildscript {
     repositories {
@@ -54,7 +54,7 @@ bukkit {
     name = "LudosCore"
     main = "fr.efreicraft.ludos.core.LudosCore"
     apiVersion = "1.19"
-    authors = listOf("Antoine BANHA", "Logan TANN", "Aurelien DASSE")
+    authors = listOf("Antoine BANHA", "Logan TANN", "Aurelien DASSE", "Idir NAIT MEDDOUR")
     prefix = "MINI"
     depend = listOf("WorldEdit", "ProtocolLib", "ECATUP", "AnimusClient-Paper")
     commands {

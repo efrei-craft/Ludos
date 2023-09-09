@@ -6,7 +6,7 @@
 # L'image de base ci-dessous est locale, vous pouvez donc la modifier à votre guise.
 # Toutefois, il est préférable de l'utiliser telle quelle.
 
-FROM docker.nexus.jiveoff.fr/efrei-craft/templates/mini:latest
+FROM registry.efreicraft.fr/templates/mini.dev:latest
 
 # A noter que le dossier /data est applicable pour les serveurs de type Paper.
 # Pour les serveurs de type Velocity, le dossier est /server.
@@ -16,3 +16,5 @@ COPY --chown=1000:1000 ./AnimusClient/build/libs/AnimusClient.jar /data/librarie
 
 COPY --chown=1000:1000 ./ECATUP/build/libs /data/plugins
 COPY --chown=1000:1000 ./Ludos/run/plugins /data/plugins
+
+COPY --chown=1000:1000 ./Ludos/dev/paper-global.yml /data/config/paper-global.yml

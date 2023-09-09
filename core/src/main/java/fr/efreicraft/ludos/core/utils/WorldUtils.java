@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.core.utils;
 
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.maps.interfaces.MapPoint;
 import fr.efreicraft.ludos.core.players.LudosPlayer;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.*;
@@ -96,7 +97,10 @@ public class WorldUtils {
         creator.type(WorldType.FLAT);
         creator.generatorSettings("{\"layers\": []}");
         creator.generateStructures(false);
-        return creator.createWorld();
+
+        world = creator.createWorld();
+        WorldUtils.setupClassicWorldGamerules(world);
+        return world;
     }
 
     /**
@@ -104,7 +108,7 @@ public class WorldUtils {
      * @param name Nom du monde.
      * @return Nom normalisé du monde.
      */
-    private static String getNormalizedWorldName(String name) {
+    public static String getNormalizedWorldName(String name) {
         return worldPrefix + name;
     }
 
@@ -142,7 +146,7 @@ public class WorldUtils {
                 for(double z = start.getLocation().getZ() - FIND_FIRST_BOUNDARY_RADIUS; z <= start.getLocation().getZ() + FIND_FIRST_BOUNDARY_RADIUS; z++){
                     Block block = start.getWorld().getBlockAt(new Location(start.getWorld(), x, y, z));
                     Block blockUp = start.getWorld().getBlockAt(new Location(start.getWorld(), x, y + 1, z));
-                    if(block.getType() == Material.GOLD_BLOCK && blockUp.getType() == Material.HEAVY_WEIGHTED_PRESSURE_PLATE){
+                    if(block.getType() == Material.GOLD_BLOCK && blockUp.getType() == MapPoint.SPAWN_N_GLOBALPOINT_MARKER){
                         return block.getLocation();
                     }
                 }
@@ -151,7 +155,7 @@ public class WorldUtils {
         return null;
     }
 
-    public static void setupClassicWorldGamerules(World world) {
+    private static void setupClassicWorldGamerules(World world) {
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
         world.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
         world.setGameRule(GameRule.DO_FIRE_TICK, false);

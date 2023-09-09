@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.core.maps.interfaces;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 
 /**
  * Définie un point de carte abstrait.
@@ -10,6 +11,9 @@ import org.bukkit.Location;
  * @project EFREI-Minigames
  */
 public abstract class MapPoint {
+
+    public static final Material GAMEPOINT_MARKER = Material.LIGHT_WEIGHTED_PRESSURE_PLATE;
+    public static final Material SPAWN_N_GLOBALPOINT_MARKER = Material.HEAVY_WEIGHTED_PRESSURE_PLATE;
 
     /**
      * Nom du point

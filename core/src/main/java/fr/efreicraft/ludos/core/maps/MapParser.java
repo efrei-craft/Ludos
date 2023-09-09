@@ -1,10 +1,5 @@
 package fr.efreicraft.ludos.core.maps;
 
-import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.regions.CuboidRegion;
-import com.sk89q.worldedit.regions.Region;
-import com.sk89q.worldedit.world.World;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.maps.interfaces.IMapParsedCallback;
 import fr.efreicraft.ludos.core.maps.interfaces.MapPoint;
@@ -15,24 +10,23 @@ import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 
 /**
  * <b>Parseur de cartes</b><br />
  * Permet de récupérer les informations d'une carte grâce à une convention de création de points.<br /><br />
- *
- * Un bloc avec une plaque de pression {@link Material#HEAVY_WEIGHTED_PRESSURE_PLATE} est considérée comme un {@link GlobalPoint} sauf
+ * <p>
+ * Un bloc {@link MapPoint#SPAWN_N_GLOBALPOINT_MARKER} est considéré comme un {@link GlobalPoint} sauf
  * dans le cas que le bloc sous la plaque fait partie de la map {@link ColorUtils#getWoolDyeColorMap()}, ou celui-ci est un {@link SpawnPoint}.<br /><br />
- *
- * Un bloc avec une plaque de pression {@link Material#LIGHT_WEIGHTED_PRESSURE_PLATE} est considérée comme un {@link GamePoint}.<br /><br />
- *
+ * <p>
+ * Un bloc {@link MapPoint#GAMEPOINT_MARKER} est considéré comme un {@link GamePoint}.<br /><br />
+ * <p>
  * Une {@link Material#SPONGE} avec un {@link Material#OAK_SIGN} sont considéré comme les informations de la map. Les
  * deux premières lignes du {@link Material#OAK_SIGN} correspondent au nom de la map, les deux dernières aux auteurs.
  *
@@ -57,29 +51,29 @@ public class MapParser {
 
     /**
      * Permet de déterminer ce que définie le point actuel.<br />
-     *
+     * <p>
      * Trois types peuvent ressortir :<br />
      * - {@link GlobalPoint} : Le point est un point global à tous les jeux.<br />
      * - {@link SpawnPoint} : Le point est un point de spawn pour une équipe du jeu.<br />
      * - {@link GamePoint} : Le point est un point de jeu.<br />
      *
-     * @param block Bloc actuel
+     * @param block      Bloc actuel
      * @param blockAbove Bloc au-dessus du bloc actuel
-     * @param location Location du bloc actuel
+     * @param location   Location du bloc actuel
      * @return Un {@link MapPoint} ou null si le bloc n'est pas un point.
      */
     private static MapPoint parseMapPoint(Material block, Material blockAbove, Location location) {
-        if (blockAbove == Material.HEAVY_WEIGHTED_PRESSURE_PLATE) {
-            if(ColorUtils.getWoolDyeColorMap().containsKey(block)) {
+        if (blockAbove == MapPoint.SPAWN_N_GLOBALPOINT_MARKER) {
+            if (ColorUtils.getWoolDyeColorMap().containsKey(block)) {
                 Team team = Core.get().getTeamManager().getTeamByDyeColor(ColorUtils.getWoolDyeColorMap().get(block));
-                if(team != null) {
+                if (team != null) {
                     return new SpawnPoint(team, location);
                 }
             }
-            if(MAP_POINTS.containsKey(block)) {
+            if (MAP_POINTS.containsKey(block)) {
                 return new GlobalPoint(MAP_POINTS.get(block), location);
             }
-        } else if (blockAbove == Material.LIGHT_WEIGHTED_PRESSURE_PLATE) {
+        } else if (blockAbove == MapPoint.GAMEPOINT_MARKER) {
             Map<Material, String> materialStringMap =
                     Core.get().getGameManager().getCurrentGame().getGamePointsMaterials();
             if (materialStringMap.containsKey(block)) {
@@ -91,78 +85,132 @@ public class MapParser {
 
     /**
      * Permet de scanner la carte du monde de façon <b>asynchrone</b> à partir des points donnés.
-     * @param world Monde à scanner
-     * @param p1 Point 1 du cuboid de scan
-     * @param p2 Point 2 du cuboid de scan
+     *
+     * @param world    Monde à scanner
+     * @param p1       Point 1 du cuboid de scan
+     * @param p2       Point 2 du cuboid de scan
      * @param callback Callback à appeler quand le parsing est terminé.
      * @return Une instance de {@link ParsedMap}. <b>Attention: La carte n'a pas forcément fini de parser étant donné que l'opération est asynchrone. Veuillez utiliser le callback.</b>
      */
-    public static ParsedMap parseMap(World world, Location p1, Location p2, IMapParsedCallback callback) {
-        Region region = new CuboidRegion(
-                world,
-                BlockVector3.at(p1.getX(), p1.getY(), p1.getZ()),
-                BlockVector3.at(p2.getX(), p2.getY(), p2.getZ())
-        );
+    public static ParsedMap parseMap(org.bukkit.World world, Location p1, Location p2, IMapParsedCallback callback) {
+        ParsedMap parsedMap = new ParsedMap(world);
 
-        Core.get().getLogger().log(Level.INFO, "Parsing map: {0} in world: {1}", new Object[]{ region, world.getName() });
+        // Load chunks between p1 and p2
+        int minX = Math.min(p1.getBlockX(), p2.getBlockX());
+        int maxX = Math.max(p1.getBlockX(), p2.getBlockX());
+        int minZ = Math.min(p1.getBlockZ(), p2.getBlockZ());
+        int maxZ = Math.max(p1.getBlockZ(), p2.getBlockZ());
 
-        org.bukkit.World bukkitWorld = BukkitAdapter.adapt(world);
+        int minChunkX = minX >> 4;
+        int maxChunkX = maxX >> 4;
+        int minChunkZ = minZ >> 4;
+        int maxChunkZ = maxZ >> 4;
 
-        ParsedMap parsedMap = new ParsedMap(bukkitWorld);
+        int chunkCount = (maxChunkX - minChunkX + 1) * (maxChunkZ - minChunkZ + 1);
+        AtomicInteger chunkRead = new AtomicInteger();
 
-        Bukkit.getScheduler().runTaskAsynchronously(Core.get().getPlugin(), () -> {
-            Iterator<BlockVector3> iterator = region.iterator();
-            List<Block> blocksToBreak = new ArrayList<>();
+        Set<ChunkSnapshot> chunkSnapshots = new HashSet<>();
 
-            while (iterator.hasNext()) {
-                BlockVector3 currentBlockVector = iterator.next();
-                Block currentBlock = bukkitWorld.getBlockAt(
-                        currentBlockVector.getX(),
-                        currentBlockVector.getY(),
-                        currentBlockVector.getZ()
-                );
-                Block blockAbove = bukkitWorld.getBlockAt(
-                        currentBlockVector.getX(),
-                        currentBlockVector.getY() + 1,
-                        currentBlockVector.getZ()
-                );
+        for (int chunkX = minChunkX; chunkX <= maxChunkX; chunkX++) {
+            for (int chunkZ = minChunkZ; chunkZ <= maxChunkZ; chunkZ++) {
+                Chunk chunk = world.getChunkAt(chunkX, chunkZ);
+                if (!chunk.isLoaded()) chunk.load();
+                chunkSnapshots.add(chunk.getChunkSnapshot(false, false, false));
+                chunk.unload();
+            }
+        }
 
-                if (currentBlock.getType() == Material.SPONGE && blockAbove.getType() == Material.OAK_SIGN) {
-                    Bukkit.getScheduler().runTask(Core.get().getPlugin(), () -> {
-                        Sign sign = (Sign) blockAbove.getState();
-                        StringBuilder builder = new StringBuilder();
-                        ArrayList<TextComponent> lines = new ArrayList<>();
-                        for (Component line : sign.lines()) {
-                            lines.add((TextComponent) line);
+        final ArrayList<String> lines = new ArrayList<>();
+        List<Block> blocksToBreak = new ArrayList<>();
+        for (ChunkSnapshot chunkSnapshot : chunkSnapshots) {
+            Bukkit.getScheduler().runTaskAsynchronously(Core.get().getPlugin(), () -> {
+                for (int xz = 0; xz < 16 * 16 * 256; ++xz) {
+                    int x = xz & 15;
+                    int z = xz >> 4 & 15;
+                    int y = xz >> 8;
+
+                    int blockX = chunkSnapshot.getX() * 16 + x;
+                    int blockZ = chunkSnapshot.getZ() * 16 + z;
+
+                    Material currentBlock = chunkSnapshot.getBlockType(x, y, z);
+                    Material blockAbove = chunkSnapshot.getBlockType(x, y + 1, z);
+                    if (currentBlock == Material.SPONGE && blockAbove.name().contains("SIGN")) {
+                        blocksToBreak.addAll(Arrays.asList(
+                                world.getBlockAt(blockX, y + 1, blockZ),
+                                world.getBlockAt(blockX, y, blockZ)
+                        ));
+
+                        Bukkit.getScheduler().runTask(Core.get().getPlugin(), () -> {
+                            Block block = world.getBlockAt(blockX, y + 1, blockZ);
+                            Sign sign = (Sign) block.getState();
+                            StringBuilder builder = new StringBuilder();
+                            for (Component line : sign.lines()) {
+                                lines.add(((TextComponent) line).content());
+                            }
+                            builder.append(lines.get(0));
+                            parsedMap.setName(builder.toString().trim());
+                            builder.delete(0, builder.length());
+
+                            builder.append(lines.get(1));
+                            parsedMap.setAuthor(builder.toString().trim());
+                        });
+                    } else if (currentBlock != Material.AIR) {
+                        MapPoint mp = parseMapPoint(currentBlock, blockAbove, new Location(world, blockX, y, blockZ));
+                        if (mp != null) {
+                            parsedMap.addPoint(mp);
+                            blocksToBreak.addAll(Arrays.asList(
+                                    world.getBlockAt(blockX, y + 1, blockZ),
+                                    world.getBlockAt(blockX, y, blockZ)
+                            ));
                         }
-                        builder.append(lines.get(0).content()).append(lines.get(1).content());
-                        parsedMap.setName(builder.toString().trim());
-                        builder.delete(0, builder.length());
-                        builder.append(lines.get(2).content()).append(lines.get(3).content());
-                        parsedMap.setAuthor(builder.toString().trim());
-                    });
-
-                    blocksToBreak.add(blockAbove);
-                    blocksToBreak.add(currentBlock);
-                } else if (currentBlock.getType() != Material.AIR) {
-                    MapPoint mp = parseMapPoint(currentBlock.getType(), blockAbove.getType(), currentBlock.getLocation());
-                    if (mp != null) {
-                        parsedMap.addPoint(mp);
-                        blocksToBreak.add(blockAbove);
-                        blocksToBreak.add(currentBlock);
                     }
                 }
-            }
 
-            Bukkit.getScheduler().runTask(Core.get().getPlugin(), () -> {
+                chunkRead.getAndIncrement();
+            });
+        }
+
+        Bukkit.getScheduler().runTaskTimer(Core.get().getPlugin(), task -> {
+            if (chunkRead.get() == chunkCount) {
+                task.cancel();
                 for (Block block : blocksToBreak) {
                     block.setType(Material.AIR);
                 }
+
+                if (parsedMap.getGlobalPoints().get("BOUNDARY") == null || parsedMap.getGlobalPoints().get("BOUNDARY").size() < 2) {
+                    parsedMap.getGlobalPoints().put("BOUNDARY", new ArrayList<>());
+
+                    // On a pas trouvé les boundaries. Essayons avec le panneau sur éponge.
+                    if (lines.get(2).equals("") || lines.get(3).equals("")) {
+                        throw new IllegalStateException("La carte doit avoir deux points de délimitation.");
+                    }
+
+                    Core.get().getLogger().log(Level.INFO, "Coords boundary 1: {0}", lines.get(2));
+                    Core.get().getLogger().log(Level.INFO, "Coords boundary 2: {0}", lines.get(3));
+
+                    String[] p1Str = lines.get(2).trim().split(" ");
+                    String[] p2Str = lines.get(3).trim().split(" ");
+                    if (p1Str.length != 3 || p2Str.length != 3) {
+                        throw new IllegalStateException("Les points de délimitation doivent être au format x y z.");
+                    }
+                    Location p1Loc;
+                    Location p2Loc;
+                    try {
+                        p1Loc = new Location(world, Integer.parseInt(p1Str[0]), Integer.parseInt(p1Str[1]), Integer.parseInt(p1Str[2]));
+                        p2Loc = new Location(world, Integer.parseInt(p2Str[0]), Integer.parseInt(p2Str[1]), Integer.parseInt(p2Str[2]));
+                    } catch (NumberFormatException e) {
+                        throw new IllegalStateException("Les points de délimitation doivent être des coordonnées au format x y z.");
+                    }
+
+                    parsedMap.addPoint(new GlobalPoint("BOUNDARY", p1Loc));
+                    parsedMap.addPoint(new GlobalPoint("BOUNDARY", p2Loc));
+                }
+
                 parsedMap.setParsed(true);
-                parsedMap.setMiddleOfMap(null);
+                parsedMap.setMiddleOfMap(null); // Rappel : passer en paramètre null fait que le point est calculé automatiquement.
                 callback.onMapParsed(parsedMap);
-            });
-        });
+            }
+        }, 0, 1);
 
         return parsedMap;
     }

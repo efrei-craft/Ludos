@@ -95,3 +95,12 @@ tasks.register<Exec>("devBuildDockerImage") {
     workingDir = File("../")
     commandLine("docker", "build", "-t", "dev.efrei-craft/acp/templates/mini", "-f", "Ludos/dev/Dockerfile", ".")
 }
+
+tasks.register<Exec>("devRunDockerImage") {
+    dependsOn(":core:jar")
+    dependsOn("devBuildDockerImage")
+
+    workingDir = File("../")
+
+    commandLine("docker", "run", "-p", "25565:25565", "-v", "${project.rootDir}/run:/home/minecraft/server", "-e", "ANIMUS_STANDALONE=true", "--name", "ludos_dev", "dev.efrei-craft/acp/templates/mini")
+}

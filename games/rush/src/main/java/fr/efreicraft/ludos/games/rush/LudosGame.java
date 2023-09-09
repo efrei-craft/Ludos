@@ -12,7 +12,10 @@ import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.teams.TeamRecord;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.*;
+import org.bukkit.GameRule;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 
 import java.util.*;
 

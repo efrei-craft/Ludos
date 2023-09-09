@@ -10,8 +10,6 @@ import fr.efreicraft.ludos.core.teams.TeamRecord;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.EnumMap;
 import java.util.Map;

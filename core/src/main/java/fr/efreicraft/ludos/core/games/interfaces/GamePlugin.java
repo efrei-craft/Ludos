@@ -1,7 +1,6 @@
 package fr.efreicraft.ludos.core.games.interfaces;
 
 import fr.efreicraft.ludos.core.Core;
-import fr.efreicraft.ludos.core.games.exceptions.GameRegisteringException;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
