@@ -68,10 +68,10 @@ public class MapManager implements IManager {
 
     @Override
     public void runManager() {
-        setupLobbyWorld();
-
         int cleanedUpWorlds = WorldUtils.cleanUpWorlds();
         Core.get().getLogger().log(Level.INFO, "Cleaned up {0} worlds.", cleanedUpWorlds);
+
+        setupLobbyWorld();
     }
 
     /**
