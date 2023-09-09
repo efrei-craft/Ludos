@@ -97,10 +97,18 @@ public class LudosGame extends Game {
                     new ScoreboardField(
                             "&4Mort subite !",
                             false,
-                            player1 -> (gameLogic.redTextFlasher ? "&c&l" : "&r") + "   00:00"
+                            player1 -> (gameLogic.redTextFlasher ? "&c" : "&r") + "   00:00"
                     )
             );
         }
+        player.getBoard().setField(
+                1,
+                new ScoreboardField(
+                        "&eJoueurs restants :",
+                        true,
+                        player1 -> String.format("   %2d", Core.get().getPlayerManager().getPlayingPlayers().size())
+                )
+        );
     }
 
     @Override
