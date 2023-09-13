@@ -23,6 +23,7 @@ import java.util.Map;
         authors = {"orwenn"},
         color = "&f",
         rules = @GameRules(
+                allowRespawn = true,
                 minPlayers = 2,
                 maxPlayers = 2
         )

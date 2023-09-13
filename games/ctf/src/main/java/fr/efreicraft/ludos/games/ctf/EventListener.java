@@ -2,9 +2,13 @@ package fr.efreicraft.ludos.games.ctf;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.players.LudosPlayer;
+import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
 public record EventListener(GameLogic ctfLogic) implements Listener {
@@ -14,15 +18,20 @@ public record EventListener(GameLogic ctfLogic) implements Listener {
     }
 
     @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
     public void onPlayerBreakBlock(BlockBreakEvent event) {
         LudosPlayer ludosPlayer = Core.get().getPlayerManager().getPlayer(event.getPlayer());
 
-        String teamToCheck;  //on doit vérifier si le joueur n'appartient pas à cette team avant de casser le drapeau
+        String teamOfFlag;  //on doit vérifier si le joueur n'appartient pas à cette team avant de casser le drapeau
 
-        //Obtenir la team du drapeau
+        //Obtenir la team du drapeau (déplacer ça autre part dans le future ?)
         switch (event.getBlock().getBlockData().getMaterial()) {
-            case RED_BANNER -> teamToCheck = "RED";
-            case BLUE_BANNER -> teamToCheck = "BLUE";
+            case RED_BANNER -> teamOfFlag = "Red";
+            case BLUE_BANNER -> teamOfFlag = "Blue";
             default -> {
                 event.setCancelled(true);
                 return;
@@ -31,6 +40,24 @@ public record EventListener(GameLogic ctfLogic) implements Listener {
 
         //vérifier si un joueur n'essaie pas de casser son propre drapeau,
         //puis stocker le joueur possédant le drapeau dans gameLogic
-        event.setCancelled(ctfLogic.BreakFlag(ludosPlayer, teamToCheck));
+        event.setCancelled(ctfLogic.canBreakFlag(ludosPlayer, teamOfFlag));
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event) {
+        LudosPlayer ludosPlayer = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+        ctfLogic.dropFlagIfCarried(ludosPlayer);
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        LudosPlayer ludosPlayer = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+        Location blockLocation = event.getBlock().getLocation();
+
+        //event.getBlock().getLocation();
+        //TODO : faire en sorte que le joueur puisse ramener le drapeau adverse à sa base
+        ctfLogic.tryToScore(ludosPlayer, blockLocation);
+
+        event.setCancelled(true);
     }
 }
