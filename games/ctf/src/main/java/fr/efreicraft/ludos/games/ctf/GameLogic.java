@@ -172,4 +172,17 @@ public class GameLogic {
 
         //TODO : vérifier si une team a assez de score pour gagner ici ?
     }
+
+    /**
+     * Obtenir le score d'une team
+     * @param teamName nom de la team
+     * @return le score de la team en question (ou -1 si la team n'existe pas)
+     */
+    public int getScore(String teamName) {
+        switch (teamName) {
+            case "Red" -> { return scoreTeamRed; }
+            case "Blue" -> { return scoreTeamBlue; }
+            default -> { return -1; }
+        }
+    }
 }

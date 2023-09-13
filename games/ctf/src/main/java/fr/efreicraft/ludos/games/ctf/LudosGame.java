@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.games.ctf;
 
 
+import fr.efreicraft.ecatup.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
@@ -46,7 +47,6 @@ public class LudosGame extends Game {
     @Override
     public void beginGame() {
         super.beginGame();
-
     }
 
     @Override
@@ -61,7 +61,17 @@ public class LudosGame extends Game {
 
     @Override
     public void setupScoreboard(LudosPlayer player) {
-        // No scoreboard for now
+        player.getBoard().clearFields();
+
+        player.getBoard().setField(
+                0,
+                new ScoreboardField("&c&lRouge", true, player1 -> gameLogic.getScore("Red")+"")
+        );
+
+        player.getBoard().setField(
+                1,
+                new ScoreboardField("&9&lBleu", true, player1 -> gameLogic.getScore("Blue")+"")
+        );
     }
 
     @Override
