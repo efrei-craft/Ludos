@@ -54,8 +54,6 @@ public record EventListener(GameLogic ctfLogic) implements Listener {
         LudosPlayer ludosPlayer = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         Location blockLocation = event.getBlock().getLocation();
 
-        //event.getBlock().getLocation();
-        //TODO : faire en sorte que le joueur puisse ramener le drapeau adverse à sa base
         ctfLogic.tryToScore(ludosPlayer, blockLocation);
 
         event.setCancelled(true);
