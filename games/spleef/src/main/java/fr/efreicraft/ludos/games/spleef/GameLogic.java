@@ -11,6 +11,8 @@ import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
 import java.util.Random;
@@ -29,8 +31,11 @@ public class GameLogic {
         return THE_SHOVEL;
     }
 
-    public void allPlayersToSurvival() {
-        Core.get().getPlayerManager().getPlayingPlayers().forEach(player -> player.entity().setGameMode(org.bukkit.GameMode.SURVIVAL));
+    public void setupPlayers() {
+        Core.get().getPlayerManager().getPlayingPlayers().forEach(player -> {
+            player.entity().setGameMode(org.bukkit.GameMode.SURVIVAL);
+            player.entity().addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 20 * 420, 1, false, false, false));
+        });
     }
 
     public void setupTheShovel() {

@@ -27,7 +27,7 @@ import java.util.Map;
 @GameMetadata(
         name = "Arena",
         color = "&c",
-        description = "L'équipe avec le plus de kills à la fin du timer gagne !!!!",
+        description = "L'équipe avec le plus de kills à la fin du timer gagne !",
         authors = {"JiveOff"},
         rules = @GameRules(
                 allowRespawn = true,

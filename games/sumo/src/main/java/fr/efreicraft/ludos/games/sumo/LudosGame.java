@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.games.sumo;
 
 import com.google.common.collect.ImmutableMap;
+import fr.efreicraft.ecatup.players.scoreboards.ScoreboardField;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
@@ -18,12 +19,13 @@ import static fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder.DefaultTea
 
 @GameMetadata(
         name = "Sumo",
-        description = "Poussez votre adversaire en dehors du ring pour gagner !",
-        authors = {"DocSystem"},
+        description = "Poussez votre adversaire en dehors du ring dans un BO3 et remportez la partie !",
+        authors = {"DocSystem et JiveOff"},
         color = "&4",
         rules = @GameRules(
                 minPlayers = 2,
-                maxPlayers = 2
+                maxPlayers = 2,
+                allowRespawn = true
         )
 )
 public class LudosGame extends Game {
@@ -56,7 +58,28 @@ public class LudosGame extends Game {
 
     @Override
     public void setupScoreboard(LudosPlayer player) {
-        // No scoreboard for now
+        player.getBoard().clearFields();
+
+        player.getBoard().setField(
+                0,
+                new ScoreboardField(
+                        "&4&lScore",
+                        false,
+                        player1 -> {
+                            LudosPlayer ludosPlayer = Core.get().getPlayerManager().getPlayer(player1);
+                            LudosPlayer otherPlayer = ludosPlayer.getTeam().getPlayers().stream()
+                                    .filter(p -> p != ludosPlayer)
+                                    .findFirst()
+                                    .orElse(null);
+
+                            return String.format(
+                                    "&f%s &7- &f%s",
+                                    this.gameLogic.getPlayerKills(ludosPlayer),
+                                    this.gameLogic.getPlayerKills(otherPlayer)
+                            );
+                        }
+                )
+        );
     }
 
     @Override
@@ -75,20 +98,8 @@ public class LudosGame extends Game {
                         false,
                         true,
                         new ColorUtils.TeamColorSet(NamedTextColor.GRAY, DyeColor.WHITE, Color.WHITE),
-                        null,
-                        p -> {
-                            p.entity().setHealth(20);
-                            p.entity().setFoodLevel(20);
-                            p.entity().setSaturation(20);
-                            p.entity().setExp(0);
-                            p.entity().setLevel(0);
-                            p.entity().getInventory().clear();
-                            p.entity().getInventory().setArmorContents(null);
-                            p.entity().setGameMode(GameMode.ADVENTURE);
-//                            ItemStack kbstick = new ItemStack(Material.STICK);
-//                            kbstick.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
-//                            p.entity().getInventory().setItem(0, kbstick);
-                        }
+                        (gameLogic::canPlayerRespawn),
+                        null
                 ))
                 .putAll(ONLY_SPECTATOR.getTeamRecords())
                 .build();
