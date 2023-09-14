@@ -10,6 +10,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 public record EventListener(GameLogic ctfLogic) implements Listener {
     @EventHandler
@@ -49,13 +50,24 @@ public record EventListener(GameLogic ctfLogic) implements Listener {
         ctfLogic.dropFlagIfCarried(ludosPlayer);
     }
 
+
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
+        /*
         LudosPlayer ludosPlayer = Core.get().getPlayerManager().getPlayer(event.getPlayer());
         Location blockLocation = event.getBlock().getLocation();
-
         ctfLogic.tryToScore(ludosPlayer, blockLocation);
-
+         */
         event.setCancelled(true);
+    }
+
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if(!event.hasChangedBlock()) return;
+
+        LudosPlayer ludosPlayer = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+        Location playerLocation = ludosPlayer.entity().getLocation();
+        ctfLogic.tryToScore(ludosPlayer, playerLocation);
     }
 }

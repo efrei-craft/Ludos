@@ -2,24 +2,30 @@ package fr.efreicraft.ludos.games.ctf;
 
 import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
+import org.bukkit.Color;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.util.Vector;
 
 import java.util.Objects;
 
 public class GameLogic {
+    private LudosGame ludosGame;
+
     private Location redLocation = null;
     private Location blueLocation = null;
 
     private int scoreTeamRed = 0;
     private int scoreTeamBlue = 0;
+    private static final int SCORE_TO_WIN = 3;
 
-    public GameLogic() {
 
+    public GameLogic(LudosGame ludosGame1) {
+        ludosGame = ludosGame1;
     }
 
     //Faire apparaître les drapeaux sur la map, et stocker leurs positions
@@ -29,13 +35,17 @@ public class GameLogic {
 
         redLocation.getWorld().setBlockData(redLocation, Material.RED_BANNER.createBlockData());
         blueLocation.getWorld().setBlockData(blueLocation, Material.BLUE_BANNER.createBlockData());
-
-        BlockData redBanner = redLocation.getBlock().getBlockData();
     }
 
     public void preparePlayerToSpawn(LudosPlayer player) {
         player.entity().setGameMode(GameMode.SURVIVAL);
         player.entity().getInventory().addItem(new ItemStack(Material.DIAMOND_SWORD));
+
+        ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
+        LeatherArmorMeta lam = (LeatherArmorMeta)chestplate.getItemMeta();
+        lam.setColor(player.getTeam().getColor().bukkitColor());
+        chestplate.setItemMeta(lam);
+        player.entity().getInventory().setChestplate(chestplate);
         //TODO : ajouter + d'équipement ici ?
     }
 
@@ -95,24 +105,27 @@ public class GameLogic {
 
 
     /**
-     * Appelé quand un joueur essaie de placer un bloc
+     * Appelé lorque l'on souhaite savoir si un joueur peut marquer un point
      * @param player joueur qui essaie de marquer un point
-     * @param blockLocation position du bloc qu'essaie de poser le joueur
+     * @param locationToCompare position à laquelle on souhaite calculer la distance avec la base du joueur
      */
-    public void tryToScore(LudosPlayer player, Location blockLocation) {
+    public void tryToScore(LudosPlayer player, Location locationToCompare) {
+        ItemStack helmetItem = player.entity().getInventory().getHelmet();
+        if(helmetItem == null) return;      //Le joueur ne possède aucun drapeau dans ce cas
+
         Location baseLocation = getBaseLocation(player.getTeam().getName());      //position de la base du joueur player
         if(baseLocation == null) return;
 
         //Vecteur de la distance entre le drapeau qui vient d'être posé et la base du joueur player
         Vector vec = new Vector(
-                blockLocation.getX() - baseLocation.getX(),
-                blockLocation.getY() - baseLocation.getY(),
-                blockLocation.getZ() - baseLocation.getZ()
+                locationToCompare.getX() - baseLocation.getX(),
+                locationToCompare.getY() - baseLocation.getY(),
+                locationToCompare.getZ() - baseLocation.getZ()
         );
 
         //Norme du vecteur
         double distance = vec.length();
-        player.sendMessage(MessageUtils.ChatPrefix.GAME, distance+"");
+        //player.sendMessage(MessageUtils.ChatPrefix.GAME, distance+"");
 
         //Si la distance est inférieure à 4, alors le joueur marque 1 point pour son équipe
         if(distance < 4) {
@@ -120,16 +133,17 @@ public class GameLogic {
             dropFlagIfCarried(player);
             incrementScore(player.getTeam().getName());
         }
-        else {
-            player.sendMessage(MessageUtils.ChatPrefix.GAME, "Tu dois ramener le drapeau à ta base.");
-        }
+        // Ancien code
+        //else {
+        //    player.sendMessage(MessageUtils.ChatPrefix.GAME, "Tu dois ramener le drapeau à ta base.");
+        //}
     }
 
 
     /**
      * Obtenir la position d'une base (drapeau) à partir d'un nom de team
      * @param teamName nom de la team
-     * @return
+     * @return position de la base de la team (ou null si la team n'existe pas)
      */
     public Location getBaseLocation(String teamName) {
         switch (teamName) {
@@ -142,7 +156,7 @@ public class GameLogic {
     /**
      * Obtenir la position d'une base (drapeau) à partir d'un matériel
      * @param material matériel correspondant au drapeau de la team
-     * @return
+     * @return position de la base de la team (ou null si la team n'existe pas)
      */
     public Location getBaseLocation(Material material) {
         switch (material) {
@@ -166,11 +180,17 @@ public class GameLogic {
      */
     public void incrementScore(String teamName) {
         switch (teamName) {
-            case "Red" -> scoreTeamRed += 1;
-            case "Blue" -> scoreTeamBlue += 1;
+            case "Red" -> {
+                scoreTeamRed += 1;
+                if(scoreTeamRed >= SCORE_TO_WIN)
+                    ludosGame.setWinnerAndEndGame(new CtfWinners("RED", Color.RED));
+            }
+            case "Blue" -> {
+                scoreTeamBlue += 1;
+                if(scoreTeamBlue >= SCORE_TO_WIN)
+                    ludosGame.setWinnerAndEndGame(new CtfWinners("BLUE", Color.BLUE));
+            }
         }
-
-        //TODO : vérifier si une team a assez de score pour gagner ici ?
     }
 
     /**

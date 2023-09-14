@@ -35,7 +35,7 @@ public class LudosGame extends Game {
 
     public LudosGame() {
         super();
-        gameLogic = new GameLogic();
+        gameLogic = new GameLogic(this);
         this.setEventListener(new EventListener(gameLogic));
     }
 
