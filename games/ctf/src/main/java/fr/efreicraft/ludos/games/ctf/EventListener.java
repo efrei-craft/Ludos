@@ -39,15 +39,14 @@ public record EventListener(GameLogic ctfLogic) implements Listener {
             }
         }
 
-        //vérifier si un joueur n'essaie pas de casser son propre drapeau,
-        //puis stocker le joueur possédant le drapeau dans gameLogic
-        event.setCancelled(ctfLogic.canBreakFlag(ludosPlayer, teamOfFlag));
+        //gérer le cassage du drapeau
+        event.setCancelled(ctfLogic.handleBreakFlag(ludosPlayer, teamOfFlag));
     }
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         LudosPlayer ludosPlayer = Core.get().getPlayerManager().getPlayer(event.getPlayer());
-        ctfLogic.dropFlagIfCarried(ludosPlayer);
+        ctfLogic.dropFlagIfCarried(ludosPlayer, true);
     }
 
 

@@ -54,22 +54,32 @@ public class GameLogic {
     /**
      * Vérifier si le joueur peut casser le drapeau, et si oui le casser.
      * @param player joueur qui a cassé le drapeau
-     * @param teamOfFlag la team du drapeau qui a été cassé (utilisé pour empécher une équipe de détruire son propre drapeau)
+     * @param teamOfFlag la team du drapeau qui a été cassé
      * @return true pour annuler l'event du cassage, sinon retourne false
      */
-    public boolean canBreakFlag(LudosPlayer player, String teamOfFlag) {
-        //Vérifier si le joueur n'essaie pas de casser le drapeau de sa propre équipe
+    public boolean handleBreakFlag(LudosPlayer player, String teamOfFlag) {
+        //Vérifier si le joueur essaie de casser le drapeau de sa propre équipe (si oui le replacer à sa position initiale)
         if(Objects.equals(player.getTeam().getName(), teamOfFlag)) {
-            player.sendMessage(
+            //Obtenir la position de la base du drapeau et vérifier s'il y est actuellement
+            Location baseLocation = getBaseLocation(teamOfFlag);
+            if(baseLocation.getBlock().getBlockData().getMaterial() == getFlagMaterial(teamOfFlag)) return true;    //si oui annuler le cassage
+
+            //Sinon le replacer à sa position initiale
+            baseLocation.getWorld().setBlockData(baseLocation, getFlagMaterial(teamOfFlag).createBlockData());
+            MessageUtils.broadcastMessage(
                     MessageUtils.ChatPrefix.GAME,
-                    "Tu ne peux pas récupérer ton propre drapeau !"
+                    getTeamColorCode(teamOfFlag) + "Le drapeau " + teamOfFlag.toLowerCase()
+                            + " a été renvoyé à sa base."
             );
-            return true;
+
+            return false;   //Détruire le bloc
         }
 
-        player.sendMessage(
+        MessageUtils.broadcastMessage(
                 MessageUtils.ChatPrefix.GAME,
-                "Tu as récupéré le drapeau adverse !"
+                getTeamColorCode(player.getTeam().getName()) + player.getName()
+                        + " &ra capturé le drapeau de l'équipe "
+                        + getTeamColorCode(teamOfFlag) + teamOfFlag.toLowerCase()
         );
 
         Material flagMaterial = getFlagMaterial(teamOfFlag);
@@ -88,26 +98,33 @@ public class GameLogic {
 
 
     /**
-     * Si le joueur possède un drapeau, il sera retiré de l'inventaire et replacé à sa position initiale
+     * Si le joueur possède un drapeau, il sera retiré de l'inventaire et replacé sur la map
      * @param player le joueur dont on souhaite retirer le drapeau
+     * @param dropOnPlayerPosition true : drop le drapeau à la position du joueur | false : tp le drapeau à sa base
      */
-    public void dropFlagIfCarried(LudosPlayer player) {
+    public void dropFlagIfCarried(LudosPlayer player, boolean dropOnPlayerPosition) {
         ItemStack helmetItem = player.entity().getInventory().getHelmet();
         if(helmetItem == null) return;      //Le joueur ne possède aucun drapeau dans ce cas
+
+        //Retirer l'effet de glow
+        player.entity().removePotionEffect(PotionEffectType.GLOWING);
 
         Material helmetSlotMaterial = helmetItem.getType();
         player.entity().getInventory().clear(39);   //39 = slot helmet
         player.entity().getInventory().clear(1);    // 1 = deuxième slot hotbar
 
-        //Déterminer quel drapeau replacer sur la map
-        Location baseLocation = getBaseLocation(helmetSlotMaterial);
-        if(baseLocation == null) return;
+        //Déterminer où replacer le drapeau sur la map
+        Location dropLocation;
+        if(dropOnPlayerPosition) {
+            dropLocation = player.entity().getLocation();
+        }
+        else {
+            dropLocation = getBaseLocation(helmetSlotMaterial);
+            if(dropLocation == null) return;
+        }
 
-        //Replacer le drapeau
-        baseLocation.getWorld().setBlockData(baseLocation, helmetSlotMaterial.createBlockData());
-
-        //Retirer l'effet de glow
-        player.entity().removePotionEffect(PotionEffectType.GLOWING);
+        //Replacer le drapeau sur la map
+        dropLocation.getWorld().setBlockData(dropLocation, helmetSlotMaterial.createBlockData());
     }
 
 
@@ -136,16 +153,19 @@ public class GameLogic {
 
         //Si la distance est inférieure à 4, alors le joueur marque 1 point pour son équipe
         if(distance < 4) {
-            player.sendMessage(MessageUtils.ChatPrefix.GAME, "Tu as marqué un point !");
-            dropFlagIfCarried(player);
+            String playerTeam = player.getTeam().getName();
+            MessageUtils.broadcastMessage(
+                    MessageUtils.ChatPrefix.GAME,
+                    getTeamColorCode(playerTeam) + player.getName() + " a marqué un point pour l'équipe "
+                            + playerTeam.toLowerCase()
+            );
+            dropFlagIfCarried(player, false);   //Refaire spawn le drapeau à la base adverse
             incrementScore(player.getTeam().getName());
         }
-        // Ancien code
-        //else {
-        //    player.sendMessage(MessageUtils.ChatPrefix.GAME, "Tu dois ramener le drapeau à ta base.");
-        //}
     }
 
+
+    //TODO : trouver un moyen de mieux gérer les trucs qu'il y a ci-dessous
 
     /**
      * Obtenir la position d'une base (drapeau) à partir d'un nom de team
@@ -178,6 +198,14 @@ public class GameLogic {
             case "Red" -> { return Material.RED_BANNER; }
             case "Blue" -> { return Material.BLUE_BANNER; }
             default -> { return null; }
+        }
+    }
+
+    public String getTeamColorCode(String teamName) {
+        switch (teamName) {
+            case "Red" -> { return "&c"; }
+            case "Blue" -> { return "&9"; }
+            default -> {return ""; }
         }
     }
 
