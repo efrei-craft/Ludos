@@ -6,9 +6,10 @@ import org.bukkit.Color;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.Objects;
@@ -79,6 +80,9 @@ public class GameLogic {
         player.entity().getInventory().setHelmet(new ItemStack(flagMaterial));
         player.entity().getInventory().setItem(1, new ItemStack(flagMaterial));    //1 = deuxième slot hotbar
 
+        //ajouter effet de glow
+        player.entity().addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 423310, 1));
+
         return false;
     }
 
@@ -101,6 +105,9 @@ public class GameLogic {
 
         //Replacer le drapeau
         baseLocation.getWorld().setBlockData(baseLocation, helmetSlotMaterial.createBlockData());
+
+        //Retirer l'effet de glow
+        player.entity().removePotionEffect(PotionEffectType.GLOWING);
     }
 
 
