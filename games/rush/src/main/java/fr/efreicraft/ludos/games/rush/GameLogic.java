@@ -255,7 +255,7 @@ public class GameLogic {
         ItemStack product7 = new ItemStack(Material.SHIELD);
         MerchantRecipe shield = new MerchantRecipe(product7, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
         arrow.addIngredient(new ItemStack(Material.IRON_INGOT, 3));
-        recipeList.add(arrow);
+        recipeList.add(shield);
 
 
         return recipeList;
