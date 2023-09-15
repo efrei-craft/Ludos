@@ -1,11 +1,10 @@
 package fr.efreicraft.ludos.games.ctf;
 
+import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.players.LudosPlayer;
+import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
-import org.bukkit.Color;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
@@ -16,6 +15,7 @@ import java.util.Objects;
 
 public class GameLogic {
     private LudosGame ludosGame;
+    private World world;
 
     private Location redLocation = null;
     private Location blueLocation = null;
@@ -93,7 +93,7 @@ public class GameLogic {
         //ajouter effet de glow
         player.entity().addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 423310, 1));
 
-        return false;
+        return false;   //détruire le bloc
     }
 
 
@@ -162,6 +162,31 @@ public class GameLogic {
             dropFlagIfCarried(player, false);   //Refaire spawn le drapeau à la base adverse
             incrementScore(player.getTeam().getName());
         }
+    }
+
+    public void spawnParticleAroundBase(String teamKey) {
+        Team team = Core.get().getTeamManager().getTeam(teamKey);
+        if(team.getPlayers().isEmpty()) return;
+
+        Location baseLocation = getBaseLocation(team.getName());
+        Location centerLocation = new Location(world, baseLocation.getX()+0.5, baseLocation.getY(), baseLocation.getZ()+0.5);
+        Color teamColor = team.getColor().bukkitColor();
+
+        Particle.DustOptions dustOptions = new Particle.DustOptions(teamColor, 1.0f);
+
+        double circleStep = Math.PI/30;
+        for(double angle = 0.0; angle < Math.PI*2; angle += circleStep) {
+            world.spawnParticle(Particle.REDSTONE,
+                    centerLocation.getX() + Math.cos(angle)*4,
+                    centerLocation.getY(),
+                    centerLocation.getZ() + Math.sin(angle)*4,
+                    5, dustOptions);
+        }
+    }
+
+    public void spawnParticles(int time) {
+        spawnParticleAroundBase("RED");
+        spawnParticleAroundBase("BLUE");
     }
 
 
@@ -239,5 +264,9 @@ public class GameLogic {
             case "Blue" -> { return scoreTeamBlue; }
             default -> { return -1; }
         }
+    }
+
+    public void setWorld(World world1) {
+        world = world1;
     }
 }
