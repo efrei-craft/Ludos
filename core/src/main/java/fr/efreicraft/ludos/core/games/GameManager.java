@@ -158,8 +158,6 @@ public class GameManager implements IManager {
      * @throws GameStatusException Exception levée si le jeu ne peut pas être chargé
      */
     public void loadGame(String gameName) throws GameStatusException, GameRegisteringException {
-        Core.get().getLogger().log(Level.INFO, "Loading game {0}...", gameName);
-
         if (status != GameStatus.WAITING) {
             throw new GameStatusException("Impossible de charger un jeu en cours de partie !");
         }

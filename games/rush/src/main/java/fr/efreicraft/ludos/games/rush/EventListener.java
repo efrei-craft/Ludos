@@ -8,6 +8,7 @@ import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import io.papermc.paper.event.entity.EntityMoveEvent;
 import net.kyori.adventure.text.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -130,13 +131,24 @@ public record EventListener(GameLogic logic) implements Listener {
             villager.clearReputations();
             if (villager.customName() == null) return;
 
-            Merchant toOpen = null;
+            Merchant toOpen = Bukkit.createMerchant(villager.customName());
 
             switch (( (TextComponent) villager.customName()).content()) {
-                case "Bâtisseur" -> toOpen = logic.merchantBatisseur;
-                case "Terroriste" -> toOpen = logic.merchantTerroriste;
-                case "Tavernier" -> toOpen = logic.merchantTavernier;
-                case "Armurier" -> toOpen = logic.merchantArmurier;
+                case "Bâtisseur" -> {
+                    toOpen.setRecipes(logic.merchantBatisseur.getRecipes());
+                }
+                case "Terroriste" -> {
+                    toOpen.setRecipes(logic.merchantTerroriste.getRecipes());
+                }
+                case "Tavernier" -> {
+                    toOpen.setRecipes(logic.merchantTavernier.getRecipes());
+                }
+                case "Armurier" -> {
+                    toOpen.setRecipes(logic.merchantArmurier.getRecipes());
+                }
+                default -> {
+                    return;
+                }
             }
 
             event.getPlayer().openMerchant(toOpen, false);
@@ -152,9 +164,9 @@ public record EventListener(GameLogic logic) implements Listener {
 
     @EventHandler
     public void onEntityMove(EntityMoveEvent event) {
-
         if (event.getEntity().getType() == EntityType.VILLAGER) {
             event.setTo(event.getFrom());
+            event.setCancelled(true);
         }
     }
 

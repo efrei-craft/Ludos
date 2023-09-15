@@ -19,7 +19,6 @@ public final class LudosCore extends JavaPlugin {
         getLogger().info("Starting Core.");
         new Core(this, ProtocolLibrary.getProtocolManager());
 
-        getLogger().info("Adding Redis handler.");
         ACP.getClient().addRedisHandler(new RedisHandler());
     }
 
