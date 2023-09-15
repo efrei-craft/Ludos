@@ -56,6 +56,7 @@ public class LudosGame extends Game {
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
         world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
         world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+        world.setGameRule(GameRule.NATURAL_REGENERATION, true);
 
         this.gameLogic.world(world);
     }
