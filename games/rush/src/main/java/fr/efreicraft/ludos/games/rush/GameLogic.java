@@ -162,9 +162,9 @@ public class GameLogic {
         endstone.addIngredient(new ItemStack(Material.BRICK, 4));
         recipeList.add(endstone);
 
-        ItemStack product2 = new ItemStack(Material.SOUL_SAND);
+        ItemStack product2 = new ItemStack(Material.SOUL_SAND, 2);
         MerchantRecipe soulsand = new MerchantRecipe(product2, 0, Integer.MAX_VALUE, false, 0, 1, -1, 0, true);
-        soulsand.addIngredient(new ItemStack(Material.IRON_INGOT, 2));
+        soulsand.addIngredient(new ItemStack(Material.IRON_INGOT));
         recipeList.add(soulsand);
 
         ItemStack product3 = new ItemStack(Material.WOODEN_PICKAXE);
