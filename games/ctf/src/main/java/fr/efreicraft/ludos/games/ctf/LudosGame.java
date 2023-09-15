@@ -19,6 +19,9 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Ewenn BAUDET
+ */
 @GameMetadata(
         name = "CTF",
         description = "TODO !",
@@ -67,12 +70,12 @@ public class LudosGame extends Game {
 
         player.getBoard().setField(
                 0,
-                new ScoreboardField("&c&lRouge", true, player1 -> gameLogic.getScore("Red")+"")
+                new ScoreboardField("&c&lRouge", true, player1 -> gameLogic.getScore("Rouge")+"")
         );
 
         player.getBoard().setField(
                 1,
-                new ScoreboardField("&9&lBleu", true, player1 -> gameLogic.getScore("Blue")+"")
+                new ScoreboardField("&9&lBleu", true, player1 -> gameLogic.getScore("Bleu")+"")
         );
     }
 
@@ -88,7 +91,7 @@ public class LudosGame extends Game {
     public Map<String, TeamRecord> getTeamRecords() {
         HashMap<String, TeamRecord> teams = new HashMap<>();
         teams.put("RED", new TeamRecord(
-                "Red",
+                "Rouge",
                 1,
                 true,
                 true,
@@ -97,7 +100,7 @@ public class LudosGame extends Game {
                 this.gameLogic::preparePlayerToSpawn
         ));
         teams.put("BLUE", new TeamRecord(
-                "Blue",
+                "Bleu",
                 2,
                 true,
                 true,

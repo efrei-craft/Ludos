@@ -9,7 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public record CtfWinners(String teamKey, Color teamColor) implements GameWinner {
+/**
+ * Utilisé pour définir une certaine équipe comme gagnante du ctf
+ * @author Ewenn BAUDET
+ * @param teamKey clé associée à la team dans le TeamManager de ludos ("RED" / "BLUE")
+ */
+public record CtfWinners(String teamKey) implements GameWinner {
     @Override
     public Color getFireworkColor() {
         return Core.get().getTeamManager().getTeam(teamKey).getColor().bukkitColor();

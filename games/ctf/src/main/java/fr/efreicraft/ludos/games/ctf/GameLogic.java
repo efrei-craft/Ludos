@@ -13,6 +13,10 @@ import org.bukkit.util.Vector;
 
 import java.util.Objects;
 
+/**
+ * Classe principale de la logique du leu CTF
+ * @author Ewenn BAUDET
+ */
 public class GameLogic {
     private LudosGame ludosGame;
     private World world;
@@ -199,8 +203,8 @@ public class GameLogic {
      */
     public Location getBaseLocation(String teamName) {
         switch (teamName) {
-            case "Red" -> { return redLocation; }
-            case "Blue" -> { return blueLocation; }
+            case "Rouge" -> { return redLocation; }
+            case "Bleu" -> { return blueLocation; }
             default -> { return null; }
         }
     }
@@ -220,16 +224,16 @@ public class GameLogic {
 
     public Material getFlagMaterial(String teamName) {
         switch(teamName) {
-            case "Red" -> { return Material.RED_BANNER; }
-            case "Blue" -> { return Material.BLUE_BANNER; }
+            case "Rouge" -> { return Material.RED_BANNER; }
+            case "Bleu" -> { return Material.BLUE_BANNER; }
             default -> { return null; }
         }
     }
 
     public String getTeamColorCode(String teamName) {
         switch (teamName) {
-            case "Red" -> { return "&c"; }
-            case "Blue" -> { return "&9"; }
+            case "Rouge" -> { return "&c"; }
+            case "Bleu" -> { return "&9"; }
             default -> {return ""; }
         }
     }
@@ -240,15 +244,15 @@ public class GameLogic {
      */
     public void incrementScore(String teamName) {
         switch (teamName) {
-            case "Red" -> {
+            case "Rouge" -> {
                 scoreTeamRed += 1;
                 if(scoreTeamRed >= SCORE_TO_WIN)
-                    ludosGame.setWinnerAndEndGame(new CtfWinners("RED", Color.RED));
+                    ludosGame.setWinnerAndEndGame(new CtfWinners("RED"));
             }
-            case "Blue" -> {
+            case "Bleu" -> {
                 scoreTeamBlue += 1;
                 if(scoreTeamBlue >= SCORE_TO_WIN)
-                    ludosGame.setWinnerAndEndGame(new CtfWinners("BLUE", Color.BLUE));
+                    ludosGame.setWinnerAndEndGame(new CtfWinners("BLUE"));
             }
         }
     }
@@ -260,8 +264,8 @@ public class GameLogic {
      */
     public int getScore(String teamName) {
         switch (teamName) {
-            case "Red" -> { return scoreTeamRed; }
-            case "Blue" -> { return scoreTeamBlue; }
+            case "Rouge" -> { return scoreTeamRed; }
+            case "Bleu" -> { return scoreTeamBlue; }
             default -> { return -1; }
         }
     }

@@ -12,6 +12,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+/**
+ * @author Ewenn BAUDET
+ * @param ctfLogic logique du jeu CTF
+ */
 public record EventListener(GameLogic ctfLogic) implements Listener {
     @EventHandler
     public void onPlayerDrop(PlayerDropItemEvent event) {
@@ -31,8 +35,8 @@ public record EventListener(GameLogic ctfLogic) implements Listener {
 
         //Obtenir la team du drapeau (déplacer ça autre part dans le future ?)
         switch (event.getBlock().getBlockData().getMaterial()) {
-            case RED_BANNER -> teamOfFlag = "Red";
-            case BLUE_BANNER -> teamOfFlag = "Blue";
+            case RED_BANNER -> teamOfFlag = "Rouge";
+            case BLUE_BANNER -> teamOfFlag = "Bleu";
             default -> {
                 event.setCancelled(true);
                 return;
