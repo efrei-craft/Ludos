@@ -28,6 +28,8 @@ public class GameLogic {
     private int scoreTeamBlue = 0;
     private static final int SCORE_TO_WIN = 3;
 
+    private static final double BASE_RADIUS = 4;
+
 
     public GameLogic(LudosGame ludosGame1) {
         ludosGame = ludosGame1;
@@ -155,8 +157,8 @@ public class GameLogic {
         double distance = vec.length();
         //player.sendMessage(MessageUtils.ChatPrefix.GAME, distance+"");
 
-        //Si la distance est inférieure à 4, alors le joueur marque 1 point pour son équipe
-        if(distance < 4) {
+        //Si la distance est inférieure à une certaine distance, alors le joueur marque 1 point pour son équipe
+        if(distance < BASE_RADIUS) {
             String playerTeam = player.getTeam().getName();
             MessageUtils.broadcastMessage(
                     MessageUtils.ChatPrefix.GAME,
@@ -181,9 +183,9 @@ public class GameLogic {
         double circleStep = Math.PI/30;
         for(double angle = 0.0; angle < Math.PI*2; angle += circleStep) {
             world.spawnParticle(Particle.REDSTONE,
-                    centerLocation.getX() + Math.cos(angle)*4,
+                    centerLocation.getX() + Math.cos(angle)*BASE_RADIUS,
                     centerLocation.getY(),
-                    centerLocation.getZ() + Math.sin(angle)*4,
+                    centerLocation.getZ() + Math.sin(angle)*BASE_RADIUS,
                     5, dustOptions);
         }
     }

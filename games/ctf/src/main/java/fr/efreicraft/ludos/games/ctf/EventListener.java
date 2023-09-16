@@ -50,7 +50,7 @@ public record EventListener(GameLogic ctfLogic) implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         LudosPlayer ludosPlayer = Core.get().getPlayerManager().getPlayer(event.getPlayer());
-        ctfLogic.dropFlagIfCarried(ludosPlayer, true);
+        ctfLogic.dropFlagIfCarried(ludosPlayer, ludosPlayer.entity().getLocation().getY() > -64);
     }
 
 
