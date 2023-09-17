@@ -30,7 +30,7 @@ import java.util.Map;
         rules = @GameRules(
                 allowRespawn = true,
                 minPlayers = 2,
-                maxPlayers = 2
+                maxPlayers = 8
         )
 )
 public class LudosGame extends Game {
