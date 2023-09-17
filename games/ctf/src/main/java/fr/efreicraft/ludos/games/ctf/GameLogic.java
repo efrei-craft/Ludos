@@ -61,14 +61,15 @@ public class GameLogic {
      * Vérifier si le joueur peut casser le drapeau, et si oui le casser.
      * @param player joueur qui a cassé le drapeau
      * @param teamOfFlag la team du drapeau qui a été cassé
+     * @param flagLocation la position du drapeau qui a été cassé
      * @return true pour annuler l'event du cassage, sinon retourne false
      */
-    public boolean handleBreakFlag(LudosPlayer player, String teamOfFlag) {
+    public boolean handleBreakFlag(LudosPlayer player, String teamOfFlag, Location flagLocation) {
         //Vérifier si le joueur essaie de casser le drapeau de sa propre équipe (si oui le replacer à sa position initiale)
         if(Objects.equals(player.getTeam().getName(), teamOfFlag)) {
-            //Obtenir la position de la base du drapeau et vérifier s'il y est actuellement
+            //Obtenir la position de la base du drapeau et vérifier si c'est le bloc qu'essaie de casser le joueur
             Location baseLocation = getBaseLocation(teamOfFlag);
-            if(baseLocation.getBlock().getBlockData().getMaterial() == getFlagMaterial(teamOfFlag)) return true;    //si oui annuler le cassage
+            if(flagLocation.equals(baseLocation)) return true;    //si oui annuler le cassage
 
             //Sinon le replacer à sa position initiale
             baseLocation.getWorld().setBlockData(baseLocation, getFlagMaterial(teamOfFlag).createBlockData());
@@ -81,6 +82,7 @@ public class GameLogic {
             return false;   //Détruire le bloc
         }
 
+        //Le joueur casse le drapeau de la team adverse
         MessageUtils.broadcastMessage(
                 MessageUtils.ChatPrefix.GAME,
                 getTeamColorCode(player.getTeam().getName()) + player.getName()

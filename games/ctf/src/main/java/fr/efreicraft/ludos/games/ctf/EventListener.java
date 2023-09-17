@@ -44,7 +44,8 @@ public record EventListener(GameLogic ctfLogic) implements Listener {
         }
 
         //gérer le cassage du drapeau
-        event.setCancelled(ctfLogic.handleBreakFlag(ludosPlayer, teamOfFlag));
+        Location flagLocation = event.getBlock().getLocation();
+        event.setCancelled(ctfLogic.handleBreakFlag(ludosPlayer, teamOfFlag, flagLocation));
     }
 
     @EventHandler
