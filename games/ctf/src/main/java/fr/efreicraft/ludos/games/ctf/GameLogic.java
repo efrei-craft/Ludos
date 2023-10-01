@@ -23,8 +23,13 @@ public class GameLogic {
 
     private int killZoneY = -64;
 
-    private Location redLocation = null;
-    private Location blueLocation = null;
+    private Location redBaseLocation = null;
+    private Location blueBaseLocation = null;
+
+    //Le but de ces deux variables est de concerver la position des trapeaux dans le monde
+    //afin de ne pas les confondre avec d'autres banières (posé par des builders par ex)
+    private Location redFlagLocation = null;
+    private Location blueFlagLocation = null;
 
     private int scoreTeamRed = 0;
     private int scoreTeamBlue = 0;
@@ -37,13 +42,20 @@ public class GameLogic {
         ludosGame = ludosGame1;
     }
 
-    //Faire apparaître les drapeaux sur la map, et stocker leurs positions
+    /**
+     * Faire apparaître les drapeaux sur la map, et stocker leurs positions
+     * @param red_location position initiale du drapeau rouge
+     * @param blue_location position initiale du drapeau bleu
+     */
     public void initFlags(Location red_location, Location blue_location) {
-        redLocation = red_location;
-        blueLocation = blue_location;
+        redBaseLocation = red_location;
+        blueBaseLocation = blue_location;
 
-        redLocation.getWorld().setBlockData(redLocation, Material.RED_BANNER.createBlockData());
-        blueLocation.getWorld().setBlockData(blueLocation, Material.BLUE_BANNER.createBlockData());
+        redFlagLocation = red_location;
+        blueFlagLocation = blue_location;
+
+        redBaseLocation.getWorld().setBlockData(redBaseLocation, Material.RED_BANNER.createBlockData());
+        blueBaseLocation.getWorld().setBlockData(blueBaseLocation, Material.BLUE_BANNER.createBlockData());
     }
 
 
@@ -76,6 +88,12 @@ public class GameLogic {
      * @return true pour annuler l'event du cassage, sinon retourne false
      */
     public boolean handleBreakFlag(LudosPlayer player, String teamOfFlag, Location flagLocation) {
+        Material flagMaterial = getFlagMaterial(teamOfFlag);
+        if(flagMaterial == null) return true;
+
+        //Vérifier si le joueur n'essaie pas de casser un drapeau du décor
+        if(!flagLocation.equals(getFlagLocation(flagMaterial))) return true;
+
         //Vérifier si le joueur essaie de casser le drapeau de sa propre équipe (si oui le replacer à sa position initiale)
         if(Objects.equals(player.getTeam().getName(), teamOfFlag)) {
             //Obtenir la position de la base du drapeau et vérifier si c'est le bloc qu'essaie de casser le joueur
@@ -83,12 +101,14 @@ public class GameLogic {
             if(flagLocation.equals(baseLocation)) return true;    //si oui annuler le cassage
 
             //Sinon le replacer à sa position initiale
-            baseLocation.getWorld().setBlockData(baseLocation, getFlagMaterial(teamOfFlag).createBlockData());
+            baseLocation.getWorld().setBlockData(baseLocation, flagMaterial.createBlockData());
             MessageUtils.broadcastMessage(
                     MessageUtils.ChatPrefix.GAME,
                     getTeamColorCode(teamOfFlag) + "Le drapeau " + teamOfFlag.toLowerCase()
                             + " a été renvoyé à sa base."
             );
+
+            updateFlagLocation(flagMaterial, baseLocation);
 
             return false;   //Détruire le bloc
         }
@@ -100,9 +120,6 @@ public class GameLogic {
                         + " &ra capturé le drapeau de l'équipe "
                         + getTeamColorCode(teamOfFlag) + teamOfFlag.toLowerCase()
         );
-
-        Material flagMaterial = getFlagMaterial(teamOfFlag);
-        if(flagMaterial == null) return true;
 
         //Le drapeau est placé sur la tête du joueur qui le récupère afin d'être visible par tout le monde,
         //et dans le deuxième slot de la hotbar afin d'être visible par le joueur lui-même
@@ -144,6 +161,9 @@ public class GameLogic {
 
         //Replacer le drapeau sur la map
         dropLocation.getWorld().setBlockData(dropLocation, helmetSlotMaterial.createBlockData());
+        updateFlagLocation(helmetSlotMaterial, dropLocation);
+
+        //TODO : si le joueur meurt au dessus du vide (sans qu'il y ait de sol en dessous de lui) il faut replacer le drapeau à son spawn
     }
 
 
@@ -215,9 +235,22 @@ public class GameLogic {
         }
     }
 
+
+    public void spawnParticleDebug() {
+        Particle.DustOptions dustOptionsBases = new Particle.DustOptions(Color.GREEN, 1.0f);
+        world.spawnParticle(Particle.REDSTONE, redBaseLocation, 5, dustOptionsBases);
+        world.spawnParticle(Particle.REDSTONE, blueBaseLocation, 5, dustOptionsBases);
+
+        Particle.DustOptions dustOptionsFlags = new Particle.DustOptions(Color.ORANGE, 1.0f);
+        world.spawnParticle(Particle.REDSTONE, redFlagLocation, 5, dustOptionsFlags);
+        world.spawnParticle(Particle.REDSTONE, blueFlagLocation, 5, dustOptionsFlags);
+    }
+
     public void spawnParticles(int time) {
         spawnParticleAroundBase("RED");
         spawnParticleAroundBase("BLUE");
+
+        //spawnParticleDebug();
     }
 
 
@@ -230,8 +263,8 @@ public class GameLogic {
      */
     public Location getBaseLocation(String teamName) {
         switch (teamName) {
-            case "Rouge" -> { return redLocation; }
-            case "Bleu" -> { return blueLocation; }
+            case "Rouge" -> { return redBaseLocation; }
+            case "Bleu" -> { return blueBaseLocation; }
             default -> { return null; }
         }
     }
@@ -243,8 +276,8 @@ public class GameLogic {
      */
     public Location getBaseLocation(Material material) {
         switch (material) {
-            case RED_BANNER -> { return redLocation; }
-            case BLUE_BANNER -> { return blueLocation; }
+            case RED_BANNER -> { return redBaseLocation; }
+            case BLUE_BANNER -> { return blueBaseLocation; }
             default -> { return null; }
         }
     }
@@ -256,6 +289,36 @@ public class GameLogic {
             default -> { return null; }
         }
     }
+
+
+    /**
+     * Mettre à jour la position d'un des drapeaux
+     * @param flagMaterial Matériel correspondant au drapeau
+     * @param location Nouvelle position du drapeau dans le monde
+     */
+    public void updateFlagLocation(Material flagMaterial, Location location) {
+        //"arrondir" la position afin de pouvoir la comparer
+        Location l = new Location(world, location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        switch (flagMaterial) {
+            case RED_BANNER -> { redFlagLocation = l; }
+            case BLUE_BANNER -> { blueFlagLocation = l; }
+            default -> { /* rien */ }
+        }
+    }
+
+    /**
+     * Obtenir la position d'un drapeau dans le monde (si le drapeau est dans un inventaire, sa position précédente dans le monde est retourné)
+     * @param flagMaterial Matériel correspondant au drapeau
+     * @return la position du drapeau dans le monde
+     */
+    public Location getFlagLocation(Material flagMaterial) {
+        switch (flagMaterial) {
+            case RED_BANNER -> { return redFlagLocation; }
+            case BLUE_BANNER -> { return blueFlagLocation; }
+            default -> { return null; }
+        }
+    }
+
 
     public String getTeamColorCode(String teamName) {
         switch (teamName) {
