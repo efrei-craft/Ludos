@@ -62,6 +62,10 @@ public class LudosGame extends Game {
                 game_points.get("RED_FLAG").get(0).getLocation(),
                 game_points.get("BLUE_FLAG").get(0).getLocation()
         );
+
+        if(game_points.get("KILL_ZONE") != null) {
+            gameLogic.initKillZone(game_points.get("KILL_ZONE").get(0).getLocation().getBlockY());
+        }
     }
 
     @Override
@@ -84,6 +88,7 @@ public class LudosGame extends Game {
         EnumMap<Material, String> gamePointsMaterials = new EnumMap<>(Material.class);
         gamePointsMaterials.put(Material.RED_CONCRETE, "RED_FLAG");
         gamePointsMaterials.put(Material.BLUE_CONCRETE, "BLUE_FLAG");
+        gamePointsMaterials.put(Material.BEDROCK, "KILL_ZONE");
         return gamePointsMaterials;
     }
 

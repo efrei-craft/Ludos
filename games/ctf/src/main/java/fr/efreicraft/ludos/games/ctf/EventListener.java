@@ -71,6 +71,9 @@ public record EventListener(GameLogic ctfLogic) implements Listener {
         if(!event.hasChangedBlock()) return;
 
         LudosPlayer ludosPlayer = Core.get().getPlayerManager().getPlayer(event.getPlayer());
+
+        ctfLogic.checkKillZone(ludosPlayer);
+
         Location playerLocation = ludosPlayer.entity().getLocation();
         ctfLogic.tryToScore(ludosPlayer, playerLocation);
     }

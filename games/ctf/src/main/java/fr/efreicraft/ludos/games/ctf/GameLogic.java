@@ -21,6 +21,8 @@ public class GameLogic {
     private LudosGame ludosGame;
     private World world;
 
+    private int killZoneY = -64;
+
     private Location redLocation = null;
     private Location blueLocation = null;
 
@@ -42,6 +44,15 @@ public class GameLogic {
 
         redLocation.getWorld().setBlockData(redLocation, Material.RED_BANNER.createBlockData());
         blueLocation.getWorld().setBlockData(blueLocation, Material.BLUE_BANNER.createBlockData());
+    }
+
+
+    /**
+     * Permet de définir la position y de la killzone (tout joueur passant dessous sera tué)
+     * @param kill_zone_y position y de la killzone
+     */
+    public void initKillZone(int kill_zone_y) {
+        killZoneY = kill_zone_y;
     }
 
     public void preparePlayerToSpawn(LudosPlayer player) {
@@ -171,6 +182,18 @@ public class GameLogic {
             incrementScore(player.getTeam().getName());
         }
     }
+
+    /**
+     * Vérifier si le joueur est sous la killzone. Si oui le tuer.
+     * @param player joueur à vérifier
+     */
+    public void checkKillZone(LudosPlayer player) {
+        if(player.entity().getLocation().getBlockY() <= killZoneY && player.entity().getGameMode() == GameMode.SURVIVAL) {
+            dropFlagIfCarried(player, false);   //remettre le drapeau à sa base
+            player.entity().setHealth(0);   //tuer le joueur
+        }
+    }
+
 
     public void spawnParticleAroundBase(String teamKey) {
         Team team = Core.get().getTeamManager().getTeam(teamKey);
