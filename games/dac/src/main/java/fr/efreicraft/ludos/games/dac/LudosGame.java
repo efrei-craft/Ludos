@@ -18,9 +18,11 @@ import static fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder.DefaultTea
 
 @GameMetadata(
         name = "Dé à coudre",
-        description = "Poussez votre adversaire en dehors du ring pour gagner !",
+        description = "Essayer de tomber dans l'eau et passez les trois rounds pour gagner !",
         authors = {"Nat.io"},
         color = "&b",
+        mapFolder = "DAC",
+
         rules = @GameRules(
                 minPlayers = 2,
                 maxPlayers = 2
@@ -49,8 +51,8 @@ public class LudosGame extends Game {
 
     @Override
     public void postMapParse() {
-        this.gameLogic.setKillZoneLocation(
-                Core.get().getMapManager().getCurrentMap().getGamePoints().get("KILL_ZONE").get(0).getLocation()
+        this.gameLogic.setPrismarineLocation(
+                Core.get().getMapManager().getCurrentMap().getGamePoints().get("PRISMARINE").get(0).getLocation()
         );
     }
 
@@ -62,7 +64,7 @@ public class LudosGame extends Game {
     @Override
     public EnumMap<Material, String> getGamePointsMaterials() {
         EnumMap<Material, String> gamePointsMaterials = new EnumMap<>(Material.class);
-        gamePointsMaterials.put(Material.BEDROCK, "KILL_ZONE");
+        gamePointsMaterials.put(Material.PRISMARINE, "PRISMARINE");
         return gamePointsMaterials;
     }
 

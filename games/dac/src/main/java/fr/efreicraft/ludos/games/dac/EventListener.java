@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-public record EventListener(GameLogic sumo) implements Listener {
+public record EventListener(GameLogic dac) implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
@@ -18,8 +18,10 @@ public record EventListener(GameLogic sumo) implements Listener {
         if (!player.getTeam().isPlayingTeam()) {
             return;
         }
-        if (this.sumo.isOutsideKillzone(event.getTo().getY())) {
-            sumo.onPlayerBelowKillzone(player);
+        if (this.dac.isInWater(event.getTo().getY())) {
+            dac.onPlayerInWater(player);
+        } else {
+            dac.onPlayerTouchingGround(player);
         }
     }
 

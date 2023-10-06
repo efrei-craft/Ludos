@@ -74,6 +74,7 @@ public class MapManager implements IManager {
         setupLobbyWorld();
     }
 
+
     /**
      * Répertorie les cartes disponibles d'un jeu, accompagnées de leur type.
      * Cette fonction est appelée à chaque changement de jeu.
@@ -81,8 +82,13 @@ public class MapManager implements IManager {
      */
     public void setupCurrentGameMaps(Game game) {
         if (!this.currentGameMaps.isEmpty()) clearGameMaps();
-
-        File dataFolder = new File(Core.get().getPlugin().getDataFolder(), "game_maps/" + game.getMetadata().name());
+        String name;
+        if (game.getMetadata().mapFolder().isEmpty()) {
+            name = game.getMetadata().name();
+        } else {
+            name = game.getMetadata().mapFolder();
+        }
+        File dataFolder = new File(Core.get().getPlugin().getDataFolder(), "game_maps/" + name);
         if(dataFolder.exists()) {
             for (File file : Objects.requireNonNull(dataFolder.listFiles())) {
                 if (file.isFile() && file.getName().endsWith(".schem")) {

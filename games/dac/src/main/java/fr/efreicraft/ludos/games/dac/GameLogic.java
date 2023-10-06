@@ -5,18 +5,22 @@ import fr.efreicraft.ludos.core.utils.MessageUtils;
 import org.bukkit.Location;
 
 public class GameLogic {
-    private int killZonePositionY;
+    private int prismarinePositionY;
 
-    public void setKillZoneLocation(Location killZoneLocation) {
-        this.killZonePositionY = killZoneLocation.getBlockY();
+    public void setPrismarineLocation(Location prismarineLocation) {
+        this.prismarinePositionY = prismarineLocation.getBlockY();
     }
 
-    public boolean isOutsideKillzone(double positionY) {
-        return killZonePositionY > positionY;
+    public boolean isInWater(double positionY) {
+        return prismarinePositionY < positionY;
     }
 
-    public void onPlayerBelowKillzone(LudosPlayer player) {
-        player.entity().setHealth(0);
-        player.sendMessage(MessageUtils.ChatPrefix.GAME, "Vous avez été éliminé !");
+    public void onPlayerInWater(LudosPlayer player) {
+
+
+    }
+    public void onPlayerTouchingGround(LudosPlayer player) {
+        player.sendMessage(MessageUtils.ChatPrefix.GAME, "Vous êtes tombé sur un bloc ! Vous êtes éliminé !");
+
     }
 }
