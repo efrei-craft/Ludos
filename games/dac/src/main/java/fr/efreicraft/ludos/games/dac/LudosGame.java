@@ -24,8 +24,7 @@ import static fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder.DefaultTea
         mapFolder = "DAC",
 
         rules = @GameRules(
-                minPlayers = 2,
-                maxPlayers = 2
+                maxPlayers = 8
         )
 )
 public class LudosGame extends Game {
@@ -51,8 +50,8 @@ public class LudosGame extends Game {
 
     @Override
     public void postMapParse() {
-        this.gameLogic.setPrismarineLocation(
-                Core.get().getMapManager().getCurrentMap().getGamePoints().get("PRISMARINE").get(0).getLocation()
+        this.gameLogic.setBassinLocation(
+                Core.get().getMapManager().getCurrentMap().getGamePoints().get("BASSIN").get(0).getLocation()
         );
     }
 
@@ -64,7 +63,7 @@ public class LudosGame extends Game {
     @Override
     public EnumMap<Material, String> getGamePointsMaterials() {
         EnumMap<Material, String> gamePointsMaterials = new EnumMap<>(Material.class);
-        gamePointsMaterials.put(Material.PRISMARINE, "PRISMARINE");
+        gamePointsMaterials.put(Material.PRISMARINE_BRICKS, "BASSIN");
         return gamePointsMaterials;
     }
 
