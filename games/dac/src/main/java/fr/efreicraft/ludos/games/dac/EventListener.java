@@ -2,6 +2,7 @@ package fr.efreicraft.ludos.games.dac;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.players.LudosPlayer;
+import fr.efreicraft.ludos.core.utils.MessageUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -18,12 +19,13 @@ public record EventListener(GameLogic dac) implements Listener {
         if (!player.getTeam().isPlayingTeam()) {
             return;
         }
-        if (this.dac.isInWater(event.getTo().getY())) {
-            dac.onPlayerInWater(player);
-        } else {
+        if (this.dac.isInBassin(event.getTo())) {
+            dac.onPlayerInBassin(player);
+        } else if (this.dac.isOnGround(event.getTo().getY())) {
             dac.onPlayerTouchingGround(player);
         }
     }
+
 
     @EventHandler
     public void onDamage(EntityDamageEvent event) {

@@ -45,7 +45,7 @@ public class LudosGame extends Game {
     @Override
     public void beginGame() {
         super.beginGame();
-        Core.get().getTeamManager().getTeam("PLAYERS").setFriendlyFire(true);
+        Core.get().getTeamManager().getTeam("PLAYERS").setFriendlyFire(false);
     }
 
     @Override
@@ -53,6 +53,17 @@ public class LudosGame extends Game {
         this.gameLogic.setBassinLocation(
                 Core.get().getMapManager().getCurrentMap().getGamePoints().get("BASSIN").get(0).getLocation()
         );
+        this.gameLogic.setPlateformeLocation(
+                Core.get().getMapManager().getCurrentMap().getGamePoints().get("SPAWN_PLATEFORME").get(0).getLocation()
+        );
+        this.gameLogic.setPlateformeBoundaries(
+                Core.get().getMapManager().getCurrentMap().getGamePoints().get("BORDER_PLATEFORME").get(0).getLocation(),
+                Core.get().getMapManager().getCurrentMap().getGamePoints().get("BORDER_PLATEFORME").get(1).getLocation()
+        );
+        this.gameLogic.setSpawnPosition(
+                Core.get().getMapManager().getCurrentMap().getSpawnPoints().get(Core.get().getTeamManager().getTeam("PLAYERS")).get(5).getLocation()
+        );
+
     }
 
     @Override
@@ -64,6 +75,8 @@ public class LudosGame extends Game {
     public EnumMap<Material, String> getGamePointsMaterials() {
         EnumMap<Material, String> gamePointsMaterials = new EnumMap<>(Material.class);
         gamePointsMaterials.put(Material.PRISMARINE_BRICKS, "BASSIN");
+        gamePointsMaterials.put(Material.END_STONE_BRICKS, "BORDER_PLATEFORME");
+        gamePointsMaterials.put(Material.CHISELED_STONE_BRICKS,"SPAWN_PLATEFORME");
         return gamePointsMaterials;
     }
 
@@ -86,9 +99,7 @@ public class LudosGame extends Game {
                             p.entity().getInventory().clear();
                             p.entity().getInventory().setArmorContents(null);
                             p.entity().setGameMode(GameMode.ADVENTURE);
-//                            ItemStack kbstick = new ItemStack(Material.STICK);
-//                            kbstick.addUnsafeEnchantment(Enchantment.KNOCKBACK, 1);
-//                            p.entity().getInventory().setItem(0, kbstick);
+
                         }
                 ))
                 .putAll(ONLY_SPECTATOR.getTeamRecords())
