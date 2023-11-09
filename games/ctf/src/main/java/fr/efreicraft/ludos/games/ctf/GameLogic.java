@@ -153,6 +153,29 @@ public class GameLogic {
         Location dropLocation;
         if(dropOnPlayerPosition) {
             dropLocation = player.entity().getLocation();
+            boolean metSolidBock = false;
+
+            //On souhaite drop le drapeau sur le premier block solide en dessous du joueur
+            for(int y = dropLocation.getBlockY(); y > killZoneY; y--) {
+                //Obtenir une position en dessous du joueur
+                Location belowLocation = new Location(world, dropLocation.getX(), y, dropLocation.getZ());
+
+                //Vérifier le type du block
+                Material belowBockMaterial = belowLocation.getBlock().getBlockData().getMaterial();
+                if(belowBockMaterial.isEmpty()) {   //block vide (TODO : deadbush, herbe, fleurs, etc ?)
+                    dropLocation = belowLocation;
+                }
+                else {  //block solide
+                    metSolidBock = true;
+                    break;
+                }
+            }
+
+            //Si on est en dessous de la killzone, replacer le drapeau à sa base
+            if(!metSolidBock) {
+                dropLocation = getBaseLocation(helmetSlotMaterial);
+                if(dropLocation == null) return;
+            }
         }
         else {
             dropLocation = getBaseLocation(helmetSlotMaterial);
