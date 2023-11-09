@@ -5,6 +5,7 @@ import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
@@ -150,34 +151,29 @@ public class GameLogic {
         player.entity().getInventory().clear(1);    // 1 = deuxième slot hotbar
 
         //Déterminer où replacer le drapeau sur la map
-        Location dropLocation;
-        if(dropOnPlayerPosition) {
-            dropLocation = player.entity().getLocation();
-            boolean metSolidBock = false;
+        Location dropLocation = null;
+        if(dropOnPlayerPosition) {  //drop sur le joueur
+            Location playerLocation = player.entity().getLocation();
 
             //On souhaite drop le drapeau sur le premier block solide en dessous du joueur
-            for(int y = dropLocation.getBlockY(); y > killZoneY; y--) {
-                //Obtenir une position en dessous du joueur
-                Location belowLocation = new Location(world, dropLocation.getX(), y, dropLocation.getZ());
-
+            for(int y = playerLocation.getBlockY(); y > killZoneY; y--) {
                 //Vérifier le type du block
-                Material belowBockMaterial = belowLocation.getBlock().getBlockData().getMaterial();
-                if(belowBockMaterial.isEmpty()) {   //block vide (TODO : deadbush, herbe, fleurs, etc ?)
-                    dropLocation = belowLocation;
-                }
-                else {  //block solide
-                    metSolidBock = true;
+                Block belowBock = world.getBlockAt(playerLocation.getBlockX(), y, playerLocation.getBlockZ());
+                Material belowBockMaterial = belowBock.getBlockData().getMaterial();
+                if(belowBockMaterial.isSolid()) {   //block solide
+                    dropLocation = new Location(world,
+                            playerLocation.getBlockX(), y+1, playerLocation.getBlockZ());
                     break;
                 }
             }
 
             //Si on est en dessous de la killzone, replacer le drapeau à sa base
-            if(!metSolidBock) {
+            if(dropLocation == null) {
                 dropLocation = getBaseLocation(helmetSlotMaterial);
                 if(dropLocation == null) return;
             }
         }
-        else {
+        else {  //replacer à la base
             dropLocation = getBaseLocation(helmetSlotMaterial);
             if(dropLocation == null) return;
         }
