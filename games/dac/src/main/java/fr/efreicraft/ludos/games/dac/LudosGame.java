@@ -10,6 +10,7 @@ import fr.efreicraft.ludos.core.teams.TeamRecord;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -46,6 +47,8 @@ public class LudosGame extends Game {
     public void beginGame() {
         super.beginGame();
         Core.get().getTeamManager().getTeam("PLAYERS").setFriendlyFire(false);
+        gameLogic.onGameStart();
+
     }
 
     @Override
@@ -63,6 +66,8 @@ public class LudosGame extends Game {
         this.gameLogic.setSpawnPosition(
                 Core.get().getMapManager().getCurrentMap().getSpawnPoints().get(Core.get().getTeamManager().getTeam("PLAYERS")).get(5).getLocation()
         );
+
+
 
     }
 
@@ -86,9 +91,9 @@ public class LudosGame extends Game {
                 .put("PLAYERS", new TeamRecord(
                         "Joueurs",
                         1,
-                        false,
                         true,
-                        new ColorUtils.TeamColorSet(NamedTextColor.GRAY, DyeColor.WHITE, Color.WHITE),
+                        true,
+                        new ColorUtils.TeamColorSet(NamedTextColor.GRAY, DyeColor.WHITE, Color.GRAY),
                         null,
                         p -> {
                             p.entity().setHealth(20);
