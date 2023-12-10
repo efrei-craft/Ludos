@@ -1,6 +1,7 @@
 plugins {
     `java-library`
     `maven-publish`
+    id("org.sonarqube") version "4.4.1.3373"
 }
 
 java {
@@ -103,4 +104,11 @@ tasks.register<Exec>("devRunDockerImage") {
     workingDir = File("../")
 
     commandLine("docker", "run", "-p", "25565:25565", "-v", "${project.rootDir}/run:/home/minecraft/server", "-e", "ANIMUS_STANDALONE=true", "--name", "ludos_dev", "dev.efrei-craft/acp/templates/mini")
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "efrei-craft_Ludos_AYxT1h2K0r1VQ1KDYPJu")
+        property("sonar.projectName", "Ludos")
+    }
 }
