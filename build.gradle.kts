@@ -9,6 +9,10 @@ java {
 
 subprojects {
 
+    if(project.name == "games") {
+        return@subprojects
+    }
+
     apply(plugin = "maven-publish")
     apply(plugin = "java")
 
