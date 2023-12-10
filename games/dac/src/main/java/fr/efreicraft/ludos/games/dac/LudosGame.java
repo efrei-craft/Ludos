@@ -1,4 +1,5 @@
 package fr.efreicraft.ludos.games.dac;
+
 import com.google.common.collect.ImmutableMap;
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
@@ -9,9 +10,12 @@ import fr.efreicraft.ludos.core.teams.TeamRecord;
 import fr.efreicraft.ludos.core.utils.ColorUtils;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
+
 import java.util.EnumMap;
 import java.util.Map;
+
 import static fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder.DefaultTeamRecords.ONLY_SPECTATOR;
+
 @GameMetadata(
         name = "Dé à coudre",
         description = "Essayer de tomber dans l'eau et passez les trois rounds pour gagner !",
@@ -24,21 +28,25 @@ import static fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder.DefaultTea
 )
 public class LudosGame extends Game {
     private final GameLogic gameLogic;
+
     public LudosGame() {
         super();
         this.gameLogic = new GameLogic();
         this.setEventListener(new EventListener(this.gameLogic));
     }
+
     @Override
     public void preMapParse(World world) {
         // Nothing to do here
     }
+
     @Override
     public void beginGame() {
         super.beginGame();
         Core.get().getTeamManager().getTeam("PLAYERS").setFriendlyFire(false);
         gameLogic.onGameStart();
     }
+
     @Override
     public void postMapParse() {
         this.gameLogic.setBassinLocation(
@@ -55,10 +63,12 @@ public class LudosGame extends Game {
                 Core.get().getMapManager().getCurrentMap().getSpawnPoints().get(Core.get().getTeamManager().getTeam("PLAYERS")).get(5).getLocation()
         );
     }
+
     @Override
     public void setupScoreboard(LudosPlayer player) {
         // No scoreboard for now
     }
+
     @Override
     public EnumMap<Material, String> getGamePointsMaterials() {
         EnumMap<Material, String> gamePointsMaterials = new EnumMap<>(Material.class);
@@ -67,6 +77,7 @@ public class LudosGame extends Game {
         gamePointsMaterials.put(Material.CHISELED_STONE_BRICKS, "SPAWN_PLATEFORME");
         return gamePointsMaterials;
     }
+
     @Override
     public Map<String, TeamRecord> getTeamRecords() {
         return ImmutableMap.<String, TeamRecord>builder()

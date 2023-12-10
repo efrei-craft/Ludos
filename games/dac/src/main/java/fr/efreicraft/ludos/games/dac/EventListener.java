@@ -2,7 +2,6 @@ package fr.efreicraft.ludos.games.dac;
 
 import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.players.LudosPlayer;
-import fr.efreicraft.ludos.core.utils.MessageUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;

@@ -63,16 +63,16 @@ public class GameLogic {
         player.sendMessage(MessageUtils.ChatPrefix.GAME, "Tombé dans l'eau");
         Core.get().getMapManager().getCurrentMap().getWorld().setBlockData(new Location(
                 Core.get()
-                    .getMapManager()
-                    .getCurrentMap()
-                    .getWorld(),
+                        .getMapManager()
+                        .getCurrentMap()
+                        .getWorld(),
                 player.entity()
-                      .getLocation()
-                      .getBlockX(),
+                        .getLocation()
+                        .getBlockX(),
                 bassinPosition.getY() - 1,
                 player.entity()
-                      .getLocation()
-                      .getBlockZ()
+                        .getLocation()
+                        .getBlockZ()
         ), Material.BLACK_CONCRETE.createBlockData());
         player.entity().teleport(this.spawnPosition);
         nextPlayer(player);
@@ -85,16 +85,16 @@ public class GameLogic {
                 for (int z = this.boundary2Position.getBlockZ(); z <= this.boundary1Position.getBlockZ(); z++) {
                     for (int x = this.boundary2Position.getBlockX(); x <= this.boundary1Position.getBlockX(); x++) {
                         Core.get()
-                            .getMapManager()
-                            .getCurrentMap()
-                            .getWorld()
-                            .getBlockAt(x, y + decalagePlateforme, z)
-                            .setType(Core.get()
-                                         .getMapManager()
-                                         .getCurrentMap()
-                                         .getWorld()
-                                         .getBlockAt(x, y, z)
-                                         .getType());
+                                .getMapManager()
+                                .getCurrentMap()
+                                .getWorld()
+                                .getBlockAt(x, y + decalagePlateforme, z)
+                                .setType(Core.get()
+                                        .getMapManager()
+                                        .getCurrentMap()
+                                        .getWorld()
+                                        .getBlockAt(x, y, z)
+                                        .getType());
                         Core.get().getMapManager().getCurrentMap().getWorld().getBlockAt(x, y, z).setType(Material.AIR);
                     }
                 }
@@ -115,17 +115,14 @@ public class GameLogic {
         player.sendMessage(MessageUtils.ChatPrefix.GAME, "Il reste " + players.size() + " joueurs");
         if (players.size() == 1) {
             TitleUtils.broadcastTitle("&9" + "Victoire de " + players.get(0).entity().getName(), "", 0, 2, 0.5f);
-        }
-        else if (players.size() < limitOfPlayers + Math.abs(round % 2 - 1)) {
+        } else if (players.size() < limitOfPlayers + Math.abs(round % 2 - 1)) {
             this.round++;
             playRound(this.round);
-        }
-        else {
+        } else {
             for (LudosPlayer currentPlayer : players) {
                 if (currentPlayer == player && players.lastIndexOf(player) < players.size()) {
                     players.iterator().next().entity().teleport(this.plateformePosition);
-                }
-                else {
+                } else {
                     players.get(0).entity().teleport(this.plateformePosition);
                 }
             }
