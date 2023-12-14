@@ -192,6 +192,7 @@ public class GameManager implements IManager {
      * @param defaultGamePluginName Nom du plugin du jeu.
      */
     public void changeDefaultGame(String defaultGamePluginName) {
+        Core.get().getLogger().log(Level.INFO, "Changing default game to {0}...", defaultGamePluginName);
         this.defaultGamePluginName = defaultGamePluginName;
         Bukkit.getScheduler().runTask(Core.get().getPlugin(), () -> {
             try {
@@ -203,7 +204,7 @@ public class GameManager implements IManager {
     }
 
     public void registerGamePlugin(GamePlugin gamePlugin) {
-        System.out.println("Registering game " + gamePlugin.getName());
+        Core.get().getLogger().log(Level.INFO, "Registering game {0}...", gamePlugin.getName());
         gamePlugins.put(gamePlugin.getName(), gamePlugin);
     }
 

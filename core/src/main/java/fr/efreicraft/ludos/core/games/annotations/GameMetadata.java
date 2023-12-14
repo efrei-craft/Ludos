@@ -19,6 +19,12 @@ public @interface GameMetadata {
     String name();
 
     /**
+     * Nom du dossier de la map.
+     * @return Nom du dossier de la map.
+     */
+    String mapFolder() default "";
+
+    /**
      * Couleur du jeu.
      * @return Couleur du jeu.
      */

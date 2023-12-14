@@ -57,16 +57,28 @@ bukkit {
     authors = listOf("Antoine BANHA", "Logan TANN", "Aurelien DASSE", "Idir NAIT MEDDOUR")
     prefix = "MINI"
     depend = listOf("WorldEdit", "ProtocolLib", "ECATUP", "AnimusClient-Paper")
+    permissions {
+        register("ludos.admin") {
+            description = "Gives access to all admin permissions"
+            default = BukkitPluginDescription.Permission.Default.OP
+            children = listOf(
+                "ludos.admin.game",
+                "ludos.admin.map",
+                "ludos.admin.forcewin",
+                "ludos.admin.move"
+            )
+        }
+    }
     commands {
         register("game") {
             description = "Manages the games"
-            permission = "ludos.admin"
+            permission = "ludos.admin.game"
             permissionMessage = "You do not have permission to manage the games"
             aliases = listOf("g")
         }
         register("map") {
             description = "Manages the maps"
-            permission = "ludos.admin"
+            permission = "ludos.admin.map"
             permissionMessage = "You do not have permission to manage the maps"
             aliases = listOf("m")
         }
@@ -76,13 +88,11 @@ bukkit {
         }
         register("forcewin") {
             description = "Makes a team or player win"
-            aliases = listOf("forcewin")
-            permission = "ludos.admin"
+            permission = "ludos.admin.forcewin"
         }
         register("move") {
             description = "Moves a player to a team"
-            aliases = listOf("move")
-            permission = "ludos.admin"
+            permission = "ludos.admin.move"
         }
     }
 }

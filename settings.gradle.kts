@@ -14,6 +14,7 @@ include (
         "games:spleef",
         "games:rush",
         "games:sumo",
+        "games:dac",
         "games:ctf"
 )
 

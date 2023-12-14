@@ -67,7 +67,7 @@ public class LudosGame extends Game {
         super.beginGame();
 
         this.gameLogic.giveTheInventory();
-        this.gameLogic.allPlayersToSurvival();
+        this.gameLogic.setupPlayers();
         this.gameLogic.startTimer();
     }
 

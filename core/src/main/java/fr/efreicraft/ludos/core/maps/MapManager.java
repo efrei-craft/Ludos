@@ -74,6 +74,14 @@ public class MapManager implements IManager {
         setupLobbyWorld();
     }
 
+    private String getMapFolder(Game game) {
+        if (game.getMetadata().mapFolder().isEmpty()) {
+            return game.getMetadata().name();
+        } else {
+            return game.getMetadata().mapFolder();
+        }
+    }
+
     /**
      * Répertorie les cartes disponibles d'un jeu, accompagnées de leur type.
      * Cette fonction est appelée à chaque changement de jeu.
@@ -82,7 +90,7 @@ public class MapManager implements IManager {
     public void setupCurrentGameMaps(Game game) {
         if (!this.currentGameMaps.isEmpty()) clearGameMaps();
 
-        File dataFolder = new File(Core.get().getPlugin().getDataFolder(), "game_maps/" + game.getMetadata().name());
+        File dataFolder = new File(Core.get().getPlugin().getDataFolder(), "game_maps/" + getMapFolder(game));
         if(dataFolder.exists()) {
             for (File file : Objects.requireNonNull(dataFolder.listFiles())) {
                 if (file.isFile() && file.getName().endsWith(".schem")) {
@@ -210,7 +218,7 @@ public class MapManager implements IManager {
 
         try {
             schematic = SchematicUtils.loadSchematic(
-                    Core.get().getGameManager().getCurrentGame().getMetadata().name() + "/" + mapName
+                    getMapFolder(Core.get().getGameManager().getCurrentGame()) + "/" + mapName
             );
         } catch (IOException e) {
             WorldUtils.deleteWorld(world);
@@ -272,12 +280,19 @@ public class MapManager implements IManager {
     private ParseMapArgs loadFolderMap(String mapName) throws MapLoadingException {
         Core.get().getLogger().log(Level.INFO, "Copying world folder {0}...", mapName);
 
-        File sourceFolder = new File(Core.get().getPlugin().getDataFolder(),
-                "game_maps/" + Core.get().getGameManager().getCurrentGame().getMetadata().name() + "/" + mapName);
-        if (!sourceFolder.isDirectory()) throw new MapLoadingException(mapName + " n'est pas un dossier ou n'existe pas.");
+        File sourceFolder = new File(
+                Core.get().getPlugin().getDataFolder(),
+                "game_maps/" + getMapFolder(Core.get().getGameManager().getCurrentGame()) + "/" + mapName
+        );
+        if (!sourceFolder.isDirectory())
+            throw new MapLoadingException(mapName + " n'est pas un dossier ou n'existe pas.");
 
-        Core.get().getLogger().log(Level.INFO, "Path is {0}", Bukkit.getPluginsFolder().getAbsolutePath().substring(0, Bukkit.getPluginsFolder().getAbsolutePath().lastIndexOf(File.separatorChar)));
-        File destination = new File(Bukkit.getPluginsFolder().getAbsolutePath().substring(0, Bukkit.getPluginsFolder().getAbsolutePath().lastIndexOf(File.separatorChar)));
+        File destination = new File(
+                Bukkit.getPluginsFolder().getAbsolutePath().substring(
+                        0,
+                        Bukkit.getPluginsFolder().getAbsolutePath().lastIndexOf(File.separatorChar)
+                )
+        );
 
         try {
             FileUtils.copyDirectory(sourceFolder, new File(destination, WorldUtils.getNormalizedWorldName(mapName)));
@@ -288,14 +303,19 @@ public class MapManager implements IManager {
         org.bukkit.World world = WorldUtils.createWorld(mapName);
         if (Core.get().getGameManager().getCurrentGame() != null) {
             Block spongeBlock = world.getSpawnLocation().getBlock();
-            if (spongeBlock.getType() != Material.SPONGE) throw new MapLoadingException("World spawn is not The Sponge Block");
+            if (spongeBlock.getType() != Material.SPONGE)
+                throw new MapLoadingException("World spawn is not The Sponge Block");
             Sign sign = (Sign) world.getBlockAt(spongeBlock.getLocation().add(0, 1, 0)).getState();
 
             int[] coord1;
             int[] coord2;
             try {
-                coord1 = Arrays.stream(((TextComponent) sign.line(2)).content().split(" ")).mapToInt(Integer::parseInt).toArray();
-                coord2 = Arrays.stream(((TextComponent) sign.line(3)).content().split(" ")).mapToInt(Integer::parseInt).toArray();
+                coord1 = Arrays.stream(((TextComponent) sign.line(2)).content().split(" "))
+                        .mapToInt(Integer::parseInt)
+                        .toArray();
+                coord2 = Arrays.stream(((TextComponent) sign.line(3)).content().split(" "))
+                        .mapToInt(Integer::parseInt)
+                        .toArray();
             } catch (NumberFormatException e) {
                 throw new MapLoadingException("Bad coords given on the map description Map");
             }
