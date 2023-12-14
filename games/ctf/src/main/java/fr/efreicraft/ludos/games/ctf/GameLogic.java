@@ -1,6 +1,7 @@
 package fr.efreicraft.ludos.games.ctf;
 
 import fr.efreicraft.ludos.core.Core;
+import fr.efreicraft.ludos.core.games.TeamWin;
 import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.teams.Team;
 import fr.efreicraft.ludos.core.utils.MessageUtils;
@@ -356,12 +357,12 @@ public class GameLogic {
             case "Rouge" -> {
                 scoreTeamRed += 1;
                 if(scoreTeamRed >= SCORE_TO_WIN)
-                    ludosGame.setWinnerAndEndGame(new CtfWinners("RED"));
+                    ludosGame.setWinnerAndEndGame(new TeamWin(Core.get().getTeamManager().getTeam("RED")));
             }
             case "Bleu" -> {
                 scoreTeamBlue += 1;
                 if(scoreTeamBlue >= SCORE_TO_WIN)
-                    ludosGame.setWinnerAndEndGame(new CtfWinners("BLUE"));
+                    ludosGame.setWinnerAndEndGame(new TeamWin(Core.get().getTeamManager().getTeam("BLUE")));
             }
         }
     }
