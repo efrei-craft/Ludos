@@ -45,16 +45,16 @@ public class GameLogic {
     }
 
     /**
-     * Faire apparaître les drapeaux sur la map, et stocker leurs positions
-     * @param red_location position initiale du drapeau rouge
-     * @param blue_location position initiale du drapeau bleu
+     * Faire apparaître les drapeaux sur la map, et stocker leurs positions. Permet également d'obtenir le monde.
+     * @param redLocation position initiale du drapeau rouge
+     * @param blueLocation position initiale du drapeau bleu
      */
-    public void initFlags(Location red_location, Location blue_location) {
-        redBaseLocation = red_location;
-        blueBaseLocation = blue_location;
+    public void initFlags(Location redLocation, Location blueLocation) {
+        redBaseLocation = redLocation;
+        blueBaseLocation = blueLocation;
 
-        redFlagLocation = red_location;
-        blueFlagLocation = blue_location;
+        redFlagLocation = redLocation;
+        blueFlagLocation = blueLocation;
 
         redBaseLocation.getWorld().setBlockData(redBaseLocation, Material.RED_BANNER.createBlockData());
         blueBaseLocation.getWorld().setBlockData(blueBaseLocation, Material.BLUE_BANNER.createBlockData());
