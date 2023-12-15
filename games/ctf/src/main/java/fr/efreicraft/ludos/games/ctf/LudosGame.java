@@ -56,15 +56,15 @@ public class LudosGame extends Game {
 
     @Override
     public void postMapParse() {
-        Map<String, ArrayList<GamePoint>> game_points = Core.get().getMapManager().getCurrentMap().getGamePoints();
+        Map<String, ArrayList<GamePoint>> gamePoints = Core.get().getMapManager().getCurrentMap().getGamePoints();
 
         gameLogic.initFlags(
-                game_points.get("RED_FLAG").get(0).getLocation(),
-                game_points.get("BLUE_FLAG").get(0).getLocation()
+                gamePoints.get("RED_FLAG").get(0).getLocation(),
+                gamePoints.get("BLUE_FLAG").get(0).getLocation()
         );
 
-        if(game_points.get("KILL_ZONE") != null) {
-            gameLogic.initKillZone(game_points.get("KILL_ZONE").get(0).getLocation().getBlockY());
+        if(gamePoints.get("KILL_ZONE") != null) {
+            gameLogic.initKillZone(gamePoints.get("KILL_ZONE").get(0).getLocation().getBlockY());
         }
     }
 
