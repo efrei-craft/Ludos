@@ -159,7 +159,7 @@ public class GameLogic {
             //On souhaite drop le drapeau sur le premier block solide en dessous du joueur
             for(int y = playerLocation.getBlockY(); y > killZoneY; y--) {
                 //Vérifier le type du block
-                Block belowBock = world.getBlockAt(playerLocation.getBlockX(), y, playerLocation.getBlockZ());
+                Block belowBlock = world.getBlockAt(playerLocation.getBlockX(), y, playerLocation.getBlockZ());
                 Material belowBockMaterial = belowBock.getBlockData().getMaterial();
                 if(belowBockMaterial.isSolid()) {   //block solide
                     dropLocation = new Location(world,
