@@ -160,7 +160,7 @@ public class GameLogic {
             for(int y = playerLocation.getBlockY(); y > killZoneY; y--) {
                 //Vérifier le type du block
                 Block belowBlock = world.getBlockAt(playerLocation.getBlockX(), y, playerLocation.getBlockZ());
-                Material belowBockMaterial = belowBock.getBlockData().getMaterial();
+                Material belowBockMaterial = belowBlock.getBlockData().getMaterial();
                 if(belowBockMaterial.isSolid()) {   //block solide
                     dropLocation = new Location(world,
                             playerLocation.getBlockX(), y+1, playerLocation.getBlockZ());
