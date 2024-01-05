@@ -24,7 +24,12 @@ public record EventListener(GameLogic ctfLogic) implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        event.setCancelled(true);
+        int clicked_slot = event.getSlot();
+        //System.out.println(clicked_slot);
+        //Ne pas laisser les joueurs retirer leur casque (drapeau)
+        if(clicked_slot == 39) {    //39 = helmet
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler

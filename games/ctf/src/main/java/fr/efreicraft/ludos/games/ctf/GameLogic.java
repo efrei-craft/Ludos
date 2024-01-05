@@ -149,7 +149,8 @@ public class GameLogic {
 
         Material helmetSlotMaterial = helmetItem.getType();
         player.entity().getInventory().clear(39);   //39 = slot helmet
-        player.entity().getInventory().clear(1);    // 1 = deuxième slot hotbar
+        player.entity().getInventory().remove(Material.BLUE_BANNER);
+        player.entity().getInventory().remove(Material.RED_BANNER);
 
         //Déterminer où replacer le drapeau sur la map
         Location dropLocation = null;
