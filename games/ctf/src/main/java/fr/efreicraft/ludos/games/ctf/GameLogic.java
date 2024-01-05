@@ -23,6 +23,8 @@ public class GameLogic {
     private LudosGame ludosGame;
     private World world;
 
+    private ParticleEffects particleEffects;
+
     private int killZoneY = -64;
 
     private Location redBaseLocation = null;
@@ -42,6 +44,7 @@ public class GameLogic {
 
     public GameLogic(LudosGame ludosGame1) {
         ludosGame = ludosGame1;
+        particleEffects = new ParticleEffects(this);
     }
 
     /**
@@ -81,6 +84,10 @@ public class GameLogic {
         //TODO : ajouter + d'équipement ici ?
     }
 
+
+    public void onBeginGame() {
+        particleEffects.startParticles();
+    }
 
     /**
      * Vérifier si le joueur peut casser le drapeau, et si oui le casser.
@@ -236,45 +243,6 @@ public class GameLogic {
     }
 
 
-    public void spawnParticleAroundBase(String teamKey) {
-        Team team = Core.get().getTeamManager().getTeam(teamKey);
-        if(team.getPlayers().isEmpty()) return;
-
-        Location baseLocation = getBaseLocation(team.getName());
-        Location centerLocation = new Location(world, baseLocation.getX()+0.5, baseLocation.getY(), baseLocation.getZ()+0.5);
-        Color teamColor = team.getColor().bukkitColor();
-
-        Particle.DustOptions dustOptions = new Particle.DustOptions(teamColor, 1.0f);
-
-        double circleStep = Math.PI/30;
-        for(double angle = 0.0; angle < Math.PI*2; angle += circleStep) {
-            world.spawnParticle(Particle.REDSTONE,
-                    centerLocation.getX() + Math.cos(angle)*BASE_RADIUS,
-                    centerLocation.getY(),
-                    centerLocation.getZ() + Math.sin(angle)*BASE_RADIUS,
-                    5, dustOptions);
-        }
-    }
-
-
-    public void spawnParticleDebug() {
-        Particle.DustOptions dustOptionsBases = new Particle.DustOptions(Color.GREEN, 1.0f);
-        world.spawnParticle(Particle.REDSTONE, redBaseLocation, 5, dustOptionsBases);
-        world.spawnParticle(Particle.REDSTONE, blueBaseLocation, 5, dustOptionsBases);
-
-        Particle.DustOptions dustOptionsFlags = new Particle.DustOptions(Color.ORANGE, 1.0f);
-        world.spawnParticle(Particle.REDSTONE, redFlagLocation, 5, dustOptionsFlags);
-        world.spawnParticle(Particle.REDSTONE, blueFlagLocation, 5, dustOptionsFlags);
-    }
-
-    public void spawnParticles(int time) {
-        spawnParticleAroundBase("RED");
-        spawnParticleAroundBase("BLUE");
-
-        //spawnParticleDebug();
-    }
-
-
     //TODO : trouver un moyen de mieux gérer les trucs qu'il y a ci-dessous
 
     /**
@@ -383,5 +351,9 @@ public class GameLogic {
 
     public void setWorld(World world1) {
         world = world1;
+    }
+
+    public World getWorld() {
+        return world;
     }
 }

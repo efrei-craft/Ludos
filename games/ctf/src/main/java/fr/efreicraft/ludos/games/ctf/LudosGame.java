@@ -6,7 +6,6 @@ import fr.efreicraft.ludos.core.Core;
 import fr.efreicraft.ludos.core.games.annotations.GameMetadata;
 import fr.efreicraft.ludos.core.games.annotations.GameRules;
 import fr.efreicraft.ludos.core.games.interfaces.Game;
-import fr.efreicraft.ludos.core.games.runnables.GameTimer;
 import fr.efreicraft.ludos.core.maps.points.GamePoint;
 import fr.efreicraft.ludos.core.players.LudosPlayer;
 import fr.efreicraft.ludos.core.teams.DefaultTeamRecordBuilder;
@@ -51,7 +50,7 @@ public class LudosGame extends Game {
     @Override
     public void beginGame() {
         super.beginGame();
-        GameTimer gt = new GameTimer(gameLogic::spawnParticles, -1, 10);
+        gameLogic.onBeginGame();
     }
 
     @Override
