@@ -14,7 +14,8 @@ include (
         "games:spleef",
         "games:rush",
         "games:sumo",
-        "games:dac"
+        "games:dac",
+        "games:ctf"
 )
 
 if (System.getenv("NEXUS_REPOSITORY") == null) {
